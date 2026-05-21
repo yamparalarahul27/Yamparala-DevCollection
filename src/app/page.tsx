@@ -208,6 +208,13 @@ const components: ComponentCard[] = [
     color: "#22c55e",
     status: "Latest",
   },
+  {
+    href: "/performancebutton",
+    title: "Performance Button",
+    description: "Pixel-perfect recreation of the performance.dev Subscribe button — dark pill with two-layer shadow and inset gradient ring.",
+    color: "#0a0d1a",
+    status: "Latest",
+  },
 ];
 
 const statusPriority: Record<NonNullable<ComponentCard["status"]>, number> = {
@@ -216,18 +223,27 @@ const statusPriority: Record<NonNullable<ComponentCard["status"]>, number> = {
   WIP: 2,
 };
 
+const statusStyles: Record<NonNullable<ComponentCard["status"]>, string> = {
+  Latest: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  Experience: "border-sky-200 bg-sky-50 text-sky-700",
+  WIP: "border-amber-200 bg-amber-50 text-amber-700",
+};
+
 const sortedComponents = [...components].sort((a, b) => {
   const aPriority = a.status ? statusPriority[a.status] : Number.POSITIVE_INFINITY;
   const bPriority = b.status ? statusPriority[b.status] : Number.POSITIVE_INFINITY;
   return aPriority - bPriority;
 });
 
+const totalCount = sortedComponents.length;
+const latestCount = sortedComponents.filter((c) => c.status === "Latest").length;
+
 export default function CollectionPage() {
   return (
     <div className="min-h-screen bg-[var(--background)]">
       {/* Header */}
-      <header className="border-b border-gray-200/60 px-6 py-6 sm:px-8">
-        <div className="mx-auto flex max-w-5xl flex-col items-center text-center">
+      <header className="border-b border-gray-200/60 px-6 py-10 sm:px-8 sm:py-14">
+        <div className="mx-auto flex max-w-3xl flex-col items-center text-center">
           <Image
             src="/proteus-logo.svg"
             alt="Proteus logo"
@@ -236,72 +252,77 @@ export default function CollectionPage() {
             className="h-auto w-[180px] sm:w-[220px]"
             priority
           />
-          <p className="mt-2 text-sm text-gray-500">
-            Component Collection by Yamparala Rahul [Design Engineer]
+          <p className="mt-3 text-sm text-gray-500">
+            Component Collection by Yamparala Rahul · Design Engineer
           </p>
+          <div className="mt-5 flex items-center gap-3 text-xs uppercase tracking-[0.16em] text-gray-400">
+            <span>{totalCount} components</span>
+            <span className="h-1 w-1 rounded-full bg-gray-300" />
+            <span className="text-emerald-600">{latestCount} latest</span>
+          </div>
         </div>
       </header>
 
-      {/* Grid */}
-      <main className="mx-auto max-w-5xl px-6 py-8 sm:px-8">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {sortedComponents.map((comp) => (
-            <Link
-              key={comp.href}
-              href={comp.href}
-              className="group relative flex flex-col justify-between rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-all duration-200 hover:shadow-md hover:border-gray-300 hover:-translate-y-0.5"
-            >
-              {/* Color accent bar */}
-              <div
-                className="absolute left-0 top-0 h-1 w-full rounded-t-xl"
-                style={{ backgroundColor: comp.color }}
-              />
-
-              <div>
-                <div className="mt-1 flex items-start justify-between gap-2">
-                  <h2 className="text-base font-semibold text-gray-800 transition-colors group-hover:text-[#5d3ae9]">
-                    {comp.title}
-                  </h2>
-                  {comp.status ? (
-                    <span
-                      className={`inline-flex rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${
-                        comp.status === "Latest"
-                          ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                          : comp.status === "Experience"
-                            ? "border-sky-200 bg-sky-50 text-sky-700"
-                            : "border-amber-200 bg-amber-50 text-amber-700"
-                      }`}
-                    >
-                      {comp.status}
-                    </span>
-                  ) : null}
-                </div>
-                <p className="mt-1.5 text-sm leading-relaxed text-gray-500">
-                  {comp.description}
-                </p>
-              </div>
-
-              <div className="mt-4 flex items-center gap-1 text-xs font-medium text-gray-400 group-hover:text-[#8162ff] transition-colors">
-                <span>View component</span>
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  className="transition-transform group-hover:translate-x-0.5"
-                >
-                  <path
-                    d="M5.5 3L10.5 8L5.5 13"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
+      {/* Stacked list */}
+      <main className="mx-auto max-w-3xl px-5 py-8 sm:px-8 sm:py-12">
+        <ol className="flex flex-col">
+          {sortedComponents.map((comp, idx) => (
+            <li key={comp.href}>
+              <Link
+                href={comp.href}
+                className="group relative flex items-start gap-5 border-t border-gray-200/70 px-2 py-6 transition-colors last:border-b hover:bg-white/60 sm:px-3"
+              >
+                {/* Left rail: index + color */}
+                <div className="flex w-10 shrink-0 flex-col items-center gap-2 pt-1.5 sm:w-14">
+                  <span className="font-mono text-[11px] text-gray-400">
+                    {String(idx + 1).padStart(2, "0")}
+                  </span>
+                  <span
+                    className="h-2 w-2 rounded-full ring-2 ring-white"
+                    style={{ backgroundColor: comp.color, boxShadow: `0 0 0 1px ${comp.color}33` }}
                   />
-                </svg>
-              </div>
-            </Link>
+                </div>
+
+                {/* Body */}
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+                    <h2 className="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#5d3ae9] sm:text-xl">
+                      {comp.title}
+                    </h2>
+                    {comp.status ? (
+                      <span
+                        className={`inline-flex shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${statusStyles[comp.status]}`}
+                      >
+                        {comp.status}
+                      </span>
+                    ) : null}
+                  </div>
+                  <p className="mt-1.5 text-sm leading-relaxed text-gray-500">
+                    {comp.description}
+                  </p>
+                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors group-hover:text-[#8162ff]">
+                    <span>View component</span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      className="transition-transform group-hover:translate-x-0.5"
+                    >
+                      <path
+                        d="M5.5 3L10.5 8L5.5 13"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </Link>
+            </li>
           ))}
-        </div>
+        </ol>
       </main>
     </div>
   );
