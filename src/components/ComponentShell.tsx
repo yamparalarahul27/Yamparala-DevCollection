@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Undo2 } from "lucide-react";
 import BottomSheet from "@/components/BottomSheet";
 import FloatingComponentDock from "@/components/FloatingComponentDock";
 import { componentNavLinks } from "@/lib/componentNavLinks";
+import { useComponentSource } from "@/lib/useComponentSource";
 
 export default function ComponentShell({
   title,
@@ -19,6 +20,7 @@ export default function ComponentShell({
   children: React.ReactNode;
 }) {
   const [sheetOpen, setSheetOpen] = useState<"code" | "prompt" | null>(null);
+  const { content: resolvedCodeContent, loadSource } = useComponentSource(codeContent);
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     if (typeof window === "undefined") {
       return "light";
@@ -33,6 +35,9 @@ export default function ComponentShell({
   }, [theme]);
 
   const isDark = theme === "dark";
+  const openCodeSheet = useCallback(() => {
+    void loadSource().finally(() => setSheetOpen("code"));
+  }, [loadSource]);
 
   return (
     <div
@@ -70,7 +75,7 @@ export default function ComponentShell({
 
       <FloatingComponentDock
         componentLinks={componentNavLinks}
-        onCopyCode={() => setSheetOpen("code")}
+        onCopyCode={openCodeSheet}
         onCopyPrompt={() => setSheetOpen("prompt")}
         onThemeChange={setTheme}
         theme={theme}
@@ -81,7 +86,7 @@ export default function ComponentShell({
         isOpen={sheetOpen === "code"}
         onClose={() => setSheetOpen(null)}
         title="Component Code (Next.js)"
-        content={codeContent}
+        content={resolvedCodeContent}
       />
       <BottomSheet
         isOpen={sheetOpen === "prompt"}

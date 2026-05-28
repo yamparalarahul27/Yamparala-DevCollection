@@ -4,7 +4,7 @@ import { useState } from "react";
 import ComponentShell from "@/components/ComponentShell";
 import PerformanceButton from "@/components/PerformanceButton";
 
-const codeContent = `// See /src/components/PerformanceButton.tsx for full source`;
+const codeContent = `Use Copy Code to load the current local source for the performance button.`;
 const promptContent = `Recreate the dark pill-shaped Subscribe button from performance.dev:
 - 56px tall, 138px min-width, 32px horizontal padding, 999px border-radius
 - Background rgb(10,13,26), white text, 16px / 500 weight

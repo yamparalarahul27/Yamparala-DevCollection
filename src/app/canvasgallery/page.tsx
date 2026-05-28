@@ -217,8 +217,7 @@ const galleryItems: GalleryItem[] = [
   },
 ];
 
-const codeContent = `// See /src/components/CanvasGallery.tsx for full source
-// Built with React Three Fiber v9 + @react-three/drei v10 + Three.js r172`;
+const codeContent = `Use Copy Code to load the current local source for the 3D canvas gallery.`;
 
 const promptContent = `Create a 3D canvas gallery using React Three Fiber. Layout images in a grid on 3D planes. Support pan navigation with mouse drag and inertia, scroll-to-zoom, click-to-select with camera animation. When an image is clicked, slide in a detail side panel with image preview, title, description, location, date, and tags. Include a minimap overlay and HUD.`;
 
