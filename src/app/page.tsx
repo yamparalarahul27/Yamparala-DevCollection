@@ -23,6 +23,13 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 
 const components: ComponentCard[] = [
   {
+    href: "/floating-toolbar-tooltip",
+    title: "Floating Toolbar Tooltip",
+    description: "Video-inspired top-right floating toolbar with a sliding active icon surface and morphing tooltip.",
+    color: "#111217",
+    status: "Latest",
+  },
+  {
     href: "/buttons",
     title: "Button Components",
     description: "Parallel gallery of every button demo with preview cards and View links that open each component in a new tab.",
