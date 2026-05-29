@@ -23,6 +23,13 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 
 const components: ComponentCard[] = [
   {
+    href: "/slide-to-convert-button",
+    title: "Slide To Convert Button",
+    description: "Swipe-to-confirm conversion pill with a draggable white thumb and gently moving lucide arrows.",
+    color: "#f8fafc",
+    status: "Latest",
+  },
+  {
     href: "/floating-toolbar-tooltip",
     title: "Floating Toolbar Tooltip",
     description: "Video-inspired top-right floating toolbar with a sliding active icon surface and morphing tooltip.",

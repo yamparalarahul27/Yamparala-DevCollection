@@ -10,6 +10,7 @@ export const componentNavLinks: Array<{ href: string; label: string }> = [
   { href: "/peektext", label: "Peektext" },
   { href: "/canvasgallery", label: "Canvas Gallery" },
   { href: "/floating-toolbar-tooltip", label: "Floating Toolbar Tooltip" },
+  { href: "/slide-to-convert-button", label: "Slide To Convert Button" },
   { href: "/buttons", label: "Button Components" },
   { href: "/track-status-button", label: "Track Status Button" },
   { href: "/fix-action-buttons", label: "Fix Action Buttons" },

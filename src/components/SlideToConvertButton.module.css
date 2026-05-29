@@ -1,0 +1,227 @@
+.track {
+  --fill-width: 71px;
+  --thumb-x: 5px;
+  box-sizing: border-box;
+  position: relative;
+  display: inline-flex;
+  height: 54px;
+  width: min(100%, 390px);
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.045), transparent 26%),
+    linear-gradient(90deg, #151515 0%, #202020 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.42),
+    0 14px 28px rgba(0, 0, 0, 0.16);
+  color: rgba(255, 255, 255, 0.52);
+  cursor: grab;
+  font: 500 17px/1 var(--font-inter), system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  letter-spacing: 0;
+  padding: 5px;
+  touch-action: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.track::before {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(115deg, transparent 0 27%, rgba(255, 255, 255, 0.035) 27% 38%, transparent 38% 100%),
+    linear-gradient(115deg, transparent 0 53%, rgba(255, 255, 255, 0.026) 53% 62%, transparent 62% 100%);
+  content: "";
+  pointer-events: none;
+}
+
+.track::after {
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+  content: "";
+  pointer-events: none;
+}
+
+.track[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+.track:not([data-dragging="true"]) .fill,
+.track:not([data-dragging="true"]) .thumb {
+  transition:
+    transform 210ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 210ms cubic-bezier(0.22, 1, 0.36, 1),
+    background 150ms ease-out,
+    box-shadow 150ms ease-out;
+}
+
+@media (hover: hover) {
+  .track:not(:disabled):not([data-complete="true"]):hover .thumb {
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.95),
+      0 4px 10px rgba(0, 0, 0, 0.18),
+      0 0 0 1px rgba(255, 255, 255, 0.92);
+    transform: translate3d(var(--thumb-x), -50%, 0) scale(1.02);
+  }
+
+  .track:not(:disabled):not([data-complete="true"]):hover .label {
+    color: rgba(255, 255, 255, 0.64);
+  }
+}
+
+.track:active:not(:disabled):not([data-complete="true"]) .thumb {
+  transform: translate3d(var(--thumb-x), -50%, 0) scale(0.98);
+}
+
+.track:focus-visible {
+  outline: 2px solid #f8fafc;
+  outline-offset: 5px;
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.42),
+    0 14px 28px rgba(0, 0, 0, 0.16);
+}
+
+.track:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.fill {
+  position: absolute;
+  inset: 5px auto 5px 5px;
+  width: var(--fill-width);
+  border-radius: 999px;
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04)),
+    rgba(255, 255, 255, 0.07);
+  opacity: 0.72;
+  pointer-events: none;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  color: rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+  text-align: center;
+  transition: color 150ms ease-out;
+  white-space: nowrap;
+}
+
+.thumb {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  z-index: 2;
+  display: inline-flex;
+  height: 44px;
+  width: 66px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(243, 244, 246, 0.96)),
+    #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 3px 7px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
+  color: #3f3f46;
+  transform: translate3d(var(--thumb-x), -50%, 0);
+}
+
+.arrows {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transform: translateX(-1px);
+}
+
+.arrow {
+  margin-left: -3px;
+}
+
+.arrow:first-child {
+  margin-left: 0;
+}
+
+.checkIcon {
+  color: #0f172a;
+}
+
+.track[data-complete="true"] {
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.07), transparent 26%),
+    linear-gradient(90deg, #113c2e 0%, #15583e 100%);
+  color: rgba(255, 255, 255, 0.78);
+  cursor: default;
+}
+
+.track[data-complete="true"] .fill {
+  background:
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.06)),
+    rgba(16, 185, 129, 0.24);
+}
+
+.track[data-complete="true"] .label {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .arrow {
+    animation: arrow-drift 1.15s ease-in-out infinite;
+  }
+
+  .arrow:nth-child(2) {
+    animation-delay: 120ms;
+  }
+
+  .arrow:nth-child(3) {
+    animation-delay: 240ms;
+  }
+}
+
+@media (max-width: 640px) {
+  .track {
+    height: 50px;
+    width: min(100%, 330px);
+    font-size: 15px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .track,
+  .fill,
+  .thumb,
+  .label,
+  .arrow {
+    animation: none;
+    transition: none;
+  }
+
+  .track:not(:disabled):not([data-complete="true"]):hover .thumb,
+  .track:active:not(:disabled):not([data-complete="true"]) .thumb {
+    transform: translate3d(var(--thumb-x), -50%, 0);
+  }
+}
+
+@keyframes arrow-drift {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: translateX(-1px);
+  }
+
+  45% {
+    opacity: 0.95;
+    transform: translateX(2px);
+  }
+}

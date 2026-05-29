@@ -12,6 +12,7 @@ import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
 import { OrangeAddViewButton } from "@/components/OrangeAddViewButton";
 import PerformanceButton from "@/components/PerformanceButton";
 import PreviewDeployButtons from "@/components/PreviewDeployButtons";
+import SlideToConvertButton from "@/components/SlideToConvertButton";
 import TrackStatusButton from "@/components/TrackStatusButton";
 
 type ButtonDemo = {
@@ -23,6 +24,13 @@ type ButtonDemo = {
 };
 
 const buttonDemos: ButtonDemo[] = [
+  {
+    title: "Slide To Convert Button",
+    href: "/slide-to-convert-button",
+    description: "Swipe-to-confirm conversion pill with animated lucide arrows.",
+    preview: <SlideToConvertButton />,
+    previewClassName: "bg-[#050505]",
+  },
   {
     title: "Track Status Button",
     href: "/track-status-button",
@@ -115,11 +123,13 @@ import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
 import { OrangeAddViewButton } from "@/components/OrangeAddViewButton";
 import PerformanceButton from "@/components/PerformanceButton";
 import PreviewDeployButtons from "@/components/PreviewDeployButtons";
+import SlideToConvertButton from "@/components/SlideToConvertButton";
 import TrackStatusButton from "@/components/TrackStatusButton";
 
 export default function ButtonOverview() {
   return (
     <section>
+      <SlideToConvertButton />
       <TrackStatusButton />
       <FixActionButtons />
       <GlossyIconButtonStack />
