@@ -25,6 +25,10 @@ export const componentSourceRegistry = {
     ["src", "components", "CanvasGallery.tsx"],
     ["src", "app", "canvasgallery", "page.tsx"],
   ],
+  "/dot-shimmer-effect": [
+    ["src", "components", "DotShimmerEffect.tsx"],
+    ["src", "app", "dot-shimmer-effect", "page.tsx"],
+  ],
   "/floating-toolbar-tooltip": [
     ["src", "components", "FloatingToolbarTooltip.tsx"],
     ["src", "components", "FloatingToolbarTooltip.module.css"],

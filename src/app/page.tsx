@@ -23,6 +23,13 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 
 const components: ComponentCard[] = [
   {
+    href: "/dot-shimmer-effect",
+    title: "Dot Shimmer Effect",
+    description: "Portable vanilla WebGL dot field with a fragment-shader shimmer wave behind any content.",
+    color: "#f5f5f5",
+    status: "Latest",
+  },
+  {
     href: "/slide-to-convert-button",
     title: "Slide To Convert Button",
     description: "Swipe-to-confirm conversion pill with a draggable white thumb and gently moving lucide arrows.",
