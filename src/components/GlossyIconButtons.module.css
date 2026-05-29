@@ -1,0 +1,126 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 82px;
+}
+
+.button {
+  position: relative;
+  display: inline-flex;
+  min-height: 112px;
+  min-width: 414px;
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  border: 0;
+  border-radius: 30px;
+  color: #ffffff;
+  cursor: pointer;
+  font: 500 58px/1 var(--font-inter), system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  overflow: hidden;
+  padding: 0 52px;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.28);
+  transition:
+    filter 150ms ease-out,
+    transform 150ms ease-out,
+    box-shadow 150ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button::before {
+  position: absolute;
+  inset: 5px 7px auto;
+  height: 44px;
+  border-radius: 26px 26px 18px 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.24), transparent 72%),
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.28), transparent 70%);
+  content: "";
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.button:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.button:focus-visible {
+  outline: 3px solid #60a5fa;
+  outline-offset: 5px;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.purple {
+  background: linear-gradient(180deg, #7a73dd 0%, #5146c1 100%);
+  box-shadow:
+    inset 0 5px 0 rgba(185, 182, 255, 0.58),
+    inset 0 -7px 12px rgba(45, 36, 146, 0.34),
+    0 5px 0 #3e34a5,
+    0 10px 16px rgba(18, 15, 80, 0.3);
+}
+
+.black {
+  background: linear-gradient(180deg, #3b3b3b 0%, #0e0e0f 100%);
+  box-shadow:
+    inset 0 5px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -7px 12px rgba(0, 0, 0, 0.38),
+    0 5px 0 #050505,
+    0 9px 12px rgba(0, 0, 0, 0.3);
+}
+
+.green {
+  background: linear-gradient(180deg, #18bf8f 0%, #049a75 100%);
+  box-shadow:
+    inset 0 5px 0 rgba(99, 230, 186, 0.58),
+    inset 0 -7px 12px rgba(0, 100, 76, 0.26),
+    0 5px 0 #02795d,
+    0 9px 12px rgba(0, 98, 77, 0.26);
+}
+
+.icon {
+  height: 52px;
+  width: 52px;
+  stroke-width: 2.3;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .stack {
+    gap: 38px;
+  }
+
+  .button {
+    min-height: 72px;
+    min-width: 228px;
+    gap: 18px;
+    border-radius: 22px;
+    font-size: 36px;
+    padding: 0 30px;
+  }
+
+  .icon {
+    height: 34px;
+    width: 34px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+}

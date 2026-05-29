@@ -1,5 +1,11 @@
+import { existsSync, statSync } from "node:fs";
+import path from "node:path";
 import Link from "next/link";
 import Image from "next/image";
+import {
+  componentSourceRegistry,
+  type ComponentSourceId,
+} from "@/lib/componentSourceRegistry";
 
 type ComponentCard = {
   href: string;
@@ -9,7 +15,62 @@ type ComponentCard = {
   status?: "Latest" | "WIP" | "Experience";
 };
 
+type ComponentCardWithUpdatedAt = ComponentCard & {
+  updatedAt: Date;
+  updatedAtLabel: string;
+  updatedAtMs: number;
+};
+
 const components: ComponentCard[] = [
+  {
+    href: "/buttons",
+    title: "Button Components",
+    description: "Parallel gallery of every button demo with preview cards and View links that open each component in a new tab.",
+    color: "#5d3ae9",
+    status: "Latest",
+  },
+  {
+    href: "/track-status-button",
+    title: "Track Status Button",
+    description: "Glossy purple Track Status CTA with a wide molded surface and oversized white text.",
+    color: "#7a2fd2",
+    status: "Latest",
+  },
+  {
+    href: "/fix-action-buttons",
+    title: "Fix Action Buttons",
+    description: "Stacked Apply Fix and Preview Fix controls with green glow and dark elevated treatment.",
+    color: "#08c78d",
+    status: "Latest",
+  },
+  {
+    href: "/glossy-icon-buttons",
+    title: "Glossy Icon Buttons",
+    description: "Purple, black, and green glossy icon buttons recreated from the shared stacked reference image.",
+    color: "#6255d5",
+    status: "Latest",
+  },
+  {
+    href: "/lime-alert-rule-button",
+    title: "Lime Alert Rule Button",
+    description: "Bright lime Add Alert Rule CTA with plus icon, rounded border, and soft raised finish.",
+    color: "#a3e635",
+    status: "Latest",
+  },
+  {
+    href: "/preview-deploy-buttons",
+    title: "Preview Deploy Buttons",
+    description: "Paired Preview and Deploy buttons with white lifted and dark glossy visual treatments.",
+    color: "#2d2d34",
+    status: "Latest",
+  },
+  {
+    href: "/earn-button",
+    title: "Earn Button",
+    description: "Oversized glossy green Earn pill with a filled rewards icon and cropped reference-inspired stance.",
+    color: "#006b36",
+    status: "Latest",
+  },
   {
     href: "/numberflow",
     title: "NumberFlow",
@@ -22,49 +83,6 @@ const components: ComponentCard[] = [
     title: "Floating Component Dock",
     description: "Bottom-center floating utility dock with component menu, copy actions, and theme switcher.",
     color: "#1F2937",
-    status: "WIP",
-  },
-  {
-    href: "/agentstatus",
-    title: "Agent Status Panels",
-    description: "Thinking-stage dotted progress rails plus vesting/volume/temperature control cards.",
-    color: "#4B5563",
-    status: "WIP",
-  },
-  {
-    href: "/tabpatterns",
-    title: "Tab Patterns",
-    description: "Modes/personas, primary section tabs, and lightweight filter tab sets.",
-    color: "#374151",
-    status: "WIP",
-  },
-  {
-    href: "/agenttoasts",
-    title: "Agent System Toasts",
-    description: "Four large system toasts: run complete, override warning, paused, and delete confirmation.",
-    color: "#111827",
-    status: "WIP",
-  },
-  {
-    href: "/tokenselector",
-    title: "Token Selector Modal",
-    description: "Searchable token list modal with top-by-volume rows and keyboard hints.",
-    color: "#4B5563",
-    status: "WIP",
-  },
-  {
-    href: "/timeframe",
-    title: "Timeframe Selector",
-    description: "Segmented timeframe pill with 24H, 7D, 30D, 90D, and 1Y options.",
-    color: "#6B7280",
-    status: "WIP",
-  },
-  {
-    href: "/boneyard",
-    title: "Boneyard Skeleton",
-    description:
-      "Pixel-perfect loading skeleton for a blog card using boneyard-js, with source credit.",
-    color: "#57534E",
     status: "WIP",
   },
   {
@@ -83,25 +101,11 @@ const components: ComponentCard[] = [
     status: "Latest",
   },
   {
-    href: "/friportfolio",
-    title: "FRI Portfolio Dashboard",
-    description: "Cyberpunk-themed AI agent portfolio with arc reactor, terminal, diagnostics, and directive panels.",
-    color: "#5d3ae9",
-    status: "WIP",
-  },
-  {
     href: "/mathcurveloaders",
     title: "Math Curve Loaders",
     description: "Animated loading spinners based on mathematical curves — rose, Lissajous, hypotrochoid, and more.",
     color: "#8162ff",
     status: "Experience",
-  },
-  {
-    href: "/navbar",
-    title: "Navbar",
-    description: "App logo, navigation links, search input, and user menu with dropdown.",
-    color: "#8162ff",
-    status: "WIP",
   },
   {
     href: "/chainselector",
@@ -111,52 +115,10 @@ const components: ComponentCard[] = [
     status: "WIP",
   },
   {
-    href: "/deficard",
-    title: "DeFi Card",
-    description: "Protocol cards with price, trend, TVL, favorites toggle, and chain badge.",
-    color: "#1D7AFC",
-    status: "WIP",
-  },
-  {
     href: "/nfttable",
     title: "NFT Collections Table",
     description: "Sortable table with volume, floor price, owners, supply columns.",
     color: "#22A06B",
-    status: "WIP",
-  },
-  {
-    href: "/gascard",
-    title: "Gas Fee Mode Selector",
-    description: "Walking, Speed Bike, and Future Car modes with live gwei countdown.",
-    color: "#E56910",
-    status: "WIP",
-  },
-  {
-    href: "/marketstatcard",
-    title: "Market Stats Card",
-    description: "Crypto coins count, market cap, and 24h trading volume.",
-    color: "#1F845A",
-    status: "WIP",
-  },
-  {
-    href: "/dominancebarcard",
-    title: "Dominance Bar Card",
-    description: "BTC and ETH market dominance with colored progress bars.",
-    color: "#374151",
-    status: "WIP",
-  },
-  {
-    href: "/transactions",
-    title: "Transaction Toast",
-    description: "Animated transaction status toast — processing, failed, and success states.",
-    color: "#7C3AED",
-    status: "WIP",
-  },
-  {
-    href: "/swap-flow",
-    title: "Swap Flow",
-    description: "Animated token swap interface with step-by-step flow visualization.",
-    color: "#EC4899",
     status: "WIP",
   },
   {
@@ -181,31 +143,10 @@ const components: ComponentCard[] = [
     status: "Latest",
   },
   {
-    href: "/folder",
-    title: "Folder",
-    description: "macOS-style folder icons with glossy gradients, color variants, hover lift, and size options.",
-    color: "#5aaaf5",
-    status: "Latest",
-  },
-  {
     href: "/canvasgallery",
     title: "Canvas Gallery",
     description: "3D image canvas with pan, zoom, click-to-select, side panel, and minimap. Built with React Three Fiber + Drei.",
     color: "#6366f1",
-    status: "Latest",
-  },
-  {
-    href: "/landthebooster",
-    title: "Land the Booster",
-    description: "Mars rocket landing game with physics sim, fuel/speed/angle HUD, keyboard + touch controls, and scoring.",
-    color: "#c4603c",
-    status: "Experience",
-  },
-  {
-    href: "/investmentgrowth",
-    title: "Investment Growth Chart",
-    description: "Compound growth bar chart with glowing green trend line, interactive deposit slider, and dynamic y-axis.",
-    color: "#22c55e",
     status: "Latest",
   },
   {
@@ -215,13 +156,42 @@ const components: ComponentCard[] = [
     color: "#0a0d1a",
     status: "Latest",
   },
+  {
+    href: "/figma-properties-button",
+    title: "Figma Properties Button",
+    description: "Reusable dark gradient button built from the shared Figma radius, shadow, and opacity properties.",
+    color: "#323232",
+    status: "Latest",
+  },
+  {
+    href: "/fun-loading-button",
+    title: "FUN Loading Button",
+    description: "Video-inspired transaction button with glossy loading sweep, spinner, and completed state.",
+    color: "#2f2f30",
+    status: "Latest",
+  },
+  {
+    href: "/light-gradient-button",
+    title: "Light Gradient Button",
+    description: "Figma-spec light gray hug button with subtle gradient, inset highlight, and soft shadow.",
+    color: "#d4d4d4",
+    status: "Latest",
+  },
+  {
+    href: "/orange-add-view-button",
+    title: "Orange Add View Button",
+    description: "Supplied orange Add View button with layered outer and inset shadows.",
+    color: "#ea580c",
+    status: "Latest",
+  },
+  {
+    href: "/buy-now-glow-button",
+    title: "Buy Now Glow Button",
+    description: "Cyan glowing Buy Now button recreated from the dark mobile finance screenshot.",
+    color: "#13f5d0",
+    status: "Latest",
+  },
 ];
-
-const statusPriority: Record<NonNullable<ComponentCard["status"]>, number> = {
-  Latest: 0,
-  Experience: 1,
-  WIP: 2,
-};
 
 const statusStyles: Record<NonNullable<ComponentCard["status"]>, string> = {
   Latest: "border-emerald-200 bg-emerald-50 text-emerald-700",
@@ -229,11 +199,50 @@ const statusStyles: Record<NonNullable<ComponentCard["status"]>, string> = {
   WIP: "border-amber-200 bg-amber-50 text-amber-700",
 };
 
-const sortedComponents = [...components].sort((a, b) => {
-  const aPriority = a.status ? statusPriority[a.status] : Number.POSITIVE_INFINITY;
-  const bPriority = b.status ? statusPriority[b.status] : Number.POSITIVE_INFINITY;
-  return aPriority - bPriority;
+const dateFormatter = new Intl.DateTimeFormat("en", {
+  day: "numeric",
+  month: "short",
+  year: "numeric",
 });
+
+function getComponentUpdatedAt(href: string) {
+  const sourceFiles = componentSourceRegistry[href as ComponentSourceId];
+
+  if (!sourceFiles) {
+    return new Date(0);
+  }
+
+  const newestMs = sourceFiles.reduce((latest, filePathSegments) => {
+    const absolutePath = path.join(process.cwd(), ...filePathSegments);
+
+    if (!existsSync(absolutePath)) {
+      return latest;
+    }
+
+    return Math.max(latest, statSync(absolutePath).mtimeMs);
+  }, 0);
+
+  return new Date(newestMs);
+}
+
+const sortedComponents: ComponentCardWithUpdatedAt[] = components
+  .map((component) => {
+    const updatedAt = getComponentUpdatedAt(component.href);
+
+    return {
+      ...component,
+      updatedAt,
+      updatedAtLabel: dateFormatter.format(updatedAt),
+      updatedAtMs: updatedAt.getTime(),
+    };
+  })
+  .sort((a, b) => {
+    if (b.updatedAtMs !== a.updatedAtMs) {
+      return b.updatedAtMs - a.updatedAtMs;
+    }
+
+    return a.title.localeCompare(b.title);
+  });
 
 const totalCount = sortedComponents.length;
 const latestCount = sortedComponents.filter((c) => c.status === "Latest").length;
@@ -263,62 +272,67 @@ export default function CollectionPage() {
         </div>
       </header>
 
-      {/* Stacked list */}
-      <main className="mx-auto max-w-3xl px-5 py-8 sm:px-8 sm:py-12">
-        <ol className="flex flex-col">
+      {/* Component grid */}
+      <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
+        <ol className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {sortedComponents.map((comp, idx) => (
-            <li key={comp.href}>
+            <li className="min-w-0" key={comp.href}>
               <Link
                 href={comp.href}
-                className="group relative flex items-start gap-5 border-t border-gray-200/70 px-2 py-6 transition-colors last:border-b hover:bg-white/60 sm:px-3"
+                className="group relative flex h-full min-h-[184px] flex-col rounded-lg border border-gray-200/70 bg-white/55 p-5 transition-[background-color,border-color,transform] duration-150 ease-out hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8162ff]"
               >
-                {/* Left rail: index + color */}
-                <div className="flex w-10 shrink-0 flex-col items-center gap-2 pt-1.5 sm:w-14">
-                  <span className="font-mono text-[11px] text-gray-400">
-                    {String(idx + 1).padStart(2, "0")}
-                  </span>
-                  <span
-                    className="h-2 w-2 rounded-full ring-2 ring-white"
-                    style={{ backgroundColor: comp.color, boxShadow: `0 0 0 1px ${comp.color}33` }}
-                  />
+                <div className="flex items-start justify-between gap-4">
+                  <div className="flex min-w-0 items-center gap-2.5">
+                    <span className="shrink-0 font-mono text-[11px] text-gray-400">
+                      {String(idx + 1).padStart(2, "0")}
+                    </span>
+                    <span
+                      className="h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white"
+                      style={{
+                        backgroundColor: comp.color,
+                        boxShadow: `0 0 0 1px ${comp.color}33`,
+                      }}
+                    />
+                  </div>
+                  {comp.status ? (
+                    <span
+                      className={`inline-flex shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${statusStyles[comp.status]}`}
+                    >
+                      {comp.status}
+                    </span>
+                  ) : null}
                 </div>
 
-                {/* Body */}
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
-                    <h2 className="text-lg font-semibold text-gray-900 transition-colors group-hover:text-[#5d3ae9] sm:text-xl">
-                      {comp.title}
-                    </h2>
-                    {comp.status ? (
-                      <span
-                        className={`inline-flex shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${statusStyles[comp.status]}`}
-                      >
-                        {comp.status}
-                      </span>
-                    ) : null}
-                  </div>
-                  <p className="mt-1.5 text-sm leading-relaxed text-gray-500">
+                <div className="mt-5 min-w-0 flex-1">
+                  <h2 className="text-lg font-semibold leading-tight text-gray-900 transition-colors group-hover:text-[#5d3ae9]">
+                    {comp.title}
+                  </h2>
+                  <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-gray-400">
+                    Updated {comp.updatedAtLabel}
+                  </p>
+                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-500">
                     {comp.description}
                   </p>
-                  <span className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors group-hover:text-[#8162ff]">
-                    <span>View component</span>
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      className="transition-transform group-hover:translate-x-0.5"
-                    >
-                      <path
-                        d="M5.5 3L10.5 8L5.5 13"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
                 </div>
+
+                <span className="mt-5 inline-flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors group-hover:text-[#8162ff]">
+                  <span>View component</span>
+                  <svg
+                    width="14"
+                    height="14"
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    className="transition-transform group-hover:translate-x-0.5"
+                  >
+                    <path
+                      d="M5.5 3L10.5 8L5.5 13"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
               </Link>
             </li>
           ))}

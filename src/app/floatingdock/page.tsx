@@ -2,7 +2,7 @@
 
 import ComponentShell from "@/components/ComponentShell";
 
-const CODE_CONTENT = `https://github.com/anthropics/Proteus/blob/main/src/app/floatingdock/page.tsx`;
+const CODE_CONTENT = `Use Copy Code to load the current local source for the floating dock component.`;
 
 const PROMPT_CONTENT = `Create a floating bottom-center component dock used across all component pages with:
 - Components dropdown

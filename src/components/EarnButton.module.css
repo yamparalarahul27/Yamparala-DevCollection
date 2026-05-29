@@ -1,0 +1,105 @@
+.button {
+  position: relative;
+  display: inline-flex;
+  min-height: 112px;
+  min-width: min(100%, 620px);
+  align-items: center;
+  justify-content: flex-start;
+  gap: 42px;
+  border: 0;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.18), transparent 24%),
+    linear-gradient(180deg, #006b36 0%, #00592d 52%, #08713d 100%);
+  box-shadow:
+    inset 0 4px 10px rgba(255, 255, 255, 0.22),
+    inset 0 -11px 20px rgba(0, 31, 16, 0.34),
+    inset 18px 0 26px rgba(255, 255, 255, 0.12),
+    inset -18px 0 26px rgba(0, 34, 18, 0.28),
+    0 12px 26px rgba(5, 72, 35, 0.32);
+  color: #ffffff;
+  cursor: pointer;
+  font: 700 64px/1 var(--font-inter), system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  overflow: hidden;
+  padding: 0 96px 0 78px;
+  transform: rotate(3deg);
+  transition:
+    filter 150ms ease-out,
+    transform 150ms ease-out,
+    box-shadow 150ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.button::before {
+  position: absolute;
+  inset: 8px 16px auto;
+  height: 38px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.18), transparent);
+  content: "";
+  pointer-events: none;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.05);
+  transform: rotate(3deg) translateY(-1px);
+}
+
+.button:active:not(:disabled) {
+  transform: rotate(3deg) translateY(1px);
+}
+
+.button:focus-visible {
+  outline: 3px solid #063f22;
+  outline-offset: 6px;
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.96),
+    inset 0 4px 10px rgba(255, 255, 255, 0.22),
+    inset 0 -11px 20px rgba(0, 31, 16, 0.34),
+    inset 18px 0 26px rgba(255, 255, 255, 0.12),
+    inset -18px 0 26px rgba(0, 34, 18, 0.28),
+    0 12px 26px rgba(5, 72, 35, 0.32);
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.icon {
+  height: 72px;
+  width: 72px;
+}
+
+.label,
+.icon {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .button {
+    min-height: 82px;
+    min-width: min(100%, 360px);
+    gap: 24px;
+    font-size: 44px;
+    padding: 0 56px 0 42px;
+  }
+
+  .icon {
+    height: 52px;
+    width: 52px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled) {
+    transform: rotate(3deg);
+  }
+}

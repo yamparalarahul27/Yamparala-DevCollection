@@ -139,6 +139,7 @@ function Rig({
   }, [isSelected, isMobile]);
 
   useFrame(() => {
+    /* eslint-disable react-hooks/immutability -- React Three Fiber cameras are updated imperatively per frame. */
     const lerpSpeed = lockedTarget.current ? 0.06 : 0.1;
 
     if (lockedTarget.current) {
@@ -158,6 +159,7 @@ function Rig({
       target.current.x += velocity.current.x;
       target.current.y += velocity.current.y;
     }
+    /* eslint-enable react-hooks/immutability */
   });
 
   return null;
@@ -363,6 +365,7 @@ function SidePanel({
 
   // Reset drag when panel closes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- Clears transient touch drag state after dismissal.
     if (!isOpen) setDragOffset(0);
   }, [isOpen]);
 

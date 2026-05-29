@@ -198,7 +198,7 @@ function CurveCanvas({ curve, size = 180 }: { curve: CurveType; size?: number })
     canvas.height = size * dpr;
     ctx.scale(dpr, dpr);
 
-    let startTime = performance.now();
+    const startTime = performance.now();
 
     function animate(now: number) {
       const t = (now - startTime) / 1000;

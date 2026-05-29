@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Calendar, Code, MessageSquare, Undo2 } from "lucide-react";
 import TimelineDatePicker from "@/components/TimelineDatePicker";
 import BottomSheet from "@/components/BottomSheet";
+import { useComponentSource } from "@/lib/useComponentSource";
 import { cn } from "@/lib/utils";
 
 const PROMPT_CONTENT = `Build a React timeline date range selector component with the following specs:
@@ -154,6 +155,11 @@ const CODE_CONTENT = `// ============================================
 export default function DatePickerPage() {
   const [isVisible, setIsVisible] = useState(true);
   const [sheetOpen, setSheetOpen] = useState<"code" | "prompt" | null>(null);
+  const { content: resolvedCodeContent, loadSource } = useComponentSource(CODE_CONTENT);
+
+  const openCodeSheet = () => {
+    void loadSource().finally(() => setSheetOpen("code"));
+  };
 
   return (
     <div className="min-h-screen bg-[var(--background)] flex flex-col">
@@ -228,7 +234,7 @@ export default function DatePickerPage() {
       <footer className="border-t border-gray-200/60 px-4 py-4">
         <div className="flex items-center justify-center gap-3">
           <button
-            onClick={() => setSheetOpen("code")}
+            onClick={openCodeSheet}
             className="flex items-center gap-2 px-4 py-2 text-xs font-medium rounded-lg bg-white border border-gray-200 text-gray-700 shadow-sm hover:border-gray-300 hover:shadow transition-all"
           >
             <Code size={14} />
@@ -249,7 +255,7 @@ export default function DatePickerPage() {
         isOpen={sheetOpen === "code"}
         onClose={() => setSheetOpen(null)}
         title="Component Code (Next.js)"
-        content={CODE_CONTENT}
+        content={resolvedCodeContent}
       />
       <BottomSheet
         isOpen={sheetOpen === "prompt"}
