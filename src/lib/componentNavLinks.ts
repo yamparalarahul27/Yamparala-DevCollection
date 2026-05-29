@@ -9,6 +9,7 @@ export const componentNavLinks: Array<{ href: string; label: string }> = [
   { href: "/pnlcalendar", label: "PnL Calendar" },
   { href: "/peektext", label: "Peektext" },
   { href: "/canvasgallery", label: "Canvas Gallery" },
+  { href: "/dot-shimmer-effect", label: "Dot Shimmer Effect" },
   { href: "/floating-toolbar-tooltip", label: "Floating Toolbar Tooltip" },
   { href: "/slide-to-convert-button", label: "Slide To Convert Button" },
   { href: "/buttons", label: "Button Components" },
