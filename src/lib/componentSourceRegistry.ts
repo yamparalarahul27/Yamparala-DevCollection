@@ -30,6 +30,11 @@ export const componentSourceRegistry = {
     ["src", "components", "FloatingToolbarTooltip.module.css"],
     ["src", "app", "floating-toolbar-tooltip", "page.tsx"],
   ],
+  "/slide-to-convert-button": [
+    ["src", "components", "SlideToConvertButton.tsx"],
+    ["src", "components", "SlideToConvertButton.module.css"],
+    ["src", "app", "slide-to-convert-button", "page.tsx"],
+  ],
   "/fun-loading-button": [
     ["src", "components", "FunLoadingButton.tsx"],
     ["src", "components", "FunLoadingButton.module.css"],
