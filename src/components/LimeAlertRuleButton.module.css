@@ -2,13 +2,13 @@
   box-sizing: border-box;
   position: relative;
   display: inline-flex;
-  min-height: 78px;
-  width: min(100%, 372px);
+  min-height: 64px;
+  width: min(100%, 320px);
   align-items: center;
   justify-content: center;
-  gap: 20px;
-  border: 3px solid #93dd2b;
-  border-radius: 28px;
+  gap: 14px;
+  border: 2px solid #93dd2b;
+  border-radius: 22px;
   background: linear-gradient(180deg, #e2ff95 0%, #cafd63 100%);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.64),
@@ -17,10 +17,10 @@
     0 5px 10px rgba(127, 196, 23, 0.16);
   color: #0e2608;
   cursor: pointer;
-  font: 500 34px/1 var(--font-inter), system-ui, -apple-system, "Segoe UI",
+  font: 500 26px/1 var(--font-inter), system-ui, -apple-system, "Segoe UI",
     sans-serif;
   overflow: hidden;
-  padding: 0 36px;
+  padding: 0 24px;
   transition:
     filter 150ms ease-out,
     transform 150ms ease-out,
@@ -28,8 +28,16 @@
   -webkit-tap-highlight-color: transparent;
 }
 
-.button:hover:not(:disabled) {
-  filter: brightness(1.04);
+@media (hover: hover) {
+  .button:hover:not(:disabled) {
+    filter: brightness(1.04);
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      inset 0 -1px 0 rgba(101, 180, 14, 0.16),
+      0 3px 0 rgba(132, 213, 32, 0.5),
+      0 8px 14px rgba(127, 196, 23, 0.18);
+  }
 }
 
 .button:active:not(:disabled) {
@@ -51,19 +59,19 @@
 }
 
 .icon {
-  height: 44px;
-  width: 44px;
+  height: 32px;
+  width: 32px;
   stroke-width: 1.8;
 }
 
 @media (max-width: 640px) {
   .button {
-    min-height: 64px;
-    width: min(100%, 310px);
+    min-height: 56px;
+    width: min(100%, 270px);
     gap: 14px;
     border-radius: 22px;
-    font-size: 25px;
-    padding: 0 24px;
+    font-size: 22px;
+    padding: 0 18px;
   }
 
   .icon {
@@ -75,5 +83,10 @@
 @media (prefers-reduced-motion: reduce) {
   .button {
     transition: none;
+  }
+
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled) {
+    transform: none;
   }
 }
