@@ -25,6 +25,11 @@ export const componentSourceRegistry = {
     ["src", "components", "CanvasGallery.tsx"],
     ["src", "app", "canvasgallery", "page.tsx"],
   ],
+  "/floating-toolbar-tooltip": [
+    ["src", "components", "FloatingToolbarTooltip.tsx"],
+    ["src", "components", "FloatingToolbarTooltip.module.css"],
+    ["src", "app", "floating-toolbar-tooltip", "page.tsx"],
+  ],
   "/fun-loading-button": [
     ["src", "components", "FunLoadingButton.tsx"],
     ["src", "components", "FunLoadingButton.module.css"],
