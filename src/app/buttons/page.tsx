@@ -26,74 +26,47 @@ const buttonDemos: ButtonDemo[] = [
   {
     title: "Track Status Button",
     href: "/track-status-button",
-    description: "Glossy purple Track Status CTA with oversized white text.",
-    preview: (
-      <div className="w-[720px] origin-center scale-[0.42] sm:scale-[0.48]">
-        <TrackStatusButton />
-      </div>
-    ),
+    description: "Glossy purple Track Status CTA with raised white text.",
+    preview: <TrackStatusButton />,
   },
   {
     title: "Fix Action Buttons",
     href: "/fix-action-buttons",
     description: "Stacked Apply Fix and Preview Fix actions on a dark repair surface.",
-    preview: (
-      <div className="w-[680px] origin-center scale-[0.52] sm:scale-[0.54]">
-        <FixActionButtons />
-      </div>
-    ),
-    previewClassName: "bg-[#171823] px-5",
+    preview: <FixActionButtons />,
+    previewClassName: "min-h-[260px] bg-[#171823] px-5",
   },
   {
     title: "Glossy Icon Buttons",
     href: "/glossy-icon-buttons",
     description: "Purple, black, and green glossy icon buttons from the stacked reference.",
-    preview: (
-      <div className="w-[414px] origin-center scale-[0.34] sm:scale-[0.38]">
-        <GlossyIconButtonStack />
-      </div>
-    ),
+    preview: <GlossyIconButtonStack />,
+    previewClassName: "min-h-[380px]",
   },
   {
     title: "Lime Alert Rule Button",
     href: "/lime-alert-rule-button",
     description: "Bright lime Add Alert Rule CTA with a soft raised edge.",
-    preview: (
-      <div className="w-[372px] origin-center scale-[0.74]">
-        <LimeAlertRuleButton />
-      </div>
-    ),
+    preview: <LimeAlertRuleButton />,
   },
   {
     title: "Preview Deploy Buttons",
     href: "/preview-deploy-buttons",
     description: "Paired Preview and Deploy buttons with lifted white and dark treatments.",
-    preview: (
-      <div className="w-[522px] origin-center scale-[0.48] sm:scale-[0.56]">
-        <PreviewDeployButtons />
-      </div>
-    ),
+    preview: <PreviewDeployButtons />,
   },
   {
     title: "Earn Button",
     href: "/earn-button",
-    description: "Oversized glossy green Earn pill with a filled rewards mark.",
-    preview: (
-      <div className="w-[620px] origin-center scale-[0.46] sm:scale-[0.54]">
-        <EarnButton />
-      </div>
-    ),
+    description: "Glossy green Earn pill with a filled rewards mark.",
+    preview: <EarnButton />,
     previewClassName: "bg-[#efeddb]",
   },
   {
     title: "Buy Now Glow Button",
     href: "/buy-now-glow-button",
     description: "Cyan glowing Buy Now CTA from the dark mobile finance screenshot.",
-    preview: (
-      <div className="w-full max-w-[340px]">
-        <BuyNowGlowButton />
-      </div>
-    ),
+    preview: <BuyNowGlowButton />,
     previewClassName: "bg-[#070511]",
   },
   {
@@ -208,7 +181,7 @@ export default function ButtonsPage() {
 
               <div
                 className={[
-                  "mt-4 flex h-[214px] flex-none items-center justify-center overflow-hidden rounded-md border border-gray-100 bg-white px-3 py-6",
+                  "mt-4 flex min-h-[244px] flex-none items-center justify-center overflow-visible rounded-md border border-gray-100 bg-white px-5 py-8",
                   button.previewClassName,
                 ]
                   .filter(Boolean)

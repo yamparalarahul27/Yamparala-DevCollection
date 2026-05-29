@@ -16,20 +16,37 @@
   font-weight: 500;
   line-height: normal;
   cursor: pointer;
-  transition: background 0.2s;
+  transition:
+    background 150ms ease-out,
+    box-shadow 150ms ease-out,
+    transform 150ms ease-out;
   box-shadow:
     0 2px 4px rgba(2, 3, 10, 0.4),
     0 10px 24px rgba(2, 3, 10, 0.28);
   -webkit-tap-highlight-color: transparent;
 }
 
-.button:hover {
-  background: rgb(22, 27, 48);
+@media (hover: hover) {
+  .button:hover {
+    background: rgb(22, 27, 48);
+    transform: translateY(-1px);
+    box-shadow:
+      0 3px 5px rgba(2, 3, 10, 0.38),
+      0 12px 26px rgba(2, 3, 10, 0.3);
+  }
 }
 
 .button:active {
   background: rgb(22, 27, 48);
-  transition: background 0.1s;
+  transform: translateY(1px);
+  transition:
+    background 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.button:focus-visible {
+  outline: 2px solid #60a5fa;
+  outline-offset: 4px;
 }
 
 .button:disabled {
@@ -75,4 +92,16 @@
 .innerLeaving {
   opacity: 0;
   filter: blur(6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .inner {
+    transition: none;
+  }
+
+  .button:hover,
+  .button:active {
+    transform: none;
+  }
 }
