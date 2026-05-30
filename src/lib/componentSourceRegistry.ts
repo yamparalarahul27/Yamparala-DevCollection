@@ -35,6 +35,11 @@ export const componentSourceRegistry = {
     ["src", "components", "SlideToConvertButton.module.css"],
     ["src", "app", "slide-to-convert-button", "page.tsx"],
   ],
+  "/ultramock-metallic-button": [
+    ["src", "components", "UltramockMetallicButton.tsx"],
+    ["src", "components", "UltramockMetallicButton.module.css"],
+    ["src", "app", "ultramock-metallic-button", "page.tsx"],
+  ],
   "/fun-loading-button": [
     ["src", "components", "FunLoadingButton.tsx"],
     ["src", "components", "FunLoadingButton.module.css"],

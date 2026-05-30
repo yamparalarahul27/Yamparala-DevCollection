@@ -14,6 +14,7 @@ import PerformanceButton from "@/components/PerformanceButton";
 import PreviewDeployButtons from "@/components/PreviewDeployButtons";
 import SlideToConvertButton from "@/components/SlideToConvertButton";
 import TrackStatusButton from "@/components/TrackStatusButton";
+import UltramockMetallicButton from "@/components/UltramockMetallicButton";
 
 type ButtonDemo = {
   description: string;
@@ -24,6 +25,13 @@ type ButtonDemo = {
 };
 
 const buttonDemos: ButtonDemo[] = [
+  {
+    title: "Ultramock Metallic Button",
+    href: "/ultramock-metallic-button",
+    description: "Chrome subscription CTA with pointer-driven sheen and squircle surface.",
+    preview: <UltramockMetallicButton />,
+    previewClassName: "bg-[#f7f7f8]",
+  },
   {
     title: "Slide To Convert Button",
     href: "/slide-to-convert-button",
@@ -125,10 +133,12 @@ import PerformanceButton from "@/components/PerformanceButton";
 import PreviewDeployButtons from "@/components/PreviewDeployButtons";
 import SlideToConvertButton from "@/components/SlideToConvertButton";
 import TrackStatusButton from "@/components/TrackStatusButton";
+import UltramockMetallicButton from "@/components/UltramockMetallicButton";
 
 export default function ButtonOverview() {
   return (
     <section>
+      <UltramockMetallicButton />
       <SlideToConvertButton />
       <TrackStatusButton />
       <FixActionButtons />

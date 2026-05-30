@@ -23,6 +23,13 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 
 const components: ComponentCard[] = [
   {
+    href: "/ultramock-metallic-button",
+    title: "Ultramock Metallic Button",
+    description: "Chrome subscription CTA with pointer-following sheen, sparkles, and tactile squircle surface.",
+    color: "#c7cdd3",
+    status: "Latest",
+  },
+  {
     href: "/slide-to-convert-button",
     title: "Slide To Convert Button",
     description: "Swipe-to-confirm conversion pill with a draggable white thumb and gently moving lucide arrows.",
