@@ -11,6 +11,7 @@ export const componentNavLinks: Array<{ href: string; label: string }> = [
   { href: "/canvasgallery", label: "Canvas Gallery" },
   { href: "/dot-shimmer-effect", label: "Dot Shimmer Effect" },
   { href: "/floating-toolbar-tooltip", label: "Floating Toolbar Tooltip" },
+  { href: "/ultramock-metallic-button", label: "Ultramock Metallic Button" },
   { href: "/slide-to-convert-button", label: "Slide To Convert Button" },
   { href: "/buttons", label: "Button Components" },
   { href: "/track-status-button", label: "Track Status Button" },

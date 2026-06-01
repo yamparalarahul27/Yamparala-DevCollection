@@ -1,0 +1,163 @@
+.button {
+  --mx: 0.5;
+  --my: 0.5;
+  align-items: center;
+  background:
+    radial-gradient(
+      circle at calc(var(--mx) * 100%) calc(var(--my) * 100%),
+      rgba(255, 255, 255, 0.48),
+      transparent 31%
+    ),
+    linear-gradient(
+      135deg,
+      #686d72 0%,
+      #a9b0b6 30%,
+      #f0f1f1 50%,
+      #a8afb5 70%,
+      #666b70 100%
+    );
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  border-radius: 14px;
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.38),
+    0 0 12px rgba(255, 255, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.72),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.18);
+  color: #09090b;
+  cursor: pointer;
+  display: inline-flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 8px;
+  height: 56px;
+  justify-content: center;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  min-width: 186px;
+  overflow: hidden;
+  padding: 0 20px;
+  position: relative;
+  text-transform: uppercase;
+  transition:
+    filter 150ms ease-out,
+    box-shadow 150ms ease-out,
+    transform 150ms ease-out,
+    opacity 150ms ease-out;
+  user-select: none;
+}
+
+@supports (corner-shape: superellipse(1)) {
+  .button {
+    border-radius: 22px;
+    corner-shape: superellipse(1.6);
+  }
+}
+
+.button::before {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.75),
+      rgba(255, 255, 255, 0.2) 28%,
+      transparent 58%
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.18),
+      transparent 22%,
+      transparent 78%,
+      rgba(0, 0, 0, 0.18)
+    );
+  content: "";
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+}
+
+.button::after {
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(0, 0, 0, 0.14)
+  );
+  content: "";
+  inset: auto 0 0;
+  height: 46%;
+  pointer-events: none;
+  position: absolute;
+}
+
+.button:hover:not(:disabled) {
+  filter: brightness(1.1) saturate(1.04);
+  box-shadow:
+    0 1px 6px rgba(0, 0, 0, 0.42),
+    0 0 18px rgba(255, 255, 255, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.82),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.16);
+  transform: scale(1.08);
+}
+
+.button:active:not(:disabled) {
+  filter: brightness(1.02);
+  transform: scale(0.96);
+}
+
+.button:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.9);
+  outline-offset: 4px;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.label {
+  position: relative;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+  z-index: 2;
+}
+
+.sheen {
+  background: linear-gradient(
+    135deg,
+    transparent 28%,
+    rgba(255, 255, 255, 0.45) 42%,
+    rgba(255, 255, 255, 0.75) 50%,
+    rgba(255, 255, 255, 0.45) 58%,
+    transparent 72%
+  );
+  inset: 0;
+  pointer-events: none;
+  position: absolute;
+  transform: translateX(calc((var(--mx) - 0.5) * 240%));
+  transition: transform 300ms ease-out;
+  z-index: 1;
+}
+
+.sparkles {
+  background:
+    radial-gradient(circle at 25% 30%, rgba(255, 255, 255, 0.8) 0, transparent 2px),
+    radial-gradient(circle at 72% 45%, rgba(255, 255, 255, 0.58) 0, transparent 1.5px),
+    radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.7) 0, transparent 1.5px),
+    radial-gradient(circle at 85% 25%, rgba(255, 255, 255, 0.5) 0, transparent 1px);
+  inset: 0;
+  opacity: calc(0.3 + 0.7 * var(--mx));
+  pointer-events: none;
+  position: absolute;
+  transition: opacity 300ms ease-out;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .sheen,
+  .sparkles {
+    transition-duration: 1ms;
+  }
+
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}
