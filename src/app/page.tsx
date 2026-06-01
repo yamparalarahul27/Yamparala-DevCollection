@@ -23,6 +23,13 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 
 const components: ComponentCard[] = [
   {
+    href: "/dot-shimmer-effect",
+    title: "Dot Shimmer Effect",
+    description: "Portable vanilla WebGL square grid with a cursor-trail shimmer wave behind any content.",
+    color: "#f5f5f5",
+    status: "Latest",
+  },
+  {
     href: "/ultramock-metallic-button",
     title: "Ultramock Metallic Button",
     description: "Chrome subscription CTA with pointer-following sheen, sparkles, and tactile squircle surface.",
