@@ -11,6 +11,7 @@ import LightGradientButton from "@/components/LightGradientButton";
 import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
 import { OrangeAddViewButton } from "@/components/OrangeAddViewButton";
 import PerformanceButton from "@/components/PerformanceButton";
+import PointerdownCursorButton from "@/components/PointerdownCursorButton";
 import PreviewDeployButtons from "@/components/PreviewDeployButtons";
 import SlideToConvertButton from "@/components/SlideToConvertButton";
 import TrackStatusButton from "@/components/TrackStatusButton";
@@ -25,6 +26,13 @@ type ButtonDemo = {
 };
 
 const buttonDemos: ButtonDemo[] = [
+  {
+    title: "Pointerdown Cursor Button",
+    href: "/pointerdown-cursor-button",
+    description: "Custom cursor button with a pressed-state pointerdown counterpart.",
+    preview: <PointerdownCursorButton>Pointer Down</PointerdownCursorButton>,
+    previewClassName: "bg-[#f6f6f7]",
+  },
   {
     title: "Ultramock Metallic Button",
     href: "/ultramock-metallic-button",
@@ -130,6 +138,7 @@ import LightGradientButton from "@/components/LightGradientButton";
 import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
 import { OrangeAddViewButton } from "@/components/OrangeAddViewButton";
 import PerformanceButton from "@/components/PerformanceButton";
+import PointerdownCursorButton from "@/components/PointerdownCursorButton";
 import PreviewDeployButtons from "@/components/PreviewDeployButtons";
 import SlideToConvertButton from "@/components/SlideToConvertButton";
 import TrackStatusButton from "@/components/TrackStatusButton";
@@ -138,6 +147,7 @@ import UltramockMetallicButton from "@/components/UltramockMetallicButton";
 export default function ButtonOverview() {
   return (
     <section>
+      <PointerdownCursorButton>Pointer Down</PointerdownCursorButton>
       <UltramockMetallicButton />
       <SlideToConvertButton />
       <TrackStatusButton />

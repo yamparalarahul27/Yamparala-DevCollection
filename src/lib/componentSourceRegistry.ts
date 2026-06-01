@@ -25,6 +25,23 @@ export const componentSourceRegistry = {
     ["src", "components", "CanvasGallery.tsx"],
     ["src", "app", "canvasgallery", "page.tsx"],
   ],
+  "/pointerdown-cursor-button": [
+    ["src", "components", "PointerdownCursorButton.tsx"],
+    ["src", "components", "PointerdownCursorButton.module.css"],
+    ["public", "pointer.svg"],
+    ["public", "pointerdown.svg"],
+    ["src", "app", "pointerdown-cursor-button", "page.tsx"],
+  ],
+  "/scroll-mask-scroller": [
+    ["src", "components", "ScrollMaskScroller.tsx"],
+    ["src", "components", "ScrollMaskScroller.module.css"],
+    ["src", "app", "scroll-mask-scroller", "page.tsx"],
+  ],
+  "/css-ring-text": [
+    ["src", "components", "CssRingText.tsx"],
+    ["src", "components", "CssRingText.module.css"],
+    ["src", "app", "css-ring-text", "page.tsx"],
+  ],
   "/dot-shimmer-effect": [
     ["src", "components", "DotShimmerEffect.tsx"],
     ["src", "app", "dot-shimmer-effect", "page.tsx"],
