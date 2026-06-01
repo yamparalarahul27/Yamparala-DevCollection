@@ -2,6 +2,7 @@ import { existsSync, statSync } from "node:fs";
 import path from "node:path";
 import Link from "next/link";
 import Image from "next/image";
+import ComponentCardPreview from "@/components/ComponentCardPreview";
 import {
   componentSourceRegistry,
   type ComponentSourceId,
@@ -22,6 +23,27 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 };
 
 const components: ComponentCard[] = [
+  {
+    href: "/pointerdown-cursor-button",
+    title: "Pointerdown Cursor Button",
+    description: "Tactile custom-cursor button that swaps to a pressed pointer asset on active press.",
+    color: "#111111",
+    status: "Latest",
+  },
+  {
+    href: "/scroll-mask-scroller",
+    title: "Scroll Mask Scroller",
+    description: "CSS scroll masking pattern with scrollbar space, scroll-timeline enhancement, and native fallback.",
+    color: "#2563eb",
+    status: "Latest",
+  },
+  {
+    href: "/css-ring-text",
+    title: "CSS Ring Text",
+    description: "Jhey-inspired circular text component using CSS trigonometric radius and per-character variables.",
+    color: "#6d5dfc",
+    status: "Latest",
+  },
   {
     href: "/dot-shimmer-effect",
     title: "Dot Shimmer Effect",
@@ -302,66 +324,84 @@ export default function CollectionPage() {
 
       {/* Component grid */}
       <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
-        <ol className="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ol className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {sortedComponents.map((comp, idx) => (
             <li className="min-w-0" key={comp.href}>
-              <Link
-                href={comp.href}
-                className="group relative flex h-full min-h-[184px] flex-col rounded-lg border border-gray-200/70 bg-white/55 p-5 transition-[background-color,border-color,transform] duration-150 ease-out hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8162ff]"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex min-w-0 items-center gap-2.5">
-                    <span className="shrink-0 font-mono text-[11px] text-gray-400">
-                      {String(idx + 1).padStart(2, "0")}
-                    </span>
-                    <span
-                      className="h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white"
-                      style={{
-                        backgroundColor: comp.color,
-                        boxShadow: `0 0 0 1px ${comp.color}33`,
-                      }}
-                    />
+              <article className="group relative flex h-[450px] flex-col overflow-hidden rounded-[22px] border border-gray-200/80 bg-white/45 p-2 shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white/80 hover:shadow-md sm:h-[430px]">
+                <div
+                  className="h-[196px] flex-none rounded-[18px] border border-white/75 transition-transform duration-150 ease-out group-hover:scale-[1.01]"
+                  style={{
+                    background: `radial-gradient(circle at 76% 22%, ${comp.color}33, transparent 34%), linear-gradient(135deg, ${comp.color}1f, #dedede 68%)`,
+                  }}
+                >
+                  <ComponentCardPreview
+                    color={comp.color}
+                    href={comp.href}
+                  />
+                </div>
+
+                <div className="mt-2 flex min-h-0 flex-1 flex-col rounded-[18px] bg-white/[0.92] px-5 py-5 shadow-[0_-1px_0_rgba(255,255,255,0.86)]">
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex min-w-0 items-center gap-2.5">
+                      <span className="shrink-0 font-mono text-[11px] text-gray-400">
+                        {String(idx + 1).padStart(2, "0")}
+                      </span>
+                      <span
+                        className="h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white"
+                        style={{
+                          backgroundColor: comp.color,
+                          boxShadow: `0 0 0 1px ${comp.color}33`,
+                        }}
+                      />
+                    </div>
+                    {comp.status ? (
+                      <span
+                        className={`inline-flex shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase ${statusStyles[comp.status]}`}
+                      >
+                        {comp.status}
+                      </span>
+                    ) : null}
                   </div>
-                  {comp.status ? (
-                    <span
-                      className={`inline-flex shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] ${statusStyles[comp.status]}`}
+
+                  <div className="mt-5 min-w-0 flex-1">
+                    <h2 className="line-clamp-2 text-lg font-semibold leading-tight text-gray-900 transition-colors group-hover:text-[#5d3ae9]">
+                      {comp.title}
+                    </h2>
+                    <p className="mt-1 text-xs font-medium uppercase text-gray-400">
+                      Updated {comp.updatedAtLabel}
+                    </p>
+                    <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-gray-500 sm:line-clamp-3">
+                      {comp.description}
+                    </p>
+                  </div>
+
+                  <span className="mt-7 inline-flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors group-hover:text-[#8162ff]">
+                    <span>View component</span>
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 16 16"
+                      fill="none"
+                      className="transition-transform group-hover:translate-x-0.5"
                     >
-                      {comp.status}
-                    </span>
-                  ) : null}
+                      <path
+                        d="M5.5 3L10.5 8L5.5 13"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+                    </svg>
+                  </span>
                 </div>
-
-                <div className="mt-5 min-w-0 flex-1">
-                  <h2 className="text-lg font-semibold leading-tight text-gray-900 transition-colors group-hover:text-[#5d3ae9]">
-                    {comp.title}
-                  </h2>
-                  <p className="mt-1 text-xs font-medium uppercase tracking-[0.12em] text-gray-400">
-                    Updated {comp.updatedAtLabel}
-                  </p>
-                  <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-gray-500">
-                    {comp.description}
-                  </p>
-                </div>
-
-                <span className="mt-5 inline-flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors group-hover:text-[#8162ff]">
-                  <span>View component</span>
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 16 16"
-                    fill="none"
-                    className="transition-transform group-hover:translate-x-0.5"
-                  >
-                    <path
-                      d="M5.5 3L10.5 8L5.5 13"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                </span>
-              </Link>
+                <Link
+                  aria-label={`View ${comp.title}`}
+                  className="absolute inset-0 z-10 rounded-[22px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8162ff]"
+                  href={comp.href}
+                >
+                  <span className="sr-only">View {comp.title}</span>
+                </Link>
+              </article>
             </li>
           ))}
         </ol>

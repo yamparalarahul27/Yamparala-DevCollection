@@ -1,0 +1,124 @@
+.button {
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  min-width: 184px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 18px;
+  appearance: none;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent 34%),
+    linear-gradient(135deg, #19191c 0%, #050506 48%, #24242a 100%);
+  box-shadow:
+    0 22px 46px rgba(0, 0, 0, 0.22),
+    0 2px 2px rgba(255, 255, 255, 0.28) inset,
+    0 -10px 18px rgba(0, 0, 0, 0.5) inset;
+  color: white;
+  font: 600 18px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  padding: 18px 34px;
+  transform: translateY(0) scale(1);
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease,
+    border-color 160ms ease,
+    filter 160ms ease;
+
+  /* Replace /pointer.svg with your own exported cursor asset if you want a custom pointer. */
+  cursor: url("/pointer.svg") 15 10, pointer;
+}
+
+.button::before {
+  position: absolute;
+  inset: 1px;
+  z-index: -1;
+  border-radius: 17px;
+  background:
+    radial-gradient(circle at 38% 0%, rgba(255, 255, 255, 0.36), transparent 34%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 55%);
+  content: "";
+  opacity: 0.95;
+}
+
+.button::after {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    transparent 38%,
+    rgba(255, 255, 255, 0.24) 47%,
+    transparent 58%,
+    transparent 100%
+  );
+  content: "";
+  opacity: 0;
+  transform: translateX(-24%);
+  transition:
+    opacity 180ms ease,
+    transform 320ms ease;
+}
+
+.glow {
+  position: absolute;
+  inset: 12px 20px auto;
+  height: 16px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.28);
+  filter: blur(14px);
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.35);
+}
+
+.button:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  box-shadow:
+    0 26px 58px rgba(0, 0, 0, 0.26),
+    0 2px 2px rgba(255, 255, 255, 0.34) inset,
+    0 -10px 18px rgba(0, 0, 0, 0.54) inset;
+  filter: saturate(1.08);
+  transform: translateY(-2px) scale(1.015);
+}
+
+.button:hover::after {
+  opacity: 1;
+  transform: translateX(24%);
+}
+
+.button:active {
+  box-shadow:
+    0 14px 28px rgba(0, 0, 0, 0.24),
+    0 1px 1px rgba(255, 255, 255, 0.22) inset,
+    0 10px 22px rgba(0, 0, 0, 0.48) inset;
+  transform: translateY(1px) scale(0.975);
+
+  /* Replace /pointerdown.svg with the pressed-state cursor counterpart. */
+  cursor: url("/pointerdown.svg") 15 10, pointer;
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(99, 102, 241, 0.42);
+  outline-offset: 5px;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.6);
+  opacity: 0.55;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button::after {
+    transition: none;
+  }
+}
