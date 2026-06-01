@@ -9,12 +9,12 @@ import {
   useState,
 } from "react";
 
+const TRAIL_LENGTH = 64;
+
 const VERTEX_SHADER = `
 attribute vec2 a_position;
-varying vec2 v_uv;
 
 void main() {
-  v_uv = a_position * 0.5 + 0.5;
   gl_Position = vec4(a_position, 0.0, 1.0);
 }
 `;
@@ -24,15 +24,14 @@ precision highp float;
 
 uniform vec2 u_resolution;
 uniform float u_time;
-uniform float u_speed;
+uniform float u_density;
 uniform float u_intensity;
-uniform float u_dotScale;
-uniform vec2 u_pointer;
-uniform float u_hover;
+uniform float u_ambient;
+uniform float u_trailRadius;
+uniform float u_trailDecay;
 uniform vec3 u_background;
-uniform vec3 u_dotColor;
-
-varying vec2 v_uv;
+uniform vec3 u_squareColor;
+uniform vec3 u_trail[${TRAIL_LENGTH}];
 
 float hash21(vec2 p) {
   p = fract(p * vec2(123.34, 456.21));
@@ -40,8 +39,10 @@ float hash21(vec2 p) {
   return fract(p.x * p.y);
 }
 
-float dotMask(vec2 p, float radius) {
-  return 1.0 - smoothstep(radius * 0.45, radius, length(p));
+float squareMask(vec2 p, float halfSize) {
+  vec2 d = abs(p);
+  float box = max(d.x, d.y);
+  return 1.0 - smoothstep(halfSize * 0.82, halfSize, box);
 }
 
 void main() {
@@ -49,53 +50,57 @@ void main() {
   vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
   vec2 centered = (uv - 0.5) * aspect;
 
-  float vignette = smoothstep(0.95, 0.15, length(centered));
-  float grain = hash21(gl_FragCoord.xy + floor(u_time * 24.0)) * 0.028;
-  vec3 color = u_background * (0.82 + 0.18 * vignette) + grain;
+  float vignette = smoothstep(1.05, 0.18, length(centered));
+  float grain = (hash21(gl_FragCoord.xy + floor(u_time * 24.0)) - 0.5) * 0.010;
+  vec3 color = u_background * (0.85 + 0.15 * vignette) + grain;
 
-  vec2 grid = vec2(54.0 * aspect.x, 36.0) * u_dotScale;
+  // Trail glow at this fragment (one loop per fragment, not per square).
+  // Each trail point: xy = normalized pos, z = age in seconds (z < 0 = empty).
+  float trailGlow = 0.0;
+  for (int i = 0; i < ${TRAIL_LENGTH}; i++) {
+    vec3 tp = u_trail[i];
+    if (tp.z < 0.0) continue;
+    float d = length((uv - tp.xy) * aspect);
+    float spatial = exp(-pow(d / u_trailRadius, 2.0));
+    // Streak fades to zero by ~500ms; the cursor head stays bright because
+    // trail[0] is always age=0 and max() in this loop wins.
+    float lifetimeFade = 1.0 - smoothstep(0.1, 0.5, tp.z);
+    float temporal = exp(-tp.z * u_trailDecay) * lifetimeFade;
+    trailGlow = max(trailGlow, spatial * temporal);
+  }
+
+  // Square pixel-cell grid: base count on both axes, X scaled by aspect so
+  // cells are guaranteed square in pixel space regardless of stage aspect.
+  float baseGrid = 48.0 * u_density;
+  vec2 grid = vec2(baseGrid * aspect.x, baseGrid);
   vec2 cell = uv * grid;
   vec2 id = floor(cell);
   vec2 local = fract(cell);
 
   float dots = 0.0;
-  vec2 pointer = clamp(u_pointer, vec2(0.0), vec2(1.0));
-  float pointerDiagonal = pointer.x + pointer.y * 0.42;
-
   for (int y = -1; y <= 1; y++) {
     for (int x = -1; x <= 1; x++) {
       vec2 offset = vec2(float(x), float(y));
       vec2 cellId = id + offset;
       float seed = hash21(cellId);
       float seed2 = hash21(cellId + 17.7);
-      vec2 jitter = vec2(seed, seed2) - 0.5;
-      vec2 dotCenter = offset + 0.5 + jitter * 0.42;
-      vec2 dotUv = (cellId + dotCenter) / grid;
+      vec2 squareCenter = offset + 0.5;
+      float halfSize = 0.20;
+      float mask = squareMask(local - squareCenter, halfSize);
 
-      float pointerDistance = length((dotUv - pointer) * aspect);
-      float cursorCore = exp(-pow(pointerDistance / 0.12, 2.0));
-      float cursorAura = exp(-pow(pointerDistance / 0.34, 2.0)) * 0.42;
-      float diagonal = dotUv.x + dotUv.y * 0.42 + sin(dotUv.y * 8.0 + u_time * 0.55) * 0.024;
-      float cursorSweep = exp(-pow((diagonal - pointerDiagonal) / 0.11, 2.0)) *
-        exp(-pow(pointerDistance / 0.44, 2.0)) * 0.36;
+      // Sparse twinkle: ~12% of squares blink very gently at ambient.
+      float isBlinker = step(0.88, seed);
+      float twinkle = isBlinker *
+        (0.5 + 0.5 * sin(u_time * 1.6 + seed2 * 6.2831)) * 0.45;
+      float ambient = u_ambient * (1.0 + twinkle);
 
-      float edgeLift = smoothstep(0.28, 1.0, length((dotUv - 0.5) * aspect));
-      float twinkle = 0.54 + 0.46 * sin(u_time * 2.1 + seed * 6.2831);
-      float sparse = smoothstep(0.44, 1.0, seed);
-      float radius = mix(0.035, 0.068, seed2);
-      float mask = dotMask(local - dotCenter, radius);
-      float hoverLight = (cursorCore * 1.65 + cursorAura + cursorSweep) * u_hover;
-      float presence = (0.035 + hoverLight + edgeLift * 0.025) * sparse * twinkle;
-
+      float presence = ambient + trailGlow * u_intensity;
       dots += mask * presence;
     }
   }
 
-  float dust = smoothstep(0.992, 1.0, hash21(floor(gl_FragCoord.xy * 0.75))) * 0.18;
-  dots += dust * (0.25 + 0.75 * vignette);
-  dots = clamp(dots * u_intensity, 0.0, 1.0);
-
-  vec3 shimmer = mix(u_dotColor * 0.48, u_dotColor, smoothstep(0.18, 0.85, dots));
+  dots = clamp(dots, 0.0, 1.2);
+  vec3 shimmer = mix(u_squareColor * 0.55, u_squareColor, smoothstep(0.15, 0.85, dots));
   color += shimmer * dots;
 
   gl_FragColor = vec4(color, 1.0);
@@ -195,7 +200,7 @@ export default function DotShimmerEffect({
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [hasWebGl, setHasWebGl] = useState(true);
   const backgroundRgb = useMemo(() => hexToRgb(background), [background]);
-  const dotRgb = useMemo(() => hexToRgb(dotColor), [dotColor]);
+  const squareRgb = useMemo(() => hexToRgb(dotColor), [dotColor]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -235,13 +240,14 @@ export default function DotShimmerEffect({
     const positionLocation = context.getAttribLocation(program, "a_position");
     const resolutionLocation = context.getUniformLocation(program, "u_resolution");
     const timeLocation = context.getUniformLocation(program, "u_time");
-    const speedLocation = context.getUniformLocation(program, "u_speed");
+    const densityLocation = context.getUniformLocation(program, "u_density");
     const intensityLocation = context.getUniformLocation(program, "u_intensity");
-    const dotScaleLocation = context.getUniformLocation(program, "u_dotScale");
+    const ambientLocation = context.getUniformLocation(program, "u_ambient");
+    const trailRadiusLocation = context.getUniformLocation(program, "u_trailRadius");
+    const trailDecayLocation = context.getUniformLocation(program, "u_trailDecay");
     const backgroundLocation = context.getUniformLocation(program, "u_background");
-    const dotColorLocation = context.getUniformLocation(program, "u_dotColor");
-    const pointerLocation = context.getUniformLocation(program, "u_pointer");
-    const hoverLocation = context.getUniformLocation(program, "u_hover");
+    const squareColorLocation = context.getUniformLocation(program, "u_squareColor");
+    const trailLocation = context.getUniformLocation(program, "u_trail");
 
     context.bindBuffer(context.ARRAY_BUFFER, positionBuffer);
     context.bufferData(
@@ -254,35 +260,59 @@ export default function DotShimmerEffect({
     context.vertexAttribPointer(positionLocation, 2, context.FLOAT, false, 0, 0);
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    // Trail buffer: flat [x0, y0, age0, x1, y1, age1, ...]. age < 0 = empty.
+    const trail = new Float32Array(TRAIL_LENGTH * 3);
+    for (let i = 0; i < TRAIL_LENGTH; i++) {
+      trail[i * 3 + 2] = -1;
+    }
+
+    const raw = { x: 0.5, y: 0.5 };
+    const tip = { x: 0.5, y: 0.5 };
+    let hovering = false;
     let animationFrame = 0;
     let disposed = false;
-    const start = performance.now();
-    const pointer = {
-      hover: 0,
-      targetHover: 0,
-      x: 0.5,
-      y: 0.5,
-    };
+    let lastTime = performance.now();
+    const start = lastTime;
+
+    const TRAIL_RADIUS = 0.13;
+    const BASE_TRAIL_DECAY = 1.4;
+    const AMBIENT = 0.055;
+    const CURSOR_SMOOTHING = 0.25;
 
     function updatePointer(event: PointerEvent) {
       const rect = target.getBoundingClientRect();
+      raw.x = (event.clientX - rect.left) / Math.max(1, rect.width);
+      raw.y = 1 - (event.clientY - rect.top) / Math.max(1, rect.height);
+      hovering = true;
+    }
 
-      pointer.x = (event.clientX - rect.left) / Math.max(1, rect.width);
-      pointer.y = 1 - (event.clientY - rect.top) / Math.max(1, rect.height);
-      pointer.targetHover = 1;
+    function onPointerEnter(event: PointerEvent) {
+      updatePointer(event);
+      tip.x = raw.x;
+      tip.y = raw.y;
 
       if (prefersReducedMotion.matches) {
-        pointer.hover = 1;
-        render(performance.now());
+        renderStatic();
       }
     }
 
-    function leavePointer() {
-      pointer.targetHover = 0;
+    function onPointerMove(event: PointerEvent) {
+      updatePointer(event);
 
       if (prefersReducedMotion.matches) {
-        pointer.hover = 0;
-        render(performance.now());
+        renderStatic();
+      }
+    }
+
+    function onPointerLeave() {
+      hovering = false;
+
+      if (prefersReducedMotion.matches) {
+        for (let i = 0; i < TRAIL_LENGTH; i++) {
+          trail[i * 3 + 2] = -1;
+        }
+        renderStatic();
       }
     }
 
@@ -299,54 +329,98 @@ export default function DotShimmerEffect({
       }
     }
 
-    function render(now: number) {
-      if (disposed) {
-        return;
-      }
-
-      resize();
-      const time = prefersReducedMotion.matches ? 2.9 : (now - start) / 1000;
-
-      if (!prefersReducedMotion.matches) {
-        const hoverEase = Math.min(1, 0.14 * Math.max(0.2, speed));
-        pointer.hover += (pointer.targetHover - pointer.hover) * hoverEase;
-      }
-
+    function uploadUniforms(timeSeconds: number) {
       context.useProgram(program);
       context.uniform2f(resolutionLocation, targetCanvas.width, targetCanvas.height);
-      context.uniform1f(timeLocation, time);
-      context.uniform1f(speedLocation, speed);
+      context.uniform1f(timeLocation, timeSeconds);
+      context.uniform1f(densityLocation, dotScale);
       context.uniform1f(intensityLocation, intensity);
-      context.uniform1f(dotScaleLocation, dotScale);
-      context.uniform2f(pointerLocation, pointer.x, pointer.y);
-      context.uniform1f(hoverLocation, pointer.hover);
+      context.uniform1f(ambientLocation, AMBIENT);
+      context.uniform1f(trailRadiusLocation, TRAIL_RADIUS);
+      context.uniform1f(trailDecayLocation, BASE_TRAIL_DECAY * Math.max(0.2, speed));
       context.uniform3f(backgroundLocation, backgroundRgb[0], backgroundRgb[1], backgroundRgb[2]);
-      context.uniform3f(dotColorLocation, dotRgb[0], dotRgb[1], dotRgb[2]);
+      context.uniform3f(squareColorLocation, squareRgb[0], squareRgb[1], squareRgb[2]);
+      context.uniform3fv(trailLocation, trail);
       context.drawArrays(context.TRIANGLES, 0, 3);
-
-      if (!prefersReducedMotion.matches) {
-        animationFrame = window.requestAnimationFrame(render);
-      }
     }
 
-    const observer = new ResizeObserver(() => resize());
+    // For prefers-reduced-motion: render a single frame with a static halo
+    // at the cursor (no streak, no continuous animation, no twinkle ramp).
+    function renderStatic() {
+      if (disposed) return;
+      resize();
+
+      for (let i = 0; i < TRAIL_LENGTH; i++) {
+        trail[i * 3 + 2] = -1;
+      }
+      if (hovering) {
+        trail[0] = raw.x;
+        trail[1] = raw.y;
+        trail[2] = 0;
+      }
+
+      uploadUniforms(2.9);
+    }
+
+    function render(now: number) {
+      if (disposed) return;
+
+      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      lastTime = now;
+      resize();
+
+      // Smooth tip toward raw cursor (frame-rate aware lerp).
+      const lerpAmount = 1 - Math.pow(1 - CURSOR_SMOOTHING, Math.max(1, dt * 60));
+      tip.x += (raw.x - tip.x) * lerpAmount;
+      tip.y += (raw.y - tip.y) * lerpAmount;
+
+      if (hovering) {
+        for (let i = TRAIL_LENGTH - 1; i > 0; i--) {
+          trail[i * 3] = trail[(i - 1) * 3];
+          trail[i * 3 + 1] = trail[(i - 1) * 3 + 1];
+          trail[i * 3 + 2] = trail[(i - 1) * 3 + 2];
+        }
+        trail[0] = tip.x;
+        trail[1] = tip.y;
+        trail[2] = 0;
+      }
+
+      for (let i = 0; i < TRAIL_LENGTH; i++) {
+        if (trail[i * 3 + 2] >= 0) {
+          trail[i * 3 + 2] += dt;
+        }
+      }
+
+      uploadUniforms((now - start) / 1000);
+
+      animationFrame = window.requestAnimationFrame(render);
+    }
+
+    const observer = new ResizeObserver(() => {
+      if (prefersReducedMotion.matches) renderStatic();
+    });
     observer.observe(target);
-    target.addEventListener("pointerenter", updatePointer);
-    target.addEventListener("pointermove", updatePointer);
-    target.addEventListener("pointerleave", leavePointer);
-    render(performance.now());
+    target.addEventListener("pointerenter", onPointerEnter);
+    target.addEventListener("pointermove", onPointerMove);
+    target.addEventListener("pointerleave", onPointerLeave);
+
+    if (prefersReducedMotion.matches) {
+      renderStatic();
+    } else {
+      animationFrame = window.requestAnimationFrame(render);
+    }
 
     return () => {
       disposed = true;
       window.cancelAnimationFrame(animationFrame);
       observer.disconnect();
-      target.removeEventListener("pointerenter", updatePointer);
-      target.removeEventListener("pointermove", updatePointer);
-      target.removeEventListener("pointerleave", leavePointer);
+      target.removeEventListener("pointerenter", onPointerEnter);
+      target.removeEventListener("pointermove", onPointerMove);
+      target.removeEventListener("pointerleave", onPointerLeave);
       context.deleteBuffer(positionBuffer);
       context.deleteProgram(program);
     };
-  }, [backgroundRgb, dotRgb, dotScale, intensity, speed]);
+  }, [backgroundRgb, squareRgb, dotScale, intensity, speed]);
 
   return (
     <div
