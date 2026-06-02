@@ -159,6 +159,26 @@ function MiniPeekText() {
   );
 }
 
+function MiniFinancialCharts() {
+  return (
+    <div className={styles.financialCharts}>
+      <div className={styles.miniDonut}>
+        <svg viewBox="0 0 120 120" aria-hidden="true">
+          <circle cx="60" cy="60" r="40" />
+          <path d="M60 20A40 40 0 0 1 94.6 80" />
+          <path d="M92 84A40 40 0 0 1 48 98" />
+          <path d="M44 97A40 40 0 0 1 22 52" />
+        </svg>
+      </div>
+      <div className={styles.miniBars}>
+        <span />
+        <span />
+        <span />
+      </div>
+    </div>
+  );
+}
+
 function AbstractPreview() {
   return (
     <div className={styles.abstract}>
@@ -179,6 +199,9 @@ export default function ComponentCardPreview({
   let preview: ReactNode;
 
   switch (href) {
+    case "/chart-components":
+      preview = <MiniFinancialCharts />;
+      break;
     case "/pointerdown-cursor-button":
       preview = <PointerdownCursorButton>Pointer Down</PointerdownCursorButton>;
       break;

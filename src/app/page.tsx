@@ -24,6 +24,13 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 
 const components: ComponentCard[] = [
   {
+    href: "/chart-components",
+    title: "Chart Components",
+    description: "Glossy segmented donut, cropped radial growth arc, and neon 3D bar chart components.",
+    color: "#a855f7",
+    status: "Latest",
+  },
+  {
     href: "/pointerdown-cursor-button",
     title: "Pointerdown Cursor Button",
     description: "Tactile custom-cursor button that swaps to a pressed pointer asset on active press.",
