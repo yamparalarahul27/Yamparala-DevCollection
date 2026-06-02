@@ -1,0 +1,730 @@
+.showcase {
+  display: grid;
+  width: min(100%, 1160px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+  padding-bottom: 92px;
+}
+
+.donutChart,
+.haloChart,
+.barChart {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(124, 47, 255, 0.2), transparent 34%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05), transparent 48%),
+    #020202;
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.24),
+    0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  margin: 0;
+}
+
+.donutChart {
+  display: grid;
+  min-height: clamp(340px, 42vw, 430px);
+  place-items: center;
+  padding: clamp(18px, 3vw, 24px);
+}
+
+.donutSvg {
+  width: min(100%, 430px);
+  height: auto;
+  overflow: visible;
+}
+
+.interactiveSegment {
+  cursor: pointer;
+  outline: none;
+}
+
+.interactiveSegment:focus-visible .donutArc,
+.interactiveSegment:focus-visible .haloArc,
+.interactiveSegment:focus-visible .walletArcEdge {
+  filter:
+    drop-shadow(0 0 0 rgba(255, 255, 255, 0))
+    drop-shadow(0 0 18px rgba(255, 255, 255, 0.42));
+}
+
+.innerTicks,
+.haloTicks {
+  fill: none;
+  opacity: 0.58;
+  stroke: #6e7985;
+  stroke-dasharray: 1 9;
+  stroke-linecap: round;
+  stroke-width: 3;
+}
+
+.donutArcShadow {
+  fill: none;
+  opacity: 0.9;
+  stroke: rgba(0, 0, 0, 0.82);
+  stroke-width: 66;
+  transform: translateY(6px);
+}
+
+.donutArc {
+  fill: none;
+  stroke-linecap: butt;
+  stroke-width: 54;
+  filter: drop-shadow(0 16px 18px rgba(0, 0, 0, 0.5));
+  transition:
+    filter 140ms ease-out,
+    stroke-width 140ms ease-out;
+}
+
+.activeDonutArc {
+  stroke-width: 58;
+}
+
+.donutArcHighlight {
+  fill: none;
+  opacity: 0.42;
+  stroke: rgba(255, 255, 255, 0.72);
+  stroke-dasharray: 0.42 0.58;
+  stroke-dashoffset: 0.08;
+  stroke-linecap: round;
+  stroke-width: 8;
+  transform: translate(-4px, -5px);
+  transition:
+    opacity 140ms ease-out,
+    stroke-width 140ms ease-out;
+}
+
+.activeDonutArcHighlight {
+  opacity: 0.9;
+  stroke: rgba(255, 226, 255, 0.92);
+  stroke-dasharray: 0.34 0.66;
+  stroke-width: 13;
+  filter:
+    drop-shadow(0 0 10px rgba(255, 181, 255, 0.62))
+    drop-shadow(0 0 18px rgba(146, 45, 255, 0.5));
+}
+
+.arcLabel,
+.primaryLabel {
+  fill: #9aa5af;
+  font: 700 19px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+.primaryLabel {
+  fill: #f4f1fb;
+  filter: drop-shadow(0 0 10px rgba(179, 84, 255, 0.5));
+}
+
+.centerTitle {
+  fill: white;
+  font: 800 21px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.centerMeta {
+  fill: #a6b0ba;
+  font: 500 19px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.centerChevron {
+  stroke: #aab4bc;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 3;
+}
+
+.pointer {
+  filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.32));
+  transition: transform 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.haloChart {
+  min-height: clamp(340px, 40vw, 430px);
+  padding: clamp(24px, 4vw, 34px) 0 0;
+  background:
+    radial-gradient(circle at 50% 98%, rgba(155, 41, 255, 0.34), transparent 42%),
+    linear-gradient(180deg, #010101, #030004);
+}
+
+.haloHeader {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.haloHeader span {
+  color: #9aa5af;
+  font: 500 clamp(1.05rem, 2vw, 1.35rem) / 1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.haloHeader strong {
+  color: white;
+  font: 500 clamp(2.15rem, 6vw, 3.7rem) / 1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  text-shadow: 0 18px 36px rgba(145, 39, 255, 0.3);
+}
+
+.haloHeader em {
+  color: #c667ff;
+  font-style: normal;
+}
+
+.haloSvg {
+  position: absolute;
+  left: 50%;
+  bottom: -122px;
+  width: min(116%, 680px);
+  height: auto;
+  overflow: visible;
+  transform: translateX(-50%);
+}
+
+.haloExtrude {
+  fill: none;
+  opacity: 0.72;
+  stroke: #4e0c74;
+  stroke-linecap: butt;
+  stroke-width: 78;
+  transform: translateY(24px);
+}
+
+.haloArc {
+  fill: none;
+  stroke-linecap: butt;
+  stroke-width: 72;
+  opacity: 0.78;
+  transition:
+    opacity 140ms ease-out,
+    stroke-width 140ms ease-out;
+}
+
+.activeHaloArc {
+  opacity: 1;
+  stroke-width: 78;
+}
+
+.haloShine {
+  fill: none;
+  opacity: 0.64;
+  stroke: rgba(255, 237, 255, 0.66);
+  stroke-dasharray: 0.48 0.52;
+  stroke-dashoffset: 0.12;
+  stroke-linecap: round;
+  stroke-width: 11;
+  transform: translateY(-26px);
+  transition:
+    opacity 140ms ease-out,
+    stroke-width 140ms ease-out;
+}
+
+.activeHaloShine {
+  opacity: 0.92;
+  stroke-width: 13;
+}
+
+.haloBack {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  z-index: 2;
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  min-width: 72px;
+  min-height: 64px;
+  border: 0;
+  background: transparent;
+  color: #a3adb8;
+  cursor: pointer;
+  font: 500 21px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  padding: 0;
+  transform: translateX(-50%);
+  transition:
+    color 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.haloBack:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid rgba(199, 83, 244, 0.5);
+  outline-offset: 4px;
+}
+
+.haloBack:active {
+  transform: translateX(-50%) translateY(1px) scale(0.98);
+}
+
+.haloBack i {
+  width: 18px;
+  height: 18px;
+  border-left: 4px solid currentColor;
+  border-top: 4px solid currentColor;
+  transform: rotate(45deg);
+}
+
+.barChart {
+  display: grid;
+  min-height: clamp(440px, 52vw, 560px);
+  align-content: end;
+  gap: 20px;
+  padding: clamp(34px, 5vw, 48px) clamp(22px, 4vw, 34px) 24px;
+  background:
+    radial-gradient(circle at 47% 54%, rgba(111, 39, 255, 0.16), transparent 34%),
+    radial-gradient(circle at 15% 42%, rgba(107, 255, 0, 0.12), transparent 26%),
+    #020202;
+}
+
+.barPlot {
+  position: relative;
+  display: grid;
+  min-height: clamp(330px, 42vw, 430px);
+  grid-template-columns: 1.1fr 1fr 1fr;
+  gap: clamp(24px, 7vw, 78px);
+  align-items: end;
+}
+
+.baseline {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-bottom: 4px dotted rgba(121, 134, 148, 0.58);
+}
+
+.barColumn {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  justify-items: start;
+  padding: 0;
+  text-align: left;
+}
+
+.barColumn:focus-visible {
+  border-radius: 8px;
+  outline: 3px solid rgba(0, 255, 42, 0.38);
+  outline-offset: 8px;
+}
+
+.barLabel {
+  position: absolute;
+  bottom: calc(var(--bar-height, 120px) + 26px);
+  left: 0;
+  z-index: 2;
+  display: grid;
+  gap: 9px;
+}
+
+.barLabel strong {
+  color: white;
+  font: 800 clamp(1.2rem, 3.4vw, 2rem) / 1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  text-shadow: 0 8px 22px rgba(0, 0, 0, 0.4);
+}
+
+.barLabel span {
+  color: #98a5ae;
+  font: 500 clamp(1.1rem, 3vw, 1.65rem) / 1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.bar {
+  position: relative;
+  display: block;
+  width: min(100%, 150px);
+  height: var(--bar-height);
+  border-radius: 3px 12px 5px 3px;
+  background: linear-gradient(
+    180deg,
+    var(--bar-start) 0%,
+    var(--bar-middle) 38%,
+    var(--bar-end) 100%
+  );
+  box-shadow:
+    0 0 26px color-mix(in srgb, var(--bar-glow), transparent 66%),
+    0 12px 36px rgba(0, 0, 0, 0.38) inset;
+  transition:
+    box-shadow 140ms ease-out,
+    filter 140ms ease-out,
+    transform 140ms ease-out;
+}
+
+.bar::after {
+  position: absolute;
+  top: 8px;
+  right: -14px;
+  width: 14px;
+  height: calc(100% - 4px);
+  border-radius: 0 10px 6px 0;
+  background: inherit;
+  content: "";
+  filter: brightness(0.72);
+  transform: skewY(38deg);
+  transform-origin: left top;
+}
+
+.bar::before {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(235, 255, 185, 0.34);
+  border-radius: inherit;
+  background:
+    linear-gradient(180deg, rgba(239, 255, 100, 0.42), transparent 18%),
+    radial-gradient(ellipse at 50% 76%, rgba(0, 0, 0, 0.28), transparent 30%);
+  content: "";
+}
+
+.appreciationBar {
+  background: linear-gradient(180deg, #92ff00 0%, #1ec700 35%, #006400 100%);
+}
+
+.incomeBar {
+  background: linear-gradient(180deg, #eaff00 0%, #9ad000 38%, #455f00 100%);
+}
+
+.feesBar {
+  width: min(100%, 190px);
+  background: linear-gradient(90deg, #b427ff 0%, #f2b8ff 100%);
+  box-shadow:
+    0 0 18px rgba(190, 58, 255, 0.52),
+    0 4px 12px rgba(0, 0, 0, 0.32) inset;
+}
+
+.activeBarColumn .bar {
+  box-shadow:
+    0 0 36px color-mix(in srgb, var(--bar-glow), transparent 48%),
+    0 15px 42px rgba(0, 0, 0, 0.4) inset;
+  filter: saturate(1.12) brightness(1.05);
+  transform: translateY(-5px);
+}
+
+.smallBarColumn .barLabel {
+  bottom: 52px;
+}
+
+.barColumn:nth-of-type(3) .barLabel {
+  bottom: 62px;
+}
+
+.timeframes {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px;
+  align-items: center;
+  padding-inline: 2px;
+}
+
+.timeframes button {
+  min-width: 0;
+  min-height: 44px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+  background: transparent;
+  color: #00e718;
+  cursor: pointer;
+  font: 800 clamp(0.9rem, 2.4vw, 1.45rem) / 1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  padding: 6px 8px;
+  transition:
+    background-color 120ms ease-out,
+    border-color 120ms ease-out,
+    color 120ms ease-out,
+    transform 80ms ease-out;
+}
+
+.timeframes button:focus-visible {
+  outline: 3px solid rgba(0, 255, 42, 0.46);
+  outline-offset: 3px;
+}
+
+.timeframes .activeTimeframe {
+  background: #00df18;
+  color: #031203;
+}
+
+.timeframes button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.timeframes button:last-child {
+  border-color: #00df18;
+  color: white;
+  padding-inline: 8px;
+}
+
+.walletChart {
+  display: grid;
+  width: min(100%, 560px);
+  gap: clamp(18px, 3vw, 24px);
+  justify-self: center;
+  margin: 0;
+  padding: clamp(22px, 4vw, 36px);
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 50% 12%, rgba(219, 234, 254, 0.46), transparent 24%),
+    linear-gradient(180deg, #fffbff 0%, #f8f5fb 100%);
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, 0.12),
+    0 1px 0 rgba(255, 255, 255, 0.94) inset;
+  color: #0b1020;
+}
+
+.walletTitle {
+  margin: 0;
+  color: #070707;
+  font: 750 clamp(1.85rem, 5vw, 3.15rem) / 1.02 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.walletRing {
+  display: grid;
+  min-height: clamp(230px, 34vw, 276px);
+  place-items: center;
+}
+
+.walletSvg {
+  width: min(100%, 340px);
+  height: auto;
+  overflow: visible;
+}
+
+.walletArcGlow,
+.walletArcFill,
+.walletArcEdge {
+  fill: none;
+  stroke-linecap: round;
+  transition:
+    opacity 140ms ease-out,
+    stroke-width 140ms ease-out;
+}
+
+.walletArcGlow {
+  opacity: 0.08;
+  stroke-width: 38;
+  transform: translateY(8px);
+}
+
+.activeWalletArcGlow {
+  opacity: 0.18;
+}
+
+.walletArcFill {
+  stroke-width: 34;
+}
+
+.walletArcEdge {
+  stroke-width: 7;
+  filter: drop-shadow(0 4px 4px rgba(15, 23, 42, 0.14));
+}
+
+.activeWalletArcEdge {
+  stroke-width: 9;
+}
+
+.walletCenterLabel {
+  fill: #6b7280;
+  font: 500 19px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+.walletCenterValue {
+  fill: #151515;
+  font: 500 35px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+.walletLegend {
+  display: grid;
+  gap: clamp(16px, 3vw, 22px);
+}
+
+.walletRow {
+  display: grid;
+  min-height: 40px;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  transition:
+    background-color 120ms ease-out,
+    transform 80ms ease-out;
+}
+
+.walletRow:focus-visible {
+  outline: 3px solid rgba(59, 130, 246, 0.34);
+  outline-offset: 6px;
+}
+
+.activeWalletRow {
+  background: rgba(255, 255, 255, 0.52);
+}
+
+.walletRow:active {
+  transform: translateY(1px) scale(0.99);
+}
+
+.walletSwatch {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--swatch);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.64) inset,
+    0 7px 18px color-mix(in srgb, var(--swatch), transparent 72%);
+}
+
+.walletName {
+  color: #050505;
+  font: 500 clamp(1.45rem, 4.2vw, 2.55rem) / 1.02 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+.walletAmount {
+  color: #050505;
+  font: 500 clamp(1.08rem, 3vw, 2rem) / 1.05 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.walletAmount em {
+  color: #9aa3ad;
+  font-style: normal;
+}
+
+@media (min-width: 960px) {
+  .showcase {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .barChart,
+  .walletChart {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 640px) {
+  .showcase {
+    gap: 14px;
+    padding-bottom: 128px;
+  }
+
+  .donutChart {
+    min-height: 330px;
+  }
+
+  .donutSvg {
+    width: min(100%, 350px);
+  }
+
+  .haloChart {
+    min-height: 320px;
+  }
+
+  .haloSvg {
+    bottom: -138px;
+    width: min(122%, 560px);
+  }
+
+  .barChart {
+    min-height: 430px;
+    padding: 28px 18px 24px;
+  }
+
+  .barPlot {
+    min-height: 300px;
+    gap: 18px;
+  }
+
+  .bar {
+    width: min(100%, 80px);
+  }
+
+  .barLabel {
+    bottom: calc(var(--bar-height, 120px) + 18px);
+    gap: 7px;
+  }
+
+  .barColumn:nth-of-type(3) .barLabel {
+    bottom: 42px;
+  }
+
+  .timeframes {
+    gap: 6px;
+  }
+
+  .timeframes button {
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 10px;
+    font-size: 1rem;
+    padding: 4px 7px;
+  }
+
+  .timeframes button:last-child {
+    padding-inline: 10px;
+  }
+
+  .walletChart {
+    gap: 20px;
+    padding: 24px 18px;
+  }
+
+  .walletRing {
+    min-height: 212px;
+  }
+
+  .walletSvg {
+    width: min(100%, 300px);
+  }
+
+  .walletRow {
+    grid-template-columns: 30px minmax(0, 1fr) auto;
+    gap: 10px;
+  }
+
+  .walletSwatch {
+    width: 24px;
+    height: 24px;
+  }
+
+  .walletName {
+    font-size: clamp(1.55rem, 7vw, 2rem);
+  }
+
+  .walletAmount {
+    justify-self: end;
+    font-size: clamp(1rem, 4.8vw, 1.35rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activeBarColumn .bar,
+  .bar,
+  .donutArc,
+  .donutArcHighlight,
+  .haloArc,
+  .haloBack,
+  .haloShine,
+  .pointer,
+  .timeframes button,
+  .walletArcEdge,
+  .walletArcFill,
+  .walletArcGlow,
+  .walletRow {
+    transition: none;
+  }
+}

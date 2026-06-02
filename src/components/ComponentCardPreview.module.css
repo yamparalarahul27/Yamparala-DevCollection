@@ -394,6 +394,89 @@
   box-shadow: 0 18px 34px rgba(15, 23, 42, 0.14);
 }
 
+.financialCharts {
+  display: grid;
+  width: min(80%, 270px);
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  align-items: end;
+}
+
+.miniDonut,
+.miniBars {
+  display: grid;
+  min-height: 126px;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  background: #050505;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+}
+
+.miniDonut svg {
+  width: 106px;
+  height: 106px;
+  overflow: visible;
+}
+
+.miniDonut circle,
+.miniDonut path {
+  fill: none;
+  stroke-linecap: butt;
+  stroke-width: 13;
+}
+
+.miniDonut circle {
+  opacity: 0.4;
+  stroke: rgba(148, 163, 184, 0.38);
+  stroke-dasharray: 1 7;
+  stroke-width: 2;
+}
+
+.miniDonut path:nth-of-type(1) {
+  stroke: #b43cff;
+  filter: drop-shadow(0 0 9px rgba(192, 80, 255, 0.72));
+}
+
+.miniDonut path:nth-of-type(2) {
+  stroke: #8b90a6;
+}
+
+.miniDonut path:nth-of-type(3) {
+  stroke: #383943;
+}
+
+.miniBars {
+  display: flex;
+  gap: 9px;
+  align-items: end;
+  justify-content: center;
+  padding-bottom: 24px;
+}
+
+.miniBars span {
+  width: 26px;
+  border-radius: 4px 7px 3px 3px;
+  box-shadow:
+    0 0 12px rgba(104, 255, 0, 0.36),
+    0 10px 20px rgba(0, 0, 0, 0.36) inset;
+}
+
+.miniBars span:nth-child(1) {
+  height: 82px;
+  background: linear-gradient(180deg, #94ff00, #008000);
+}
+
+.miniBars span:nth-child(2) {
+  height: 44px;
+  background: linear-gradient(180deg, #dfff00, #5f7c00);
+}
+
+.miniBars span:nth-child(3) {
+  height: 12px;
+  background: linear-gradient(90deg, #9f2fff, #ffc8ff);
+}
+
 .abstract {
   display: grid;
   width: 220px;

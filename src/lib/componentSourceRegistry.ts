@@ -25,6 +25,11 @@ export const componentSourceRegistry = {
     ["src", "components", "CanvasGallery.tsx"],
     ["src", "app", "canvasgallery", "page.tsx"],
   ],
+  "/chart-components": [
+    ["src", "components", "FinancialCharts.tsx"],
+    ["src", "components", "FinancialCharts.module.css"],
+    ["src", "app", "chart-components", "page.tsx"],
+  ],
   "/pointerdown-cursor-button": [
     ["src", "components", "PointerdownCursorButton.tsx"],
     ["src", "components", "PointerdownCursorButton.module.css"],
