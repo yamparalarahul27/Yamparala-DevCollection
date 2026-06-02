@@ -27,8 +27,12 @@ const pixel = VT323({
 });
 
 export const metadata: Metadata = {
-  title: "Proteus",
-  description: "Proteus is a cross-chain DeFi dashboard.",
+  title: {
+    default: "Yamparala Component Collection",
+    template: "%s | Yamparala Component Collection",
+  },
+  description:
+    "A curated collection of polished, copy-ready React components, interaction patterns, buttons, charts, and visual UI experiments.",
 };
 
 export default function RootLayout({
