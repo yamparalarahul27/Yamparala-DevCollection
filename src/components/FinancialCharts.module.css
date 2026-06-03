@@ -416,25 +416,35 @@
 .timeframes {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 8px;
+  gap: 6px;
   align-items: center;
-  padding-inline: 2px;
+  padding: 7px;
+  border: 1px solid rgba(0, 223, 24, 0.16);
+  border-radius: 16px;
+  background:
+    linear-gradient(180deg, rgba(0, 223, 24, 0.08), rgba(0, 0, 0, 0.22)),
+    rgba(2, 16, 5, 0.74);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.035) inset,
+    0 16px 34px rgba(0, 0, 0, 0.26);
 }
 
 .timeframes button {
   min-width: 0;
   min-height: 44px;
-  border: 1px solid transparent;
-  border-radius: 12px;
-  background: transparent;
-  color: #00e718;
+  border: 1px solid rgba(0, 223, 24, 0.16);
+  border-radius: 10px;
+  background: rgba(2, 20, 6, 0.64);
+  color: #32f344;
   cursor: pointer;
   font: 800 clamp(0.9rem, 2.4vw, 1.45rem) / 1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: 0;
   padding: 6px 8px;
+  text-shadow: 0 0 12px rgba(0, 231, 24, 0.22);
   transition:
     background-color 120ms ease-out,
     border-color 120ms ease-out,
+    box-shadow 120ms ease-out,
     color 120ms ease-out,
     transform 80ms ease-out;
 }
@@ -445,8 +455,15 @@
 }
 
 .timeframes .activeTimeframe {
-  background: #00df18;
+  border-color: rgba(116, 255, 96, 0.72);
+  background:
+    linear-gradient(180deg, rgba(184, 255, 130, 0.78), rgba(0, 223, 24, 0.95) 42%, rgba(0, 183, 21, 0.95));
   color: #031203;
+  box-shadow:
+    0 0 18px rgba(0, 223, 24, 0.4),
+    0 10px 20px rgba(0, 0, 0, 0.24),
+    0 1px 0 rgba(255, 255, 255, 0.42) inset;
+  text-shadow: none;
 }
 
 .timeframes button:active {
@@ -454,9 +471,26 @@
 }
 
 .timeframes button:last-child {
-  border-color: #00df18;
-  color: white;
+  border-color: rgba(0, 223, 24, 0.5);
+  background: rgba(2, 14, 5, 0.78);
+  color: #f7fff8;
   padding-inline: 8px;
+}
+
+.timeframes button:last-child.activeTimeframe {
+  border-color: rgba(116, 255, 96, 0.72);
+  background:
+    linear-gradient(180deg, rgba(184, 255, 130, 0.78), rgba(0, 223, 24, 0.95) 42%, rgba(0, 183, 21, 0.95));
+  color: #031203;
+}
+
+@media (hover: hover) {
+  .timeframes button:hover:not(.activeTimeframe) {
+    border-color: rgba(0, 223, 24, 0.36);
+    background: rgba(0, 223, 24, 0.12);
+    color: #f4fff6;
+    box-shadow: 0 0 16px rgba(0, 223, 24, 0.16);
+  }
 }
 
 .walletChart {
@@ -553,24 +587,46 @@
   grid-template-columns: 34px minmax(0, 1fr) auto;
   gap: 14px;
   align-items: center;
+  position: relative;
   border: 0;
   border-radius: 8px;
   background: transparent;
   cursor: pointer;
-  padding: 0;
+  padding: 4px 0;
   text-align: left;
   transition:
     background-color 120ms ease-out,
     transform 80ms ease-out;
 }
 
+.walletRow::before {
+  position: absolute;
+  left: -10px;
+  width: 4px;
+  height: 30px;
+  border-radius: 999px;
+  background: var(--swatch);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--swatch), transparent 52%);
+  content: "";
+  opacity: 0;
+  transform: scaleY(0.74);
+  transition:
+    opacity 120ms ease-out,
+    transform 120ms ease-out;
+}
+
 .walletRow:focus-visible {
-  outline: 3px solid rgba(59, 130, 246, 0.34);
-  outline-offset: 6px;
+  outline: none;
 }
 
 .activeWalletRow {
-  background: rgba(255, 255, 255, 0.52);
+  background: transparent;
+}
+
+.walletRow:focus-visible::before,
+.activeWalletRow::before {
+  opacity: 1;
+  transform: scaleY(1);
 }
 
 .walletRow:active {
@@ -585,12 +641,16 @@
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.64) inset,
     0 7px 18px color-mix(in srgb, var(--swatch), transparent 72%);
+  transition:
+    box-shadow 120ms ease-out,
+    transform 120ms ease-out;
 }
 
 .walletName {
   color: #050505;
   font: 500 clamp(1.45rem, 4.2vw, 2.55rem) / 1.02 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: 0;
+  transition: color 120ms ease-out;
 }
 
 .walletAmount {
@@ -598,11 +658,47 @@
   font: 500 clamp(1.08rem, 3vw, 2rem) / 1.05 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   letter-spacing: 0;
   white-space: nowrap;
+  transition: color 120ms ease-out;
 }
 
 .walletAmount em {
   color: #9aa3ad;
   font-style: normal;
+}
+
+.walletRow:focus-visible .walletSwatch {
+  outline: 3px solid rgba(59, 130, 246, 0.42);
+  outline-offset: 3px;
+}
+
+.walletRow:focus-visible .walletName {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--swatch), transparent 36%);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 7px;
+}
+
+.activeWalletRow .walletSwatch {
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.72) inset,
+    0 8px 20px color-mix(in srgb, var(--swatch), transparent 58%),
+    0 0 0 4px color-mix(in srgb, var(--swatch), transparent 86%);
+  transform: scale(1.08);
+}
+
+.activeWalletRow .walletName,
+.activeWalletRow .walletAmount {
+  color: color-mix(in srgb, var(--swatch), #090909 42%);
+}
+
+@media (hover: hover) {
+  .walletRow:hover .walletSwatch {
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.72) inset,
+      0 8px 20px color-mix(in srgb, var(--swatch), transparent 62%),
+      0 0 0 3px color-mix(in srgb, var(--swatch), transparent 88%);
+    transform: scale(1.06);
+  }
 }
 
 @media (min-width: 960px) {
@@ -724,7 +820,11 @@
   .walletArcEdge,
   .walletArcFill,
   .walletArcGlow,
-  .walletRow {
+  .walletRow,
+  .walletRow::before,
+  .walletSwatch,
+  .walletName,
+  .walletAmount {
     transition: none;
   }
 }

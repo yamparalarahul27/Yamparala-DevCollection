@@ -30,6 +30,11 @@ export const componentSourceRegistry = {
     ["src", "components", "FinancialCharts.module.css"],
     ["src", "app", "chart-components", "page.tsx"],
   ],
+  "/connect-wallet-button": [
+    ["src", "components", "ConnectWalletButton.tsx"],
+    ["src", "components", "ConnectWalletButton.module.css"],
+    ["src", "app", "connect-wallet-button", "page.tsx"],
+  ],
   "/pointerdown-cursor-button": [
     ["src", "components", "PointerdownCursorButton.tsx"],
     ["src", "components", "PointerdownCursorButton.module.css"],
