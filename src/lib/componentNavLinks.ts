@@ -10,6 +10,7 @@ export const componentNavLinks: Array<{ href: string; label: string }> = [
   { href: "/peektext", label: "Peektext" },
   { href: "/canvasgallery", label: "Canvas Gallery" },
   { href: "/chart-components", label: "Chart Components" },
+  { href: "/connect-wallet-button", label: "Connect Wallet Button" },
   { href: "/pointerdown-cursor-button", label: "Pointerdown Cursor Button" },
   { href: "/scroll-mask-scroller", label: "Scroll Mask Scroller" },
   { href: "/css-ring-text", label: "CSS Ring Text" },

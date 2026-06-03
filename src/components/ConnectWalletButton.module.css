@@ -1,0 +1,348 @@
+.button {
+  --cyan: #9ee8fb;
+  --cyan-bright: #c4f4ff;
+  --ink: #07111b;
+  --tile: #07111f;
+
+  box-sizing: border-box;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  width: min(100%, 294px);
+  min-height: 58px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border: 1px solid rgba(175, 244, 255, 0.58);
+  border-radius: 9px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.38), transparent 45%),
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.44), transparent 22%),
+    linear-gradient(180deg, #8edff5 0%, #78cce8 48%, #63b8d6 100%);
+  box-shadow:
+    0 0 0 1px rgba(22, 224, 255, 0.16),
+    0 0 28px rgba(70, 209, 255, 0.22),
+    0 15px 28px -16px rgba(45, 211, 255, 0.58),
+    inset 0 1px 0 rgba(255, 255, 255, 0.52),
+    inset 0 -2px 0 rgba(3, 47, 74, 0.26);
+  color: var(--ink);
+  cursor: pointer;
+  font: 500 clamp(1.3rem, 4.4vw, 1.72rem) / 1 var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: -0.035em;
+  overflow: hidden;
+  padding: 5px 6px 5px 22px;
+  text-align: left;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.3);
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    box-shadow 150ms ease-out,
+    filter 150ms ease-out,
+    transform 100ms ease-out;
+}
+
+.button::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      rgba(255, 255, 255, 0.12) 0 1px,
+      transparent 1px 4px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.12) 0 1px,
+      transparent 1px 5px
+    );
+  content: "";
+  opacity: 0.32;
+  transform: translate3d(0, 0, 0);
+  transition:
+    opacity 150ms ease-out,
+    transform 220ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button::after {
+  position: absolute;
+  inset: 1px;
+  border-radius: 8px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.28), transparent 38%),
+    linear-gradient(90deg, transparent 0 72%, rgba(255, 255, 255, 0.1) 100%);
+  content: "";
+  opacity: 0.38;
+  pointer-events: none;
+  transition: opacity 150ms ease-out;
+}
+
+.label {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transform: translateY(-1px);
+  transition:
+    color 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.actionBlock {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  width: 54px;
+  min-width: 54px;
+  height: 46px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(151, 225, 255, 0.12);
+  border-radius: 5px;
+  background:
+    radial-gradient(circle at 58% 50%, rgba(104, 213, 255, 0.12), transparent 44%),
+    linear-gradient(180deg, #0b1728 0%, var(--tile) 100%);
+  box-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.08) inset,
+    0 0 0 1px rgba(0, 0, 0, 0.28),
+    -5px 0 12px rgba(16, 55, 73, 0.16);
+  transition:
+    background 150ms ease-out,
+    border-color 150ms ease-out,
+    box-shadow 150ms ease-out,
+    transform 100ms ease-out;
+}
+
+.dotGrid {
+  display: grid;
+  width: 31px;
+  grid-template-columns: repeat(5, 4px);
+  grid-template-rows: repeat(5, 4px);
+  gap: 3px;
+  opacity: 0.9;
+  transform: translateX(-1px);
+  transition:
+    opacity 150ms ease-out,
+    transform 170ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.dotGrid i {
+  --delay: 0ms;
+
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #7fb8c8;
+  opacity: 0;
+  box-shadow: 0 0 7px rgba(132, 222, 255, 0.38);
+  transform: translateX(0) scale(0.82);
+  transition:
+    background 150ms ease-out,
+    opacity 150ms ease-out,
+    transform 150ms ease-out;
+}
+
+.dotGrid i:nth-child(4),
+.dotGrid i:nth-child(10),
+.dotGrid i:nth-child(11),
+.dotGrid i:nth-child(12),
+.dotGrid i:nth-child(13),
+.dotGrid i:nth-child(14),
+.dotGrid i:nth-child(15),
+.dotGrid i:nth-child(20),
+.dotGrid i:nth-child(24) {
+  opacity: 0.58;
+  transform: translateX(0) scale(1);
+}
+
+.dotGrid i:nth-child(11) {
+  --delay: 0ms;
+}
+
+.dotGrid i:nth-child(12) {
+  --delay: 34ms;
+}
+
+.dotGrid i:nth-child(13) {
+  --delay: 68ms;
+}
+
+.dotGrid i:nth-child(4),
+.dotGrid i:nth-child(14),
+.dotGrid i:nth-child(24) {
+  --delay: 102ms;
+  background: #9fd8e8;
+  opacity: 0.72;
+}
+
+.dotGrid i:nth-child(10),
+.dotGrid i:nth-child(15),
+.dotGrid i:nth-child(20) {
+  --delay: 136ms;
+  background: #bdefff;
+  opacity: 0.92;
+}
+
+.button[data-state="connected"] {
+  --cyan: #a6ffd8;
+  --cyan-bright: #d8ffec;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.42), transparent 45%),
+    linear-gradient(180deg, #9bf4c8 0%, #64d99d 100%);
+}
+
+.button[data-state="connecting"] {
+  cursor: wait;
+}
+
+.button[data-state="connecting"] .dotGrid {
+  animation: dot-pulse 900ms ease-in-out infinite;
+}
+
+@media (hover: hover) {
+  .button:hover:not(:disabled) {
+    filter: brightness(1.05) saturate(1.04);
+    transform: translateY(-1px);
+    box-shadow:
+      0 0 0 1px rgba(158, 232, 251, 0.24),
+      0 0 34px rgba(70, 209, 255, 0.34),
+      0 18px 30px -16px rgba(45, 211, 255, 0.7),
+      inset 0 1px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -2px 0 rgba(3, 47, 74, 0.25);
+  }
+
+  .button:hover:not(:disabled)::before {
+    opacity: 0.46;
+    transform: translate3d(7px, -4px, 0);
+  }
+
+  .button:hover:not(:disabled)::after {
+    opacity: 0.46;
+  }
+
+  .button:hover:not(:disabled) .label {
+    color: #020b12;
+    transform: translate(2px, -1px);
+  }
+
+  .button:hover:not(:disabled) .actionBlock {
+    border-color: rgba(184, 239, 255, 0.2);
+    box-shadow:
+      0 1px 0 rgba(255, 255, 255, 0.1) inset,
+      0 0 0 1px rgba(0, 0, 0, 0.24),
+      -7px 0 16px rgba(16, 55, 73, 0.24),
+      0 0 18px rgba(113, 221, 255, 0.16);
+    transform: translateX(1px);
+  }
+
+  .button:hover:not(:disabled) .dotGrid {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+
+  .button:hover:not(:disabled) .dotGrid i:nth-child(4),
+  .button:hover:not(:disabled) .dotGrid i:nth-child(10),
+  .button:hover:not(:disabled) .dotGrid i:nth-child(11),
+  .button:hover:not(:disabled) .dotGrid i:nth-child(12),
+  .button:hover:not(:disabled) .dotGrid i:nth-child(13),
+  .button:hover:not(:disabled) .dotGrid i:nth-child(14),
+  .button:hover:not(:disabled) .dotGrid i:nth-child(15),
+  .button:hover:not(:disabled) .dotGrid i:nth-child(20),
+  .button:hover:not(:disabled) .dotGrid i:nth-child(24) {
+    animation: arrow-dot-sweep 760ms cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    animation-delay: var(--delay);
+  }
+}
+
+.button:active:not(:disabled) {
+  filter: brightness(0.98);
+  transform: translateY(1px) scale(0.992);
+  box-shadow:
+    0 0 0 1px rgba(158, 232, 251, 0.16),
+    0 0 20px rgba(70, 209, 255, 0.22),
+    0 9px 18px -14px rgba(45, 211, 255, 0.5),
+    inset 0 2px 6px rgba(3, 30, 46, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.28);
+}
+
+.button:active:not(:disabled) .actionBlock {
+  transform: translateX(1px) scale(0.97);
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba(170, 239, 255, 0.86);
+  outline-offset: 4px;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.18);
+  opacity: 0.58;
+}
+
+@keyframes dot-pulse {
+  0%,
+  100% {
+    opacity: 0.54;
+    transform: translateX(-2px);
+  }
+
+  50% {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+}
+
+@keyframes arrow-dot-sweep {
+  0%,
+  100% {
+    opacity: 0.46;
+    transform: translateX(0) scale(0.92);
+  }
+
+  42% {
+    opacity: 1;
+    transform: translateX(2px) scale(1.18);
+  }
+
+  72% {
+    opacity: 0.64;
+    transform: translateX(4px) scale(0.96);
+  }
+}
+
+@media (max-width: 480px) {
+  .button {
+    width: min(100%, 260px);
+    min-height: 54px;
+    padding-left: 18px;
+  }
+
+  .actionBlock {
+    width: 50px;
+    min-width: 50px;
+    height: 42px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .button::after,
+  .button::before,
+  .actionBlock,
+  .dotGrid i,
+  .dotGrid,
+  .label {
+    animation: none;
+    transition: none;
+  }
+
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled),
+  .button:hover:not(:disabled) .actionBlock,
+  .button:hover:not(:disabled) .dotGrid,
+  .button:hover:not(:disabled) .label {
+    transform: none;
+  }
+}

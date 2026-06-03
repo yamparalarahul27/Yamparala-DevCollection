@@ -24,6 +24,13 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 
 const components: ComponentCard[] = [
   {
+    href: "/connect-wallet-button",
+    title: "Connect Wallet Button",
+    description: "Compact cyan glass wallet CTA with a dark dotted-arrow action block and tactile hover motion.",
+    color: "#9ee8fb",
+    status: "Latest",
+  },
+  {
     href: "/chart-components",
     title: "Chart Components",
     description: "Glossy segmented donut, cropped radial growth arc, and neon 3D bar chart components.",

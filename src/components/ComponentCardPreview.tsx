@@ -2,6 +2,7 @@
 
 import type { CSSProperties, ReactNode } from "react";
 import BuyNowGlowButton from "@/components/BuyNowGlowButton";
+import ConnectWalletButton from "@/components/ConnectWalletButton";
 import CssRingText from "@/components/CssRingText";
 import DotShimmerEffect from "@/components/DotShimmerEffect";
 import EarnButton from "@/components/EarnButton";
@@ -201,6 +202,13 @@ export default function ComponentCardPreview({
   switch (href) {
     case "/chart-components":
       preview = <MiniFinancialCharts />;
+      break;
+    case "/connect-wallet-button":
+      preview = (
+        <ScaledPreview scale={0.86}>
+          <ConnectWalletButton />
+        </ScaledPreview>
+      );
       break;
     case "/pointerdown-cursor-button":
       preview = <PointerdownCursorButton>Pointer Down</PointerdownCursorButton>;

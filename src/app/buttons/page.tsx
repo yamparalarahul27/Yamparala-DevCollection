@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import BuyNowGlowButton from "@/components/BuyNowGlowButton";
 import ComponentShell from "@/components/ComponentShell";
+import ConnectWalletButton from "@/components/ConnectWalletButton";
 import EarnButton from "@/components/EarnButton";
 import FigmaPropertiesButton from "@/components/FigmaPropertiesButton";
 import FixActionButtons from "@/components/FixActionButtons";
@@ -26,6 +27,13 @@ type ButtonDemo = {
 };
 
 const buttonDemos: ButtonDemo[] = [
+  {
+    title: "Connect Wallet Button",
+    href: "/connect-wallet-button",
+    description: "Compact cyan wallet CTA with a dark dotted-arrow action block and tactile motion.",
+    preview: <ConnectWalletButton />,
+    previewClassName: "bg-[#030b0f]",
+  },
   {
     title: "Pointerdown Cursor Button",
     href: "/pointerdown-cursor-button",
@@ -129,6 +137,7 @@ const buttonDemos: ButtonDemo[] = [
 
 const CODE_CONTENT = `import Link from "next/link";
 import BuyNowGlowButton from "@/components/BuyNowGlowButton";
+import ConnectWalletButton from "@/components/ConnectWalletButton";
 import EarnButton from "@/components/EarnButton";
 import FigmaPropertiesButton from "@/components/FigmaPropertiesButton";
 import FixActionButtons from "@/components/FixActionButtons";
@@ -147,6 +156,7 @@ import UltramockMetallicButton from "@/components/UltramockMetallicButton";
 export default function ButtonOverview() {
   return (
     <section>
+      <ConnectWalletButton />
       <PointerdownCursorButton>Pointer Down</PointerdownCursorButton>
       <UltramockMetallicButton />
       <SlideToConvertButton />
