@@ -11,6 +11,7 @@ import FixActionButtons from "@/components/FixActionButtons";
 import FloatingToolbarTooltip from "@/components/FloatingToolbarTooltip";
 import FunLoadingButton from "@/components/FunLoadingButton";
 import GlossyIconButtonStack from "@/components/GlossyIconButtons";
+import GlowTypingInput from "@/components/GlowTypingInput";
 import LightGradientButton from "@/components/LightGradientButton";
 import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
 import { OrangeAddViewButton } from "@/components/OrangeAddViewButton";
@@ -200,6 +201,13 @@ export default function ComponentCardPreview({
   let preview: ReactNode;
 
   switch (href) {
+    case "/glow-typing-input":
+      preview = (
+        <ScaledPreview scale={0.36}>
+          <GlowTypingInput defaultValue="Let" />
+        </ScaledPreview>
+      );
+      break;
     case "/chart-components":
       preview = <MiniFinancialCharts />;
       break;

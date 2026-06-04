@@ -30,6 +30,11 @@ export const componentSourceRegistry = {
     ["src", "components", "FinancialCharts.module.css"],
     ["src", "app", "chart-components", "page.tsx"],
   ],
+  "/glow-typing-input": [
+    ["src", "components", "GlowTypingInput.tsx"],
+    ["src", "components", "GlowTypingInput.module.css"],
+    ["src", "app", "glow-typing-input", "page.tsx"],
+  ],
   "/connect-wallet-button": [
     ["src", "components", "ConnectWalletButton.tsx"],
     ["src", "components", "ConnectWalletButton.module.css"],

@@ -24,6 +24,13 @@ type ComponentCardWithUpdatedAt = ComponentCard & {
 
 const components: ComponentCard[] = [
   {
+    href: "/glow-typing-input",
+    title: "Glow Typing Input",
+    description: "Editable dark pill input with a measured custom gradient caret and violet bloom.",
+    color: "#e9a5ff",
+    status: "Latest",
+  },
+  {
     href: "/connect-wallet-button",
     title: "Connect Wallet Button",
     description: "Compact cyan glass wallet CTA with a dark dotted-arrow action block and tactile hover motion.",
