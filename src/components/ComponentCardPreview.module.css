@@ -212,43 +212,7 @@
 }
 
 .avatar {
-  position: relative;
-  width: 172px;
-  height: 172px;
-  border-radius: 999px;
-  background:
-    linear-gradient(90deg, color-mix(in srgb, var(--accent) 78%, #ffffff) 50%, rgba(255, 255, 255, 0.8) 50%);
   box-shadow: 0 22px 50px rgba(15, 23, 42, 0.14);
-}
-
-.avatar span {
-  position: absolute;
-  left: 50%;
-  background: #111827;
-  transform: translateX(-50%);
-}
-
-.avatar span:nth-child(1) {
-  top: 46px;
-  width: 64px;
-  height: 64px;
-  border-radius: 999px;
-}
-
-.avatar span:nth-child(2) {
-  bottom: 36px;
-  width: 96px;
-  height: 36px;
-  border-radius: 999px 999px 28px 28px;
-}
-
-.avatar span:nth-child(3) {
-  left: 36%;
-  top: 68px;
-  width: 18px;
-  height: 18px;
-  border-radius: 999px;
-  background: white;
 }
 
 .loaders {
