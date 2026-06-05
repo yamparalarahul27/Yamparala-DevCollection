@@ -195,9 +195,9 @@ const components: ComponentCard[] = [
   {
     href: "/avatarcreator",
     title: "Avatar Creator",
-    description: "Split-tone avatar builder with swatch picker, shuffle action, and custom color add.",
+    description: "Reusable dithered-gradient profile avatar builder with swatches, shuffle, and custom color add.",
     color: "#9B4EE8",
-    status: "WIP",
+    status: "Latest",
   },
   {
     href: "/pnlcalendar",

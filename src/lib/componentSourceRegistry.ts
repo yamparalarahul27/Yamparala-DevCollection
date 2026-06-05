@@ -15,7 +15,10 @@ export const componentSourceRegistry = {
   "/mathcurveloaders": [["src", "app", "mathcurveloaders", "page.tsx"]],
   "/chainselector": [["src", "app", "chainselector", "page.tsx"]],
   "/nfttable": [["src", "app", "nfttable", "page.tsx"]],
-  "/avatarcreator": [["src", "app", "avatarcreator", "page.tsx"]],
+  "/avatarcreator": [
+    ["src", "components", "ProfileAvatar.tsx"],
+    ["src", "app", "avatarcreator", "page.tsx"],
+  ],
   "/pnlcalendar": [["src", "app", "pnlcalendar", "page.tsx"]],
   "/peektext": [
     ["src", "components", "Peektext.tsx"],

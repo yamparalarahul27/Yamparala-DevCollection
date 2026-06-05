@@ -17,6 +17,7 @@ import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
 import { OrangeAddViewButton } from "@/components/OrangeAddViewButton";
 import PerformanceButton from "@/components/PerformanceButton";
 import PointerdownCursorButton from "@/components/PointerdownCursorButton";
+import ProfileAvatar from "@/components/ProfileAvatar";
 import PreviewDeployButtons from "@/components/PreviewDeployButtons";
 import ScrollMaskScroller from "@/components/ScrollMaskScroller";
 import SlideToConvertButton from "@/components/SlideToConvertButton";
@@ -105,11 +106,15 @@ function MiniDock() {
 
 function MiniAvatar() {
   return (
-    <div className={styles.avatar}>
-      <span />
-      <span />
-      <span />
-    </div>
+    <ProfileAvatar
+      bottom="#ad73ee"
+      className={styles.avatar}
+      dithered
+      size={154}
+      top="#9b4ee8"
+    >
+      RY
+    </ProfileAvatar>
   );
 }
 
