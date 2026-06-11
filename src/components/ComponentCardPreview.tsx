@@ -186,6 +186,25 @@ function MiniFinancialCharts() {
   );
 }
 
+function MiniArticleRail() {
+  return (
+    <div className={styles.articleRailPreview}>
+      <div className={styles.articleRailPage}>
+        <span />
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className={styles.articleRailTicks}>
+        {Array.from({ length: 18 }).map((_, index) => (
+          <i key={index} />
+        ))}
+        <b />
+      </div>
+    </div>
+  );
+}
+
 function AbstractPreview() {
   return (
     <div className={styles.abstract}>
@@ -232,6 +251,9 @@ export default function ComponentCardPreview({
           <ScrollMaskScroller />
         </ScaledPreview>
       );
+      break;
+    case "/article-scroll-rail":
+      preview = <MiniArticleRail />;
       break;
     case "/css-ring-text":
       preview = (

@@ -1,0 +1,171 @@
+.mobileProgress {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 60;
+  height: 2px;
+  transform-origin: left;
+  background: #2563eb;
+}
+
+.rail {
+  position: fixed;
+  top: var(--rail-top);
+  right: 0;
+  bottom: var(--rail-bottom);
+  z-index: 20;
+  display: none;
+  width: min(18vw, 248px);
+  padding-right: 16px;
+  pointer-events: none;
+}
+
+.railInner {
+  position: relative;
+  height: 100%;
+  pointer-events: auto;
+}
+
+.ticks,
+.jumpLayer,
+.sectionNav {
+  position: absolute;
+  inset: 0;
+}
+
+.tick {
+  position: absolute;
+  top: var(--tick-y);
+  right: 0;
+  width: 8px;
+  height: 1px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / var(--tick-opacity));
+  transform: translateY(-0.5px);
+  transition:
+    width 100ms cubic-bezier(0, 0, 0.2, 1),
+    background-color 100ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.tickButton {
+  position: absolute;
+  top: var(--tick-y);
+  right: -10px;
+  width: 80px;
+  height: 10px;
+  border: 0;
+  padding: 0;
+  transform: translateY(-5px);
+  background: transparent;
+  cursor: pointer;
+}
+
+.tickButton:hover + .tick,
+.railInner:hover .tick {
+  width: 12px;
+}
+
+.tickButton:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 3px;
+}
+
+.sectionNav {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.railInner:hover .sectionNav,
+.sectionNav:focus-within {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sectionLink {
+  position: absolute;
+  top: var(--section-y);
+  right: 28px;
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: flex-end;
+  padding-inline: 8px;
+  transform: translateY(-50%) translateX(6px);
+  color: #111827;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-align: right;
+  text-transform: uppercase;
+  opacity: 0;
+  transition:
+    opacity 180ms cubic-bezier(0, 0, 0.2, 1) var(--delay),
+    transform 180ms cubic-bezier(0, 0, 0.2, 1) var(--delay),
+    color 100ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.railInner:hover .sectionLink,
+.sectionLink:focus-visible {
+  transform: translateY(-50%) translateX(0);
+  opacity: 1;
+}
+
+.sectionLink:hover,
+.sectionLink:focus-visible {
+  color: #2563eb;
+  outline: none;
+}
+
+.marker {
+  position: absolute;
+  top: var(--marker-y);
+  right: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  transform: translateY(-50%);
+  color: #2563eb;
+  transition: opacity 180ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.railInner:hover .marker {
+  opacity: 0.2;
+}
+
+.markerText {
+  position: absolute;
+  right: 24px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.markerLine {
+  width: 16px;
+  height: 1px;
+  background: currentColor;
+}
+
+@media (min-width: 1024px) {
+  .mobileProgress {
+    display: none;
+  }
+
+  .rail {
+    display: block;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tick,
+  .sectionNav,
+  .sectionLink,
+  .marker {
+    transition: none;
+  }
+}

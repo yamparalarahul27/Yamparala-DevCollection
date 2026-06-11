@@ -59,6 +59,13 @@ const components: ComponentCard[] = [
     status: "Latest",
   },
   {
+    href: "/article-scroll-rail",
+    title: "Article Scroll Rail",
+    description: "Making Software inspired article progress rail with clickable ticks, section labels, and mobile progress bar.",
+    color: "#2563eb",
+    status: "Latest",
+  },
+  {
     href: "/css-ring-text",
     title: "CSS Ring Text",
     description: "Jhey-inspired circular text component using CSS trigonometric radius and per-character variables.",
