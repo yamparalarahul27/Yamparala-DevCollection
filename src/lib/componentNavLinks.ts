@@ -14,6 +14,7 @@ export const componentNavLinks: Array<{ href: string; label: string }> = [
   { href: "/connect-wallet-button", label: "Connect Wallet Button" },
   { href: "/pointerdown-cursor-button", label: "Pointerdown Cursor Button" },
   { href: "/scroll-mask-scroller", label: "Scroll Mask Scroller" },
+  { href: "/article-scroll-rail", label: "Article Scroll Rail" },
   { href: "/css-ring-text", label: "CSS Ring Text" },
   { href: "/dot-shimmer-effect", label: "Dot Shimmer Effect" },
   { href: "/floating-toolbar-tooltip", label: "Floating Toolbar Tooltip" },

@@ -55,6 +55,11 @@ export const componentSourceRegistry = {
     ["src", "components", "ScrollMaskScroller.module.css"],
     ["src", "app", "scroll-mask-scroller", "page.tsx"],
   ],
+  "/article-scroll-rail": [
+    ["src", "components", "ArticleScrollRail.tsx"],
+    ["src", "components", "ArticleScrollRail.module.css"],
+    ["src", "app", "article-scroll-rail", "page.tsx"],
+  ],
   "/css-ring-text": [
     ["src", "components", "CssRingText.tsx"],
     ["src", "components", "CssRingText.module.css"],
