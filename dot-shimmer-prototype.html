@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dot Shimmer — Prototype</title>
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: #0a0a0c;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      color: #eaeaea;
+    }
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 28px;
+      padding: 40px 20px;
+    }
+    .stage {
+      position: relative;
+      width: min(1180px, 94vw);
+      height: min(560px, 62vh);
+      min-height: 420px;
+      border-radius: 28px;
+      overflow: hidden;
+      background: #111;
+      box-shadow: 0 40px 120px rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      cursor: crosshair;
+    }
+    .stage canvas {
+      display: block;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .label {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      user-select: none;
+      text-align: center;
+    }
+    .label .t {
+      font-size: clamp(36px, 6vw, 64px);
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      color: #f2f2f2;
+    }
+    .label .s {
+      font-size: 12px;
+      opacity: 0.42;
+      margin-top: 8px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px 28px;
+      align-items: center;
+      padding: 16px 22px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      font-size: 12px;
+      max-width: min(1180px, 94vw);
+    }
+    .controls label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      min-width: 130px;
+    }
+    .controls .name {
+      display: flex;
+      justify-content: space-between;
+      opacity: 0.72;
+      font-variant-numeric: tabular-nums;
+    }
+    .controls input[type=range] {
+      accent-color: #ddd;
+      width: 160px;
+    }
+    .nojs {
+      padding: 24px;
+      text-align: center;
+      opacity: 0.6;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="stage" id="stage">
+    <canvas id="c" aria-hidden="true"></canvas>
+    <div class="label">
+      <div>
+        <div class="t">Dot Shimmer</div>
+        <div class="s">Move your cursor over the surface</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls" id="ctrls">
+    <label>
+      <div class="name"><span>Trail radius</span><span data-out="radius">0.13</span></div>
+      <input type="range" min="0.04" max="0.30" step="0.005" value="0.13" id="ctrl-radius">
+    </label>
+    <label>
+      <div class="name"><span>Trail decay (1/s)</span><span data-out="decay">1.40</span></div>
+      <input type="range" min="0.3" max="4.0" step="0.05" value="1.4" id="ctrl-decay">
+    </label>
+    <label>
+      <div class="name"><span>Cursor smoothing</span><span data-out="smooth">0.25</span></div>
+      <input type="range" min="0.05" max="1" step="0.01" value="0.25" id="ctrl-smooth">
+    </label>
+    <label>
+      <div class="name"><span>Ambient</span><span data-out="ambient">0.055</span></div>
+      <input type="range" min="0" max="0.15" step="0.005" value="0.055" id="ctrl-ambient">
+    </label>
+    <label>
+      <div class="name"><span>Dot density</span><span data-out="density">1.20</span></div>
+      <input type="range" min="0.6" max="2" step="0.05" value="1.2" id="ctrl-density">
+    </label>
+    <label>
+      <div class="name"><span>Intensity</span><span data-out="intensity">1.60</span></div>
+      <input type="range" min="0.4" max="3" step="0.05" value="1.6" id="ctrl-intensity">
+    </label>
+  </div>
+
+  <script>
+  (function() {
+    const stage = document.getElementById('stage');
+    const canvas = document.getElementById('c');
+    const gl = canvas.getContext('webgl', {
+      alpha: false,
+      antialias: false,
+      depth: false,
+      stencil: false,
+      powerPreference: 'high-performance',
+    });
+
+    if (!gl) {
+      stage.innerHTML = '<div class="nojs">WebGL not available in this browser.</div>';
+      return;
+    }
+
+    const TRAIL_LENGTH = 64;
+
+    const VERT = `
+      attribute vec2 a_position;
+      void main() { gl_Position = vec4(a_position, 0.0, 1.0); }
+    `;
+
+    const FRAG = `
+      precision highp float;
+
+      uniform vec2 u_resolution;
+      uniform float u_time;
+      uniform float u_radius;
+      uniform float u_decay;
+      uniform float u_ambient;
+      uniform float u_density;
+      uniform float u_intensity;
+      uniform vec3 u_dotColor;
+      uniform vec3 u_background;
+      uniform vec3 u_trail[${TRAIL_LENGTH}];
+
+      float hash21(vec2 p) {
+        p = fract(p * vec2(123.34, 456.21));
+        p += dot(p, p + 45.32);
+        return fract(p.x * p.y);
+      }
+
+      float squareMask(vec2 p, float halfSize) {
+        vec2 d = abs(p);
+        float box = max(d.x, d.y);
+        return 1.0 - smoothstep(halfSize * 0.82, halfSize, box);
+      }
+
+      void main() {
+        vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+        vec2 aspect = vec2(u_resolution.x / u_resolution.y, 1.0);
+        vec2 centered = (uv - 0.5) * aspect;
+
+        float vignette = smoothstep(1.05, 0.18, length(centered));
+        float grain = (hash21(gl_FragCoord.xy + floor(u_time * 24.0)) - 0.5) * 0.010;
+        vec3 color = u_background * (0.85 + 0.15 * vignette) + grain;
+
+        // Trail glow at this fragment (one loop per fragment, not per dot)
+        float trailGlow = 0.0;
+        for (int i = 0; i < ${TRAIL_LENGTH}; i++) {
+          vec3 tp = u_trail[i];
+          if (tp.z < 0.0) continue;
+          float d = length((uv - tp.xy) * aspect);
+          float spatial = exp(-pow(d / u_radius, 2.0));
+          // Streak fades to zero by ~500ms; bright dot under cursor stays
+          // because trail[0] is always age=0 (max() in this loop wins).
+          float lifetimeFade = 1.0 - smoothstep(0.1, 0.5, tp.z);
+          float temporal = exp(-tp.z * u_decay) * lifetimeFade;
+          trailGlow = max(trailGlow, spatial * temporal);
+        }
+
+        // Square pixel-cell grid: same base on both axes, multiplied by aspect on X.
+        // Guarantees cell_w_px == cell_h_px regardless of stage aspect ratio.
+        float baseGrid = 48.0 * u_density;
+        vec2 grid = vec2(baseGrid * aspect.x, baseGrid);
+        vec2 cell = uv * grid;
+        vec2 id = floor(cell);
+        vec2 local = fract(cell);
+
+        float dots = 0.0;
+        for (int y = -1; y <= 1; y++) {
+          for (int x = -1; x <= 1; x++) {
+            vec2 offset = vec2(float(x), float(y));
+            vec2 cellId = id + offset;
+            float seed = hash21(cellId);
+            float seed2 = hash21(cellId + 17.7);
+            vec2 dotCenter = offset + 0.5;
+            float halfSize = 0.20;
+            float mask = squareMask(local - dotCenter, halfSize);
+            // Sparse twinkle: only ~12% of squares blink, gently
+            float isBlinker = step(0.88, seed);
+            float twinkle = isBlinker * (0.5 + 0.5 * sin(u_time * 1.6 + seed2 * 6.2831)) * 0.45;
+            float ambient = u_ambient * (1.0 + twinkle);
+            float presence = ambient + trailGlow * u_intensity;
+            dots += mask * presence;
+          }
+        }
+
+        dots = clamp(dots, 0.0, 1.2);
+        vec3 shimmer = mix(u_dotColor * 0.55, u_dotColor, smoothstep(0.15, 0.85, dots));
+        color += shimmer * dots;
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+
+    function compile(type, src) {
+      const sh = gl.createShader(type);
+      gl.shaderSource(sh, src);
+      gl.compileShader(sh);
+      if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) {
+        console.error(gl.getShaderInfoLog(sh));
+        throw new Error('shader compile error');
+      }
+      return sh;
+    }
+
+    const program = gl.createProgram();
+    gl.attachShader(program, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(program, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(program);
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(program));
+      throw new Error('program link error');
+    }
+    gl.useProgram(program);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const posLoc = gl.getAttribLocation(program, 'a_position');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+    const u = {
+      resolution: gl.getUniformLocation(program, 'u_resolution'),
+      time: gl.getUniformLocation(program, 'u_time'),
+      radius: gl.getUniformLocation(program, 'u_radius'),
+      decay: gl.getUniformLocation(program, 'u_decay'),
+      ambient: gl.getUniformLocation(program, 'u_ambient'),
+      density: gl.getUniformLocation(program, 'u_density'),
+      intensity: gl.getUniformLocation(program, 'u_intensity'),
+      dotColor: gl.getUniformLocation(program, 'u_dotColor'),
+      background: gl.getUniformLocation(program, 'u_background'),
+      trail: gl.getUniformLocation(program, 'u_trail'),
+    };
+
+    gl.uniform3f(u.dotColor, 0.96, 0.96, 0.97);
+    gl.uniform3f(u.background, 0.07, 0.07, 0.08);
+
+    // Trail buffer: flat [x0, y0, age0, x1, y1, age1, ...]. age < 0 means empty slot.
+    const trail = new Float32Array(TRAIL_LENGTH * 3);
+    for (let i = 0; i < TRAIL_LENGTH; i++) trail[i * 3 + 2] = -1;
+
+    const raw = { x: 0.5, y: 0.5 };
+    const tip = { x: 0.5, y: 0.5 };
+    let hovering = false;
+    let lastTime = performance.now();
+    const start = lastTime;
+
+    const params = {
+      radius: 0.13,
+      decay: 1.4,
+      smooth: 0.25,
+      ambient: 0.055,
+      density: 1.2,
+      intensity: 1.6,
+    };
+
+    ['radius', 'decay', 'smooth', 'ambient', 'density', 'intensity'].forEach((key) => {
+      const input = document.getElementById('ctrl-' + key);
+      const out = document.querySelector(`[data-out="${key}"]`);
+      input.addEventListener('input', () => {
+        params[key] = parseFloat(input.value);
+        out.textContent = params[key].toFixed(key === 'ambient' ? 3 : 2);
+      });
+    });
+
+    function resize() {
+      const rect = stage.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const w = Math.max(1, Math.floor(rect.width * dpr));
+      const h = Math.max(1, Math.floor(rect.height * dpr));
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w;
+        canvas.height = h;
+        gl.viewport(0, 0, w, h);
+      }
+    }
+
+    function updatePointer(e) {
+      const rect = stage.getBoundingClientRect();
+      raw.x = (e.clientX - rect.left) / Math.max(1, rect.width);
+      raw.y = 1 - (e.clientY - rect.top) / Math.max(1, rect.height);
+    }
+
+    stage.addEventListener('pointerenter', (e) => {
+      updatePointer(e);
+      tip.x = raw.x;
+      tip.y = raw.y;
+      hovering = true;
+    });
+    stage.addEventListener('pointermove', (e) => {
+      updatePointer(e);
+      hovering = true;
+    });
+    stage.addEventListener('pointerleave', () => {
+      hovering = false;
+    });
+
+    function render(now) {
+      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      lastTime = now;
+      resize();
+
+      // Smooth tip toward raw cursor (frame-rate aware lerp)
+      const lerpAmount = 1 - Math.pow(1 - params.smooth, Math.max(1, dt * 60));
+      tip.x += (raw.x - tip.x) * lerpAmount;
+      tip.y += (raw.y - tip.y) * lerpAmount;
+
+      // Push new trail point if hovering (shift buffer, prepend)
+      if (hovering) {
+        for (let i = TRAIL_LENGTH - 1; i > 0; i--) {
+          trail[i * 3]     = trail[(i - 1) * 3];
+          trail[i * 3 + 1] = trail[(i - 1) * 3 + 1];
+          trail[i * 3 + 2] = trail[(i - 1) * 3 + 2];
+        }
+        trail[0] = tip.x;
+        trail[1] = tip.y;
+        trail[2] = 0;
+      }
+
+      // Age all valid entries
+      for (let i = 0; i < TRAIL_LENGTH; i++) {
+        if (trail[i * 3 + 2] >= 0) trail[i * 3 + 2] += dt;
+      }
+
+      gl.uniform2f(u.resolution, canvas.width, canvas.height);
+      gl.uniform1f(u.time, (now - start) / 1000);
+      gl.uniform1f(u.radius, params.radius);
+      gl.uniform1f(u.decay, params.decay);
+      gl.uniform1f(u.ambient, params.ambient);
+      gl.uniform1f(u.density, params.density);
+      gl.uniform1f(u.intensity, params.intensity);
+      gl.uniform3fv(u.trail, trail);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  })();
+  </script>
+</body>
+</html>
