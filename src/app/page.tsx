@@ -1,12 +1,20 @@
 import { existsSync, statSync } from "node:fs";
 import path from "node:path";
-import Link from "next/link";
 import Image from "next/image";
-import ComponentCardPreview from "@/components/ComponentCardPreview";
+import ComponentCollectionList from "@/components/ComponentCollectionList";
 import {
   componentSourceRegistry,
   type ComponentSourceId,
 } from "@/lib/componentSourceRegistry";
+
+type ComponentCategory =
+  | "Buttons"
+  | "Inputs & Controls"
+  | "Data & Charts"
+  | "Navigation & Layout"
+  | "Text & Typography"
+  | "Visual Effects"
+  | "Experiments";
 
 type ComponentCard = {
   href: string;
@@ -17,7 +25,7 @@ type ComponentCard = {
 };
 
 type ComponentCardWithUpdatedAt = ComponentCard & {
-  updatedAt: Date;
+  category: ComponentCategory;
   updatedAtLabel: string;
   updatedAtMs: number;
 };
@@ -77,6 +85,13 @@ const components: ComponentCard[] = [
     title: "Dot Shimmer Effect",
     description: "Portable vanilla WebGL square grid with a cursor-trail shimmer wave behind any content.",
     color: "#f5f5f5",
+    status: "Latest",
+  },
+  {
+    href: "/siri-glsl-wave",
+    title: "Siri GLSL Wave",
+    description: "Vanilla WebGL Siri-style wave and fluid dots shaders with responsive canvas sizing.",
+    color: "#5b7cfa",
     status: "Latest",
   },
   {
@@ -271,10 +286,43 @@ const components: ComponentCard[] = [
   },
 ];
 
-const statusStyles: Record<NonNullable<ComponentCard["status"]>, string> = {
-  Latest: "border-emerald-200 bg-emerald-50 text-emerald-700",
-  Experience: "border-sky-200 bg-sky-50 text-sky-700",
-  WIP: "border-amber-200 bg-amber-50 text-amber-700",
+const componentCategories: Partial<Record<string, ComponentCategory>> = {
+  "/article-scroll-rail": "Navigation & Layout",
+  "/avatarcreator": "Inputs & Controls",
+  "/buttons": "Buttons",
+  "/buy-now-glow-button": "Buttons",
+  "/canvasgallery": "Experiments",
+  "/chainselector": "Inputs & Controls",
+  "/chart-components": "Data & Charts",
+  "/connect-wallet-button": "Buttons",
+  "/css-ring-text": "Text & Typography",
+  "/datepicker": "Inputs & Controls",
+  "/dot-shimmer-effect": "Visual Effects",
+  "/earn-button": "Buttons",
+  "/figma-properties-button": "Buttons",
+  "/fix-action-buttons": "Buttons",
+  "/floating-toolbar-tooltip": "Visual Effects",
+  "/floatingdock": "Navigation & Layout",
+  "/fun-loading-button": "Buttons",
+  "/glossy-icon-buttons": "Buttons",
+  "/glow-typing-input": "Inputs & Controls",
+  "/light-gradient-button": "Buttons",
+  "/lime-alert-rule-button": "Buttons",
+  "/mathcurveloaders": "Visual Effects",
+  "/nfttable": "Data & Charts",
+  "/numberflow": "Data & Charts",
+  "/orange-add-view-button": "Buttons",
+  "/peektext": "Text & Typography",
+  "/performancebutton": "Buttons",
+  "/pnlcalendar": "Data & Charts",
+  "/pointerdown-cursor-button": "Buttons",
+  "/preview-deploy-buttons": "Buttons",
+  "/scroll-mask-scroller": "Navigation & Layout",
+  "/siri-glsl-wave": "Visual Effects",
+  "/slide-to-convert-button": "Buttons",
+  "/svgtoc": "Navigation & Layout",
+  "/track-status-button": "Buttons",
+  "/ultramock-metallic-button": "Buttons",
 };
 
 const dateFormatter = new Intl.DateTimeFormat("en", {
@@ -309,7 +357,7 @@ const sortedComponents: ComponentCardWithUpdatedAt[] = components
 
     return {
       ...component,
-      updatedAt,
+      category: componentCategories[component.href] ?? "Experiments",
       updatedAtLabel: dateFormatter.format(updatedAt),
       updatedAtMs: updatedAt.getTime(),
     };
@@ -324,6 +372,7 @@ const sortedComponents: ComponentCardWithUpdatedAt[] = components
 
 const totalCount = sortedComponents.length;
 const latestCount = sortedComponents.filter((c) => c.status === "Latest").length;
+const categoryCount = new Set(sortedComponents.map((c) => c.category)).size;
 
 export default function CollectionPage() {
   return (
@@ -345,94 +394,15 @@ export default function CollectionPage() {
           <div className="mt-5 flex items-center gap-3 text-xs uppercase tracking-[0.16em] text-gray-400">
             <span>{totalCount} components</span>
             <span className="h-1 w-1 rounded-full bg-gray-300" />
+            <span>{categoryCount} categories</span>
+            <span className="h-1 w-1 rounded-full bg-gray-300" />
             <span className="text-emerald-600">{latestCount} latest</span>
           </div>
         </div>
       </header>
 
-      {/* Component grid */}
       <main className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
-        <ol className="grid auto-rows-fr grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {sortedComponents.map((comp, idx) => (
-            <li className="min-w-0" key={comp.href}>
-              <article className="group relative flex h-[450px] flex-col overflow-hidden rounded-[22px] border border-gray-200/80 bg-white/45 p-2 shadow-sm transition-[background-color,border-color,box-shadow,transform] duration-150 ease-out hover:-translate-y-0.5 hover:border-gray-300 hover:bg-white/80 hover:shadow-md sm:h-[430px]">
-                <div
-                  className="h-[196px] flex-none rounded-[18px] border border-white/75 transition-transform duration-150 ease-out group-hover:scale-[1.01]"
-                  style={{
-                    background: `radial-gradient(circle at 76% 22%, ${comp.color}33, transparent 34%), linear-gradient(135deg, ${comp.color}1f, #dedede 68%)`,
-                  }}
-                >
-                  <ComponentCardPreview
-                    color={comp.color}
-                    href={comp.href}
-                  />
-                </div>
-
-                <div className="mt-2 flex min-h-0 flex-1 flex-col rounded-[18px] bg-white/[0.92] px-5 py-5 shadow-[0_-1px_0_rgba(255,255,255,0.86)]">
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex min-w-0 items-center gap-2.5">
-                      <span className="shrink-0 font-mono text-[11px] text-gray-400">
-                        {String(idx + 1).padStart(2, "0")}
-                      </span>
-                      <span
-                        className="h-2.5 w-2.5 shrink-0 rounded-full ring-2 ring-white"
-                        style={{
-                          backgroundColor: comp.color,
-                          boxShadow: `0 0 0 1px ${comp.color}33`,
-                        }}
-                      />
-                    </div>
-                    {comp.status ? (
-                      <span
-                        className={`inline-flex shrink-0 rounded-full border px-2.5 py-0.5 text-[10px] font-semibold uppercase ${statusStyles[comp.status]}`}
-                      >
-                        {comp.status}
-                      </span>
-                    ) : null}
-                  </div>
-
-                  <div className="mt-5 min-w-0 flex-1">
-                    <h2 className="line-clamp-2 text-lg font-semibold leading-tight text-gray-900 transition-colors group-hover:text-[#5d3ae9]">
-                      {comp.title}
-                    </h2>
-                    <p className="mt-1 text-xs font-medium uppercase text-gray-400">
-                      Updated {comp.updatedAtLabel}
-                    </p>
-                    <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-gray-500 sm:line-clamp-3">
-                      {comp.description}
-                    </p>
-                  </div>
-
-                  <span className="mt-7 inline-flex items-center gap-1 text-xs font-medium text-gray-400 transition-colors group-hover:text-[#8162ff]">
-                    <span>View component</span>
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      className="transition-transform group-hover:translate-x-0.5"
-                    >
-                      <path
-                        d="M5.5 3L10.5 8L5.5 13"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  </span>
-                </div>
-                <Link
-                  aria-label={`View ${comp.title}`}
-                  className="absolute inset-0 z-10 rounded-[22px] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#8162ff]"
-                  href={comp.href}
-                >
-                  <span className="sr-only">View {comp.title}</span>
-                </Link>
-              </article>
-            </li>
-          ))}
-        </ol>
+        <ComponentCollectionList components={sortedComponents} />
       </main>
     </div>
   );
