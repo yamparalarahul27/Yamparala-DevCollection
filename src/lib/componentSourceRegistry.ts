@@ -69,6 +69,10 @@ export const componentSourceRegistry = {
     ["src", "components", "DotShimmerEffect.tsx"],
     ["src", "app", "dot-shimmer-effect", "page.tsx"],
   ],
+  "/siri-glsl-wave": [
+    ["src", "components", "SiriGlslWave.tsx"],
+    ["src", "app", "siri-glsl-wave", "page.tsx"],
+  ],
   "/floating-toolbar-tooltip": [
     ["src", "components", "FloatingToolbarTooltip.tsx"],
     ["src", "components", "FloatingToolbarTooltip.module.css"],

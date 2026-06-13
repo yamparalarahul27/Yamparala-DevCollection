@@ -17,6 +17,7 @@ export const componentNavLinks: Array<{ href: string; label: string }> = [
   { href: "/article-scroll-rail", label: "Article Scroll Rail" },
   { href: "/css-ring-text", label: "CSS Ring Text" },
   { href: "/dot-shimmer-effect", label: "Dot Shimmer Effect" },
+  { href: "/siri-glsl-wave", label: "Siri GLSL Wave" },
   { href: "/floating-toolbar-tooltip", label: "Floating Toolbar Tooltip" },
   { href: "/ultramock-metallic-button", label: "Ultramock Metallic Button" },
   { href: "/slide-to-convert-button", label: "Slide To Convert Button" },
