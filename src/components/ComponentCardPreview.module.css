@@ -66,6 +66,17 @@
   transform-origin: center;
 }
 
+.glassMini {
+  display: grid;
+  width: 520px;
+  min-height: 420px;
+  place-items: center;
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 58px),
+    linear-gradient(180deg, #0b0d13, #191a21 54%, #08090d);
+  padding: 54px;
+}
+
 .timeline {
   display: grid;
   width: min(76%, 260px);

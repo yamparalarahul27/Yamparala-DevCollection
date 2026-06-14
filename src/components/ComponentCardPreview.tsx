@@ -10,6 +10,8 @@ import FigmaPropertiesButton from "@/components/FigmaPropertiesButton";
 import FixActionButtons from "@/components/FixActionButtons";
 import FloatingToolbarTooltip from "@/components/FloatingToolbarTooltip";
 import FunLoadingButton from "@/components/FunLoadingButton";
+import GlassButton from "@/components/GlassButton";
+import GlassCard from "@/components/GlassCard";
 import GlossyIconButtonStack from "@/components/GlossyIconButtons";
 import GlowTypingInput from "@/components/GlowTypingInput";
 import LightGradientButton from "@/components/LightGradientButton";
@@ -239,6 +241,21 @@ export default function ComponentCardPreview({
       preview = (
         <ScaledPreview scale={0.86}>
           <ConnectWalletButton />
+        </ScaledPreview>
+      );
+      break;
+    case "/glass-components":
+      preview = (
+        <ScaledPreview scale={0.5}>
+          <div className={styles.glassMini}>
+            <GlassCard
+              description="Ready check"
+              eyebrow="Release"
+              title="Signal"
+            >
+              <GlassButton>Open</GlassButton>
+            </GlassCard>
+          </div>
         </ScaledPreview>
       );
       break;

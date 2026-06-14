@@ -34,4 +34,5 @@ export const componentNavLinks: Array<{ href: string; label: string }> = [
   { href: "/lime-alert-rule-button", label: "Lime Alert Rule Button" },
   { href: "/preview-deploy-buttons", label: "Preview Deploy Buttons" },
   { href: "/earn-button", label: "Earn Button" },
+  { href: "/glass-components", label: "Glass Button & Card" },
 ];

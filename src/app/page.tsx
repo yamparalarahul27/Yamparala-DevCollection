@@ -39,6 +39,13 @@ const components: ComponentCard[] = [
     status: "Latest",
   },
   {
+    href: "/glass-components",
+    title: "Glass Button & Card",
+    description: "Frosted CTA and card components using the extracted gradient border, blur, shadow, and noise recipe.",
+    color: "#f8fafc",
+    status: "Latest",
+  },
+  {
     href: "/connect-wallet-button",
     title: "Connect Wallet Button",
     description: "Compact cyan glass wallet CTA with a dark dotted-arrow action block and tactile hover motion.",
@@ -304,6 +311,7 @@ const componentCategories: Partial<Record<string, ComponentCategory>> = {
   "/floating-toolbar-tooltip": "Visual Effects",
   "/floatingdock": "Navigation & Layout",
   "/fun-loading-button": "Buttons",
+  "/glass-components": "Buttons",
   "/glossy-icon-buttons": "Buttons",
   "/glow-typing-input": "Inputs & Controls",
   "/light-gradient-button": "Buttons",

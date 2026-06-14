@@ -148,6 +148,12 @@ export const componentSourceRegistry = {
     ["src", "components", "EarnButton.module.css"],
     ["src", "app", "earn-button", "page.tsx"],
   ],
+  "/glass-components": [
+    ["src", "components", "GlassButton.tsx"],
+    ["src", "components", "GlassCard.tsx"],
+    ["src", "components", "GlassComponents.module.css"],
+    ["src", "app", "glass-components", "page.tsx"],
+  ],
 } as const;
 
 export type ComponentSourceId = keyof typeof componentSourceRegistry;

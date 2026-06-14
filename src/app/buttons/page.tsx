@@ -7,6 +7,7 @@ import EarnButton from "@/components/EarnButton";
 import FigmaPropertiesButton from "@/components/FigmaPropertiesButton";
 import FixActionButtons from "@/components/FixActionButtons";
 import FunLoadingButton from "@/components/FunLoadingButton";
+import GlassButton from "@/components/GlassButton";
 import GlossyIconButtonStack from "@/components/GlossyIconButtons";
 import LightGradientButton from "@/components/LightGradientButton";
 import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
@@ -33,6 +34,13 @@ const buttonDemos: ButtonDemo[] = [
     description: "Compact cyan wallet CTA with a dark dotted-arrow action block and tactile motion.",
     preview: <ConnectWalletButton />,
     previewClassName: "bg-[#030b0f]",
+  },
+  {
+    title: "Glass Button & Card",
+    href: "/glass-components",
+    description: "Frosted CTA using the extracted gradient-border, blur, shadow, and noise treatment.",
+    preview: <GlassButton>Launch stack</GlassButton>,
+    previewClassName: "bg-[#080a0f]",
   },
   {
     title: "Pointerdown Cursor Button",
@@ -142,6 +150,7 @@ import EarnButton from "@/components/EarnButton";
 import FigmaPropertiesButton from "@/components/FigmaPropertiesButton";
 import FixActionButtons from "@/components/FixActionButtons";
 import FunLoadingButton from "@/components/FunLoadingButton";
+import GlassButton from "@/components/GlassButton";
 import GlossyIconButtonStack from "@/components/GlossyIconButtons";
 import LightGradientButton from "@/components/LightGradientButton";
 import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
@@ -162,6 +171,7 @@ export default function ButtonOverview() {
       <SlideToConvertButton />
       <TrackStatusButton />
       <FixActionButtons />
+      <GlassButton>Launch stack</GlassButton>
       <GlossyIconButtonStack />
       <LimeAlertRuleButton />
       <PreviewDeployButtons />
