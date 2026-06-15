@@ -1,0 +1,232 @@
+.glassButton,
+.glassCard {
+  --glass-noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23noise)' opacity='.68'/%3E%3C/svg%3E");
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  -webkit-backdrop-filter: blur(var(--glass-blur, 10px));
+  backdrop-filter: blur(var(--glass-blur, 10px));
+}
+
+.glassButton::before,
+.glassCard::before {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  padding: var(--gradientBorder-size, 0.5px);
+  border-radius: inherit;
+  background: var(
+    --gradientBorder-gradient,
+    linear-gradient(
+      175deg,
+      rgba(255, 255, 255, 0.2464) 10.85%,
+      rgba(20, 20, 20, 0.56) 24.36%,
+      rgba(50, 50, 50, 0.56) 73.67%,
+      rgba(255, 255, 255, 0.56) 90.68%
+    )
+  );
+  content: "";
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  mask-composite: exclude;
+}
+
+.glassButton::after,
+.glassCard::after {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--glass-noise);
+  background-size: 140px 140px;
+  content: "";
+  mix-blend-mode: screen;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.glassButton {
+  --gradientBorder-size: 0.5px;
+  box-sizing: border-box;
+  display: inline-flex;
+  width: min(100%, 217px);
+  height: 46px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: 0;
+  border-radius: 99px;
+  background: linear-gradient(
+    182.51deg,
+    rgba(255, 255, 255, 0.02) 27.09%,
+    rgba(90, 90, 90, 0.02) 58.59%,
+    rgba(0, 0, 0, 0.02) 92.75%
+  );
+  box-shadow:
+    0 30.0444px 16.2444px rgba(0, 0, 0, 0.1207),
+    0 15.6px 8.2875px rgba(0, 0, 0, 0.07),
+    0 6.35556px 4.15556px rgba(0, 0, 0, 0.04);
+  color: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+  font: 650 14px/1 var(--font-inter), system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  letter-spacing: 0;
+  padding: 0 22px;
+  text-decoration: none;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.3);
+  transition:
+    box-shadow 160ms ease-out,
+    filter 160ms ease-out,
+    transform 160ms ease-out;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.glassCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+.nav {
+  --gradientBorder-size: 1px;
+  width: min(100%, 309px);
+  height: auto;
+  min-height: 52px;
+  justify-content: space-between;
+  padding: 7.5px 9px 7.5px 24px;
+}
+
+.buttonContent {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.buttonIcon {
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: currentColor;
+}
+
+.buttonIcon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.glassButton:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.95);
+  outline-offset: 4px;
+}
+
+.glassButton:disabled,
+.glassButton[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.52;
+}
+
+.glassCard {
+  --gradientBorder-size: 1px;
+  --glass-blur: 18px;
+  box-sizing: border-box;
+  display: grid;
+  width: min(100%, 420px);
+  gap: 22px;
+  border-radius: 28px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.025) 48%, rgba(0, 0, 0, 0.16)),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.01));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.22),
+    0 34px 54px rgba(0, 0, 0, 0.18),
+    0 12px 18px rgba(0, 0, 0, 0.12);
+  color: #f8fafc;
+  padding: clamp(22px, 5vw, 30px);
+}
+
+.cardHeader {
+  display: grid;
+  gap: 10px;
+}
+
+.eyebrow {
+  color: rgba(255, 255, 255, 0.64);
+  font: 700 11px/1 var(--font-inter), system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: #ffffff;
+  font: 700 clamp(1.45rem, 5vw, 2.35rem) / 1.05 var(--font-inter), system-ui,
+    -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+.description {
+  margin: 0;
+  max-width: 32rem;
+  color: rgba(255, 255, 255, 0.72);
+  font: 500 14px/1.65 var(--font-inter), system-ui, -apple-system, "Segoe UI",
+    sans-serif;
+}
+
+.cardBody {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 14px;
+}
+
+.cardFooter {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+@media (hover: hover) {
+  .glassButton:hover:not(:disabled):not([aria-disabled="true"]) {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+    box-shadow:
+      0 34px 18px rgba(0, 0, 0, 0.13),
+      0 17px 9px rgba(0, 0, 0, 0.08),
+      0 7px 5px rgba(0, 0, 0, 0.05);
+  }
+}
+
+.glassButton:active:not(:disabled):not([aria-disabled="true"]) {
+  transform: translateY(1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glassButton {
+    transition: none;
+  }
+
+  .glassButton:hover:not(:disabled):not([aria-disabled="true"]),
+  .glassButton:active:not(:disabled):not([aria-disabled="true"]) {
+    transform: none;
+  }
+}

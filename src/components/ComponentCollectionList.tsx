@@ -1,6 +1,11 @@
 "use client";
 
-import { type ChangeEvent, useMemo, useSyncExternalStore } from "react";
+import {
+  type ChangeEvent,
+  type KeyboardEvent,
+  useMemo,
+  useSyncExternalStore,
+} from "react";
 import Link from "next/link";
 import { ArrowRight, Search, X } from "lucide-react";
 
@@ -24,6 +29,7 @@ const CATEGORY_ORDER = [
   "Visual Effects",
   "Experiments",
 ];
+const ALL_SECTION = "All";
 
 const statusStyles: Record<NonNullable<ComponentListItem["status"]>, string> = {
   Latest: "border-emerald-200 bg-emerald-50 text-emerald-700",
@@ -35,6 +41,11 @@ function normalize(value: string) {
   return value.trim().toLowerCase();
 }
 
+function getSectionTabId(section: string) {
+  const slug = normalize(section).replace(/[^a-z0-9]+/g, "-");
+  return `component-section-tab-${slug || "all"}`;
+}
+
 function updateSearchParam(query: string) {
   const url = new URL(window.location.href);
   const nextQuery = query.trim();
@@ -43,6 +54,19 @@ function updateSearchParam(query: string) {
     url.searchParams.set("q", nextQuery);
   } else {
     url.searchParams.delete("q");
+  }
+
+  window.history.replaceState(null, "", `${url.pathname}${url.search}`);
+  window.dispatchEvent(new Event("proteus-component-search-change"));
+}
+
+function updateSectionParam(section: string) {
+  const url = new URL(window.location.href);
+
+  if (section === ALL_SECTION) {
+    url.searchParams.delete("section");
+  } else {
+    url.searchParams.set("section", section);
   }
 
   window.history.replaceState(null, "", `${url.pathname}${url.search}`);
@@ -67,6 +91,16 @@ function getServerSearchSnapshot() {
   return "";
 }
 
+function getSectionSnapshot() {
+  return (
+    new URLSearchParams(window.location.search).get("section") ?? ALL_SECTION
+  );
+}
+
+function getServerSectionSnapshot() {
+  return ALL_SECTION;
+}
+
 export default function ComponentCollectionList({
   components,
 }: {
@@ -76,6 +110,11 @@ export default function ComponentCollectionList({
     subscribeToSearch,
     getSearchSnapshot,
     getServerSearchSnapshot,
+  );
+  const section = useSyncExternalStore(
+    subscribeToSearch,
+    getSectionSnapshot,
+    getServerSectionSnapshot,
   );
 
   const filteredComponents = useMemo(() => {
@@ -99,20 +138,74 @@ export default function ComponentCollectionList({
     });
   }, [components, query]);
 
+  const availableCategories = useMemo(() => {
+    const knownCategories = CATEGORY_ORDER.filter((category) =>
+      components.some((component) => component.category === category),
+    );
+    const hasOther = components.some(
+      (component) => !CATEGORY_ORDER.includes(component.category),
+    );
+
+    return hasOther ? [...knownCategories, "Other"] : knownCategories;
+  }, [components]);
+
+  const selectedSection = useMemo(() => {
+    if (section === ALL_SECTION) {
+      return ALL_SECTION;
+    }
+
+    return availableCategories.includes(section) ? section : ALL_SECTION;
+  }, [availableCategories, section]);
+
+  const sectionTabs = useMemo(() => {
+    const countCategory = (category: string) =>
+      filteredComponents.filter((component) =>
+        category === "Other"
+          ? !CATEGORY_ORDER.includes(component.category)
+          : component.category === category,
+      ).length;
+
+    return [
+      { count: filteredComponents.length, label: ALL_SECTION },
+      ...availableCategories.map((category) => ({
+        count: countCategory(category),
+        label: category,
+      })),
+    ];
+  }, [availableCategories, filteredComponents]);
+
+  const sectionComponents = useMemo(() => {
+    if (selectedSection === ALL_SECTION) {
+      return filteredComponents;
+    }
+
+    return filteredComponents.filter((component) =>
+      selectedSection === "Other"
+        ? !CATEGORY_ORDER.includes(component.category)
+        : component.category === selectedSection,
+    );
+  }, [filteredComponents, selectedSection]);
+
   const groupedComponents = useMemo(() => {
+    if (selectedSection !== ALL_SECTION) {
+      return sectionComponents.length
+        ? [{ category: selectedSection, items: sectionComponents }]
+        : [];
+    }
+
     const knownGroups = CATEGORY_ORDER.map((category) => ({
       category,
-      items: filteredComponents.filter((item) => item.category === category),
+      items: sectionComponents.filter((item) => item.category === category),
     })).filter((group) => group.items.length > 0);
 
-    const uncategorized = filteredComponents.filter(
+    const uncategorized = sectionComponents.filter(
       (item) => !CATEGORY_ORDER.includes(item.category),
     );
 
     return uncategorized.length
       ? [...knownGroups, { category: "Other", items: uncategorized }]
       : knownGroups;
-  }, [filteredComponents]);
+  }, [sectionComponents, selectedSection]);
 
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
     updateSearchParam(event.target.value);
@@ -121,6 +214,49 @@ export default function ComponentCollectionList({
   const clearSearch = () => {
     updateSearchParam("");
   };
+
+  const handleSectionKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
+    if (
+      ![
+        "ArrowDown",
+        "ArrowLeft",
+        "ArrowRight",
+        "ArrowUp",
+        "End",
+        "Home",
+      ].includes(event.key)
+    ) {
+      return;
+    }
+
+    event.preventDefault();
+
+    const tabs = Array.from(
+      event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]'),
+    );
+    const activeIndex = Math.max(
+      0,
+      tabs.indexOf(document.activeElement as HTMLButtonElement),
+    );
+    const lastIndex = tabs.length - 1;
+    const nextIndex =
+      event.key === "Home"
+        ? 0
+        : event.key === "End"
+          ? lastIndex
+          : event.key === "ArrowLeft" || event.key === "ArrowUp"
+            ? activeIndex === 0
+              ? lastIndex
+              : activeIndex - 1
+            : activeIndex === lastIndex
+              ? 0
+              : activeIndex + 1;
+
+    tabs[nextIndex]?.focus();
+    tabs[nextIndex]?.click();
+  };
+
+  const selectedTabId = getSectionTabId(selectedSection);
 
   return (
     <section aria-labelledby="components-heading" className="space-y-8">
@@ -133,7 +269,7 @@ export default function ComponentCollectionList({
             Components
           </h1>
           <p className="mt-2 text-sm leading-6 text-gray-500">
-            {filteredComponents.length} of {components.length} components
+            {sectionComponents.length} of {components.length} components
           </p>
         </div>
 
@@ -172,8 +308,53 @@ export default function ComponentCollectionList({
         </div>
       </div>
 
+      <div
+        aria-label="Component sections"
+        className="flex gap-2 overflow-x-auto border-b border-gray-200/70 pb-3"
+        onKeyDown={handleSectionKeyDown}
+        role="tablist"
+      >
+        {sectionTabs.map((tab) => {
+          const selected = tab.label === selectedSection;
+
+          return (
+            <button
+              aria-controls="component-section-panel"
+              aria-selected={selected}
+              className={[
+                "inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border px-3 text-sm font-medium outline-none transition-colors duration-150 ease-out focus-visible:ring-2 focus-visible:ring-gray-900/20",
+                selected
+                  ? "border-gray-950 bg-gray-950 text-white"
+                  : "border-gray-200 bg-white text-gray-600 hover:border-gray-300 hover:text-gray-950",
+              ].join(" ")}
+              id={getSectionTabId(tab.label)}
+              key={tab.label}
+              onClick={() => updateSectionParam(tab.label)}
+              role="tab"
+              tabIndex={selected ? 0 : -1}
+              type="button"
+            >
+              <span>{tab.label}</span>
+              <span
+                className={[
+                  "rounded-full px-1.5 py-0.5 text-[11px]",
+                  selected ? "bg-white/16 text-white" : "bg-gray-100 text-gray-500",
+                ].join(" ")}
+              >
+                {tab.count}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
       {groupedComponents.length > 0 ? (
-        <div className="space-y-9">
+        <div
+          aria-labelledby={selectedTabId}
+          className="space-y-9"
+          id="component-section-panel"
+          role="tabpanel"
+        >
           {groupedComponents.map((group) => (
             <section aria-labelledby={`${group.category}-heading`} key={group.category}>
               <div className="mb-3 flex items-baseline justify-between gap-4">
@@ -243,13 +424,26 @@ export default function ComponentCollectionList({
           <p className="mt-2 max-w-sm text-sm leading-6 text-gray-500">
             Try a different name, category, or status.
           </p>
-          <button
-            className="mt-5 min-h-10 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 shadow-sm transition-colors duration-150 ease-out hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20"
-            onClick={clearSearch}
-            type="button"
-          >
-            Clear search
-          </button>
+          <div className="mt-5 flex flex-wrap justify-center gap-2">
+            {query ? (
+              <button
+                className="min-h-10 rounded-lg border border-gray-200 bg-white px-4 text-sm font-medium text-gray-700 shadow-sm transition-colors duration-150 ease-out hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20"
+                onClick={clearSearch}
+                type="button"
+              >
+                Clear search
+              </button>
+            ) : null}
+            {selectedSection !== ALL_SECTION ? (
+              <button
+                className="min-h-10 rounded-lg bg-gray-950 px-4 text-sm font-medium text-white shadow-sm transition-colors duration-150 ease-out hover:bg-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-900/20"
+                onClick={() => updateSectionParam(ALL_SECTION)}
+                type="button"
+              >
+                All sections
+              </button>
+            ) : null}
+          </div>
         </div>
       )}
     </section>
