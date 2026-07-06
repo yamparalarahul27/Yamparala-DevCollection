@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import ComponentShell from "@/components/ComponentShell";
 
 type Chain = {
@@ -104,7 +105,13 @@ export default function ChainSelectorPage() {
                 onClick={() => setSelectedChainId(chain.id)}
                 type="button"
               >
-                <img alt={chain.label} className="h-5 w-5 shrink-0" src={chain.icon} />
+                <Image
+                  alt={chain.label}
+                  className="h-5 w-5 shrink-0"
+                  height={20}
+                  src={chain.icon}
+                  width={20}
+                />
                 {active ? (
                   <span className="text-[12px] font-medium text-[#1f2937]">{chain.label}</span>
                 ) : null}
@@ -112,11 +119,13 @@ export default function ChainSelectorPage() {
             );
           })}
         </div>
-        <img
+        <Image
           alt=""
           aria-hidden="true"
           className="ml-auto h-6 w-6 shrink-0 rotate-180"
+          height={24}
           src="/proteus/header/chevron-up.svg"
+          width={24}
         />
       </div>
     </ComponentShell>

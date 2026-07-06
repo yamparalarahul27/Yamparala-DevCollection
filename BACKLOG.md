@@ -18,3 +18,39 @@ Notes:
 - Performance: lazy-load preview routes; keep sidebar light.
 
 Out of scope for this PR — tracked here so we don't lose it.
+
+## Project health follow-ups
+
+Remaining items from the July 2026 project review (registry consolidation,
+git-based dates, serverless source-viewer fix, CI, README, and lint cleanup
+already landed):
+
+### Repo hygiene
+
+- Remove the 2.1 MB `Proteus Logo.svg` at the repo root — `public/proteus-logo.svg`
+  already serves the site; keep design masters out of the repo or optimize them.
+- Remove `dot-shimmer-prototype.html` at the root; the `/dot-shimmer-effect`
+  route supersedes it.
+- Remove unused create-next-app leftovers in `public/` (`next.svg`, `vercel.svg`,
+  `globe.svg`, `file.svg`, `window.svg`) after confirming nothing references them.
+
+### Testing
+
+- Add a test runner (Vitest fits the stack) and start with unit tests for
+  `src/lib/parseDateInput.ts` — pure date-parsing logic that is easy to regress.
+- Add a registry consistency test: every `componentRegistry` entry's `href`
+  has a matching `src/app/<route>/page.tsx` and every listed source file exists.
+- Wire the test step into the CI workflow once tests exist.
+
+### Dependencies
+
+- Align `three` (^0.172) with `@types/three` (^0.183) to avoid type/runtime
+  API drift; upgrade `three` or pin types to the matching version.
+
+### Nice-to-haves
+
+- Per-page `metadata` (title/description) for component routes so shared
+  links preview well; only the root layout defines metadata today.
+- Consider generating component source snippets at build time instead of
+  reading the filesystem in `/api/component-source`, which would let the
+  route become static and drop the `outputFileTracingIncludes` config.
