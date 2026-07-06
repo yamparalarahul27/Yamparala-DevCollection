@@ -1,7 +1,7 @@
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import { NextResponse } from "next/server";
-import { componentSourceRegistry, type ComponentSourceFile } from "@/lib/componentSourceRegistry";
+import { componentSourceRegistry, type ComponentSourceFile } from "@/lib/componentRegistry";
 
 export const runtime = "nodejs";
 

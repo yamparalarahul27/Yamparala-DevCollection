@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Undo2 } from "lucide-react";
 import BottomSheet from "@/components/BottomSheet";
 import FloatingComponentDock from "@/components/FloatingComponentDock";
-import { componentNavLinks } from "@/lib/componentNavLinks";
+import { componentNavLinks } from "@/lib/componentRegistry";
 import { useComponentSource } from "@/lib/useComponentSource";
 
 export default function ComponentShell({
