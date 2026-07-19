@@ -1,0 +1,699 @@
+.root {
+  --card: #ffffff;
+  --card-border: rgba(15, 23, 42, 0.1);
+  --composer: #ffffff;
+  --ink: #131820;
+  --muted: #687180;
+  --subtle: #8a93a2;
+  --divider: rgba(15, 23, 42, 0.08);
+  --button-surface: #f4f5f7;
+  --button-hover: #e9ebef;
+  --focus: #2563eb;
+
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  width: min(100%, 446px);
+  min-width: 0;
+  height: 404px;
+  overflow: clip;
+  padding-top: 270px;
+  background: transparent;
+  color: var(--ink);
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.contextCard {
+  position: absolute;
+  top: 12px;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  height: 236px;
+  grid-template-rows: 48px 132px 56px;
+  overflow: hidden;
+  border: 1px solid var(--card-border);
+  border-radius: 26px;
+  background: var(--card);
+  box-shadow:
+    0 20px 48px rgba(15, 23, 42, 0.1),
+    0 2px 7px rgba(15, 23, 42, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  filter: blur(4px);
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 258px, 0) scaleY(0.96);
+  transform-origin: bottom center;
+  visibility: hidden;
+  will-change: transform, opacity, filter;
+  transition:
+    transform 300ms cubic-bezier(0.4, 0, 1, 1),
+    opacity 180ms cubic-bezier(0.4, 0, 1, 1),
+    filter 180ms cubic-bezier(0.4, 0, 1, 1),
+    visibility 0ms linear 300ms;
+}
+
+.root[data-open="true"] .contextCard {
+  filter: blur(var(--context-blur));
+  opacity: var(--context-opacity);
+  transform: translate3d(0, calc(22px - var(--context-gap)), 0) scaleY(var(--context-scale));
+  visibility: visible;
+  transition:
+    transform 420ms cubic-bezier(0.16, 1.16, 0.3, 1),
+    opacity 220ms cubic-bezier(0, 0, 0.2, 1),
+    filter 220ms cubic-bezier(0, 0, 0.2, 1),
+    visibility 0ms linear 0ms;
+}
+
+.root[data-interactive="true"] .contextCard {
+  pointer-events: auto;
+}
+
+.root[data-scrubbing="true"] .contextCard,
+.root[data-scrubbing="true"][data-open="true"] .contextCard {
+  transition: none;
+}
+
+.root[data-debug="true"] {
+  outline: 1px dashed rgba(37, 99, 235, 0.58);
+  outline-offset: -1px;
+}
+
+.root[data-debug="true"] .contextCard,
+.root[data-debug="true"] .composer {
+  outline: 1px dashed rgba(225, 29, 72, 0.72);
+  outline-offset: -3px;
+}
+
+.root[data-debug="true"] .contextCard::after,
+.root[data-debug="true"] .composer::after {
+  position: absolute;
+  top: 6px;
+  left: 10px;
+  z-index: 4;
+  border-radius: 4px;
+  background: rgba(17, 24, 39, 0.82);
+  color: #ffffff;
+  content: "CONTEXT";
+  font-size: 8px;
+  font-weight: 700;
+  line-height: 16px;
+  padding: 0 5px;
+  pointer-events: none;
+}
+
+.root[data-debug="true"] .composer::after {
+  content: "COMPOSER";
+}
+
+.contextHeader {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--divider);
+  padding: 0 15px;
+}
+
+.contextHeader > span:first-child {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.contextHeader strong {
+  overflow: hidden;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contextHeader svg {
+  flex: none;
+  color: #596579;
+}
+
+.totalCoverage {
+  flex: none;
+  border: 1px solid var(--divider);
+  border-radius: 999px;
+  background: var(--button-surface);
+  color: #505a69;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  padding: 5px 8px;
+}
+
+.assetList,
+.skeletonList {
+  display: grid;
+  min-height: 0;
+  grid-template-rows: repeat(3, 44px);
+  margin: 0;
+  padding: 0;
+}
+
+.assetRow {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: 30px minmax(78px, 1fr) minmax(72px, auto) 54px;
+  align-items: center;
+  gap: 9px;
+  border-bottom: 1px solid var(--divider);
+  list-style: none;
+  padding: 0 14px;
+}
+
+.assetRow:last-child {
+  border-bottom: 0;
+}
+
+.assetIcon {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--asset-accent) 56%, white);
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--asset-accent) 14%, white);
+  color: color-mix(in srgb, var(--asset-accent) 78%, #18202d);
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.assetIdentity,
+.pnl,
+.coverage {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.assetIdentity strong,
+.pnl strong,
+.coverage strong {
+  overflow: hidden;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.assetIdentity > span,
+.pnl > span,
+.coverage > span {
+  color: var(--subtle);
+  font-size: 9px;
+  font-weight: 520;
+  line-height: 1.1;
+}
+
+.pnl,
+.coverage {
+  align-items: flex-end;
+  text-align: right;
+}
+
+.pnl strong {
+  color: #16805d;
+}
+
+.pnl[data-positive="false"] strong {
+  color: #c24152;
+}
+
+.coverage strong {
+  color: #465060;
+}
+
+.actions {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 7px;
+  border-top: 1px solid var(--divider);
+  padding: 8px 12px;
+}
+
+.actions button,
+.statePanel button {
+  display: inline-flex;
+  min-width: 0;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--divider);
+  border-radius: 8px;
+  background: var(--button-surface);
+  color: #404a59;
+  font: 600 11px / 1 var(--font-inter), system-ui, sans-serif;
+  padding: 0 8px;
+  transition:
+    background-color 100ms ease-out,
+    border-color 100ms ease-out,
+    color 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.actions button:focus-visible,
+.statePanel button:focus-visible,
+.sendButton:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.composer {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  width: 100%;
+  height: 134px;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--card-border);
+  border-radius: 30px;
+  background: var(--composer);
+  box-shadow:
+    0 16px 34px rgba(15, 23, 42, 0.11),
+    0 2px 6px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  padding: 18px 72px 18px 23px;
+  transition:
+    border-color 150ms ease-out,
+    box-shadow 150ms ease-out;
+}
+
+.composer:focus-within {
+  border-color: rgba(37, 99, 235, 0.34);
+  box-shadow:
+    0 16px 34px rgba(15, 23, 42, 0.11),
+    0 2px 6px rgba(15, 23, 42, 0.04),
+    0 0 0 3px rgba(37, 99, 235, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+}
+
+.composer input {
+  min-width: 0;
+  height: 38px;
+  flex: 1;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--ink);
+  font: 500 16px / 1.4 var(--font-inter), system-ui, sans-serif;
+  letter-spacing: 0;
+  outline: none;
+  padding: 0 4px;
+}
+
+.composer input::placeholder {
+  color: #9299a4;
+}
+
+.composer input:focus-visible {
+  outline: none;
+}
+
+.sendButton {
+  position: absolute;
+  right: 16px;
+  bottom: 15px;
+  display: grid;
+  width: 40px;
+  min-width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #222832;
+  box-shadow:
+    0 5px 12px rgba(15, 23, 42, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  color: #ffffff;
+  transition:
+    background-color 100ms ease-out,
+    box-shadow 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.sendButton:disabled {
+  background: #e2e5e9;
+  box-shadow: none;
+  color: #9aa1ac;
+  cursor: not-allowed;
+}
+
+.statePanel {
+  display: flex;
+  grid-row: 2 / 4;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  color: var(--muted);
+  text-align: center;
+  padding: 18px;
+}
+
+.statePanel > strong {
+  color: var(--ink);
+  font-size: 13px;
+}
+
+.statePanel > span {
+  font-size: 11px;
+}
+
+.statePanel button {
+  margin-top: 3px;
+}
+
+.skeletonList {
+  grid-row: 2 / 4;
+  grid-template-rows: repeat(3, 52px);
+  align-content: center;
+  padding: 8px 14px;
+}
+
+.skeletonRow {
+  display: grid;
+  grid-template-columns: 30px 1fr 74px;
+  align-items: center;
+  gap: 10px;
+}
+
+.skeletonRow i {
+  display: block;
+  height: 9px;
+  border-radius: 6px;
+  background: #e8eaee;
+  animation: skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+.skeletonRow i:first-child {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.playground {
+  display: flex;
+  width: min(100%, 520px);
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  background: transparent;
+}
+
+.motionControls {
+  display: flex;
+  width: min(100%, 446px);
+  min-height: 48px;
+  align-items: center;
+  gap: 16px;
+  color: #5f6875;
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 11px;
+}
+
+.gapControl {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  grid-template-columns: auto minmax(72px, 1fr) 42px;
+  align-items: center;
+  gap: 9px;
+}
+
+.gapControl > span,
+.debugControl > span {
+  font-weight: 600;
+}
+
+.gapControl output {
+  color: #717a88;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.gapControl input[type="range"] {
+  width: 100%;
+  height: 20px;
+  margin: 0;
+  accent-color: #2563eb;
+  cursor: ew-resize;
+}
+
+.debugControl {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.debugControl input {
+  width: 15px;
+  height: 15px;
+  margin: 0;
+  accent-color: #2563eb;
+}
+
+.controlActions {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.controlActions button {
+  display: inline-flex;
+  min-width: 40px;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: 7px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  color: #4f5968;
+  font: 600 11px / 1 var(--font-inter), system-ui, sans-serif;
+  padding: 0 10px;
+  transition:
+    background-color 100ms ease-out,
+    border-color 100ms ease-out,
+    box-shadow 100ms ease-out,
+    color 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.controlActions button:first-child {
+  padding: 0;
+}
+
+.controlActions button:focus-visible,
+.debugControl input:focus-visible,
+.gapControl input:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+@media (hover: hover) {
+  .actions button:hover,
+  .statePanel button:hover {
+    border-color: rgba(15, 23, 42, 0.14);
+    background: var(--button-hover);
+    color: var(--ink);
+    transform: translateY(-1px);
+  }
+
+  .sendButton:hover:not(:disabled) {
+    background: #11161e;
+    box-shadow:
+      0 7px 16px rgba(15, 23, 42, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    transform: translateY(-1px);
+  }
+
+  .controlActions button:hover {
+    border-color: rgba(15, 23, 42, 0.16);
+    background: #ffffff;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.08);
+    color: #18202c;
+    transform: translateY(-1px);
+  }
+}
+
+.actions button:active,
+.statePanel button:active,
+.sendButton:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+
+.controlActions button:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+:global(.theme-dark) .root {
+  --card: #1a1d23;
+  --card-border: rgba(255, 255, 255, 0.1);
+  --composer: #202329;
+  --ink: #f0f2f5;
+  --muted: #a9b0bb;
+  --subtle: #8f98a6;
+  --divider: rgba(255, 255, 255, 0.08);
+  --button-surface: #282c34;
+  --button-hover: #313640;
+  --focus: #79a7ff;
+}
+
+:global(.theme-dark) .contextCard,
+:global(.theme-dark) .composer {
+  box-shadow:
+    0 18px 44px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+:global(.theme-dark) .totalCoverage,
+:global(.theme-dark) .actions button,
+:global(.theme-dark) .coverage strong,
+:global(.theme-dark) .statePanel button {
+  color: #c5cbd4;
+}
+
+:global(.theme-dark) .assetIcon {
+  border-color: color-mix(in srgb, var(--asset-accent) 56%, #202329);
+  background: color-mix(in srgb, var(--asset-accent) 20%, #202329);
+  color: color-mix(in srgb, var(--asset-accent) 78%, white);
+}
+
+:global(.theme-dark) .skeletonRow i {
+  background: #30343c;
+}
+
+:global(.theme-dark) .sendButton:disabled {
+  background: #30343b;
+  color: #747d8a;
+}
+
+:global(.theme-dark) .motionControls {
+  color: #aeb5c0;
+}
+
+:global(.theme-dark) .gapControl output {
+  color: #9fa8b5;
+}
+
+:global(.theme-dark) .controlActions button {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(35, 39, 47, 0.92);
+  color: #d4d8df;
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 420px) {
+  .contextHeader {
+    padding-inline: 12px;
+  }
+
+  .assetRow {
+    grid-template-columns: 28px minmax(66px, 1fr) minmax(63px, auto) 48px;
+    gap: 7px;
+    padding-inline: 11px;
+  }
+
+  .assetIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .actions {
+    gap: 5px;
+    padding-inline: 9px;
+  }
+
+  .actions button {
+    gap: 4px;
+    padding-inline: 5px;
+  }
+
+  .composer {
+    padding-inline: 17px 15px;
+  }
+
+  .composer input {
+    font-size: 15px;
+  }
+
+  .motionControls {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .gapControl {
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .debugControl {
+    margin-right: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .contextCard,
+  .root[data-open="true"] .contextCard,
+  .actions button,
+  .statePanel button,
+  .sendButton,
+  .composer,
+  .controlActions button {
+    animation: none;
+    transition: none;
+  }
+
+  .skeletonRow i {
+    animation: none;
+  }
+
+  .actions button:hover,
+  .statePanel button:hover,
+  .sendButton:hover:not(:disabled),
+  .controlActions button:hover,
+  .actions button:active,
+  .statePanel button:active,
+  .sendButton:active:not(:disabled),
+  .controlActions button:active {
+    transform: none;
+  }
+}
