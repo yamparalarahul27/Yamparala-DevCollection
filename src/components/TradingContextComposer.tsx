@@ -121,7 +121,7 @@ const actionPrompts: Record<"orders" | "positions" | "explain", string> = {
 const currencyFormatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
   maximumFractionDigits: 2,
-  minimumFractionDigits: 0,
+  minimumFractionDigits: 2,
   style: "currency",
 });
 
