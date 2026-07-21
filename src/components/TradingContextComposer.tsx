@@ -9,15 +9,9 @@ import {
   type CSSProperties,
   type ChangeEvent,
   type FormEvent,
+  type KeyboardEvent,
 } from "react";
-import {
-  ArrowUp,
-  ChartNoAxesCombined,
-  CircleAlert,
-  ReceiptText,
-  RefreshCw,
-  Sparkles,
-} from "lucide-react";
+import { ArrowUp, CircleAlert, ReceiptText, RefreshCw } from "lucide-react";
 import useGapMotion from "@/lib/useGapMotion";
 import styles from "./TradingContextComposer.module.css";
 
@@ -25,6 +19,7 @@ export type TradingContextAction =
   | "orders"
   | "positions"
   | "explain"
+  | "asset"
   | "retry";
 
 export type TradingContextStatus = "ready" | "loading" | "empty" | "error";
@@ -54,6 +49,8 @@ export type TradingContextComposerProps = {
   label?: string;
   name?: string;
   onAction?: (action: TradingContextAction, prompt: string) => void;
+  /** Called when the user dismisses the card with Esc while `forceOpen` is controlled. */
+  onDismiss?: () => void;
   /** Reports the live animated gap every frame (used by the playground slider). */
   onGapChange?: (gap: number) => void;
   onRetry?: () => void;
@@ -115,7 +112,7 @@ const defaultAssets: readonly TradingAssetContext[] = [
   },
 ];
 
-const actionPrompts: Record<Exclude<TradingContextAction, "retry">, string> = {
+const actionPrompts: Record<"orders" | "positions" | "explain", string> = {
   explain: "Explain the PnL and portfolio exposure shown here",
   orders: "Show all of my recent orders",
   positions: "Show my open positions",
@@ -133,30 +130,103 @@ function formatPnl(value: number) {
   return value >= 0 ? `+${formatted}` : `-${formatted}`;
 }
 
-function TradingRows({ assets }: { assets: readonly TradingAssetContext[] }) {
+function BitcoinMark() {
+  return (
+    <svg aria-hidden="true" className={styles.assetLogo} viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="16" fill="#f7931a" />
+      <path
+        fill="#ffffff"
+        d="M21.2 14.1c.3-1.9-1.1-2.9-3-3.6l.6-2.5-1.5-.4-.6 2.4c-.4-.1-.8-.2-1.2-.3l.6-2.4-1.5-.4-.6 2.5c-.3-.1-.6-.1-.9-.2l-2.1-.5-.4 1.6s1.1.3 1.1.3c.6.2.7.6.7.9l-.7 2.9h.2l-.2.1-1 4c-.1.2-.3.5-.7.4 0 0-1.1-.3-1.1-.3l-.8 1.8 2 .5c.4.1.7.2 1.1.3l-.6 2.5 1.5.4.6-2.5c.4.1.8.2 1.2.3l-.6 2.5 1.5.4.6-2.5c2.6.5 4.5.3 5.3-2 .7-1.9 0-3-1.4-3.7 1-.2 1.7-.9 1.9-2.2zm-3.4 4.9c-.5 1.9-3.7.9-4.7.6l.8-3.4c1 .3 4.4.8 3.9 2.8zm.5-4.9c-.4 1.7-3.1.8-3.9.6l.8-3c.9.2 3.6.6 3.1 2.4z"
+      />
+    </svg>
+  );
+}
+
+function EthereumMark() {
+  return (
+    <svg aria-hidden="true" className={styles.assetLogo} viewBox="0 0 32 32">
+      <circle cx="16" cy="16" r="16" fill="#627eea" />
+      <path d="M16.5 4v8.87l7.5 3.35L16.5 4z" fill="#ffffff" fillOpacity=".62" />
+      <path d="M16.5 4 9 16.22l7.5-3.35V4z" fill="#ffffff" />
+      <path d="M16.5 21.97V28l7.5-10.38-7.5 4.35z" fill="#ffffff" fillOpacity=".62" />
+      <path d="M16.5 28v-6.03L9 17.62 16.5 28z" fill="#ffffff" />
+      <path d="m16.5 20.57 7.5-4.35-7.5-3.34v7.69z" fill="#ffffff" fillOpacity=".28" />
+      <path d="m9 16.22 7.5 4.35v-7.69L9 16.22z" fill="#ffffff" fillOpacity=".62" />
+    </svg>
+  );
+}
+
+function SolanaMark() {
+  const gradientId = `sol-${useId().replace(/[^a-zA-Z0-9_-]/g, "")}`;
+  return (
+    <svg aria-hidden="true" className={styles.assetLogo} viewBox="0 0 32 32">
+      <defs>
+        <linearGradient gradientUnits="userSpaceOnUse" id={gradientId} x1="8" x2="24" y1="24" y2="8">
+          <stop stopColor="#9945ff" />
+          <stop offset="1" stopColor="#14f195" />
+        </linearGradient>
+      </defs>
+      <circle cx="16" cy="16" r="16" fill="#1b1b1f" />
+      <path
+        fill={`url(#${gradientId})`}
+        d="M10.6 19.7a.66.66 0 0 1 .46-.19h11.5c.29 0 .43.35.23.55l-2.27 2.28a.66.66 0 0 1-.46.19H8.56a.32.32 0 0 1-.23-.55l2.27-2.28zm0-8.51a.66.66 0 0 1 .46-.19h11.5c.29 0 .43.35.23.55l-2.27 2.28a.66.66 0 0 1-.46.19H8.56a.32.32 0 0 1-.23-.55l2.27-2.28zm11.46 4.23a.66.66 0 0 0-.46-.19h-11.5a.32.32 0 0 0-.23.55l2.27 2.28c.12.12.29.19.46.19h11.5c.29 0 .43-.35.23-.55l-2.27-2.28z"
+      />
+    </svg>
+  );
+}
+
+function AssetMark({ asset }: { asset: TradingAssetContext }) {
+  const symbol = asset.name.split(/[-/]/)[0].toUpperCase();
+
+  if (symbol === "BTC") return <BitcoinMark />;
+  if (symbol === "ETH") return <EthereumMark />;
+  if (symbol === "SOL") return <SolanaMark />;
+
+  return (
+    <span
+      aria-hidden="true"
+      className={styles.assetIcon}
+      style={{ "--asset-accent": asset.accent ?? "#64748b" } as CSSProperties}
+    >
+      {asset.icon}
+    </span>
+  );
+}
+
+function TradingRows({
+  assets,
+  onAssetSelect,
+  tabbable,
+}: {
+  assets: readonly TradingAssetContext[];
+  onAssetSelect: (asset: TradingAssetContext) => void;
+  tabbable: boolean;
+}) {
   return (
     <ul className={styles.assetList}>
       {assets.slice(0, 3).map((asset) => (
-        <li className={styles.assetRow} key={`${asset.name}-${asset.market}`}>
-          <span
-            aria-hidden="true"
-            className={styles.assetIcon}
-            style={{ "--asset-accent": asset.accent ?? "#64748b" } as CSSProperties}
+        <li className={styles.assetItem} key={`${asset.name}-${asset.market}`}>
+          <button
+            className={styles.assetRow}
+            onClick={() => onAssetSelect(asset)}
+            tabIndex={tabbable ? 0 : -1}
+            type="button"
           >
-            {asset.icon}
-          </span>
-          <span className={styles.assetIdentity}>
-            <strong>{asset.name}</strong>
-            <span>{asset.market === "futures" ? "Futures" : "Spot"}</span>
-          </span>
-          <span className={styles.pnl} data-positive={asset.pnl >= 0 ? "true" : "false"}>
-            <span>{asset.market === "futures" ? "uPnL" : "PnL"}</span>
-            <strong>{formatPnl(asset.pnl)}</strong>
-          </span>
-          <span className={styles.coverage}>
-            <span>Portfolio</span>
-            <strong>{Math.round(asset.coverage)}%</strong>
-          </span>
+            <AssetMark asset={asset} />
+            <span className={styles.assetIdentity}>
+              <strong>{asset.name}</strong>
+              <span className={styles.marketTag}>
+                {asset.market === "futures" ? "Futures" : "Spot"}
+              </span>
+            </span>
+            <span className={styles.pnlBlock} data-positive={asset.pnl >= 0 ? "true" : "false"}>
+              <strong>{formatPnl(asset.pnl)}</strong>
+              <span>
+                {asset.market === "futures" ? "uPnL" : "PnL"} · {Math.round(asset.coverage)}% of
+                portfolio
+              </span>
+            </span>
+          </button>
         </li>
       ))}
     </ul>
@@ -188,6 +258,7 @@ export default function TradingContextComposer({
   label = "Ask about your portfolio",
   name,
   onAction,
+  onDismiss,
   onGapChange,
   onRetry,
   onSubmitPrompt,
@@ -202,15 +273,18 @@ export default function TradingContextComposer({
   const contextId = `${generatedId}-context`;
   const gooId = `goo-${generatedId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const [internalValue, setInternalValue] = useState(defaultValue);
+  const [dismissed, setDismissed] = useState(false);
   const prompt = value ?? internalValue;
   const inferredOpen = /\b(orders?|positions?)\b/i.test(prompt);
-  const isOpen = forceOpen ?? inferredOpen;
+  const isOpen = forceOpen ?? (inferredOpen && !dismissed);
 
   const motion = useGapMotion(
     manualGap !== undefined ? manualGap : isOpen ? MAX_GAP : MIN_GAP,
   );
   const wasOpenRef = useRef(isOpen);
   const hadManualRef = useRef(manualGap !== undefined);
+  const closeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const escCloseRef = useRef(false);
 
   useEffect(() => {
     if (manualGap !== undefined) {
@@ -222,14 +296,46 @@ export default function TradingContextComposer({
     const manualReleased = hadManualRef.current;
     hadManualRef.current = false;
 
-    if (isOpen !== wasOpenRef.current || manualReleased) {
-      wasOpenRef.current = isOpen;
+    if (isOpen === wasOpenRef.current && !manualReleased) {
+      return;
+    }
+
+    wasOpenRef.current = isOpen;
+
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+
+    const play = () =>
       motion.playTo(isOpen ? MAX_GAP : MIN_GAP, {
         direction: isOpen ? "in" : "out",
         maxOvershootPx: OVERSHOOT_CAP_PX,
       });
+
+    // Debounce typed closes so the card doesn't slam shut while the user
+    // edits through a keyword; Esc and explicit toggles close immediately.
+    const typedClose = !isOpen && forceOpen === undefined && !manualReleased && !escCloseRef.current;
+    escCloseRef.current = false;
+
+    if (typedClose) {
+      closeTimerRef.current = setTimeout(() => {
+        closeTimerRef.current = null;
+        play();
+      }, 350);
+    } else {
+      play();
     }
-  }, [isOpen, manualGap, motion]);
+  }, [forceOpen, isOpen, manualGap, motion]);
+
+  useEffect(
+    () => () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    },
+    [],
+  );
 
   const gap = motion.gap;
 
@@ -270,7 +376,34 @@ export default function TradingContextComposer({
   }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    if (dismissed) {
+      setDismissed(false);
+    }
+
     updatePrompt(event.currentTarget.value);
+  }
+
+  function handleInputKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key !== "Escape" || !isOpen) {
+      return;
+    }
+
+    event.preventDefault();
+    escCloseRef.current = true;
+
+    if (forceOpen === undefined) {
+      setDismissed(true);
+    } else {
+      onDismiss?.();
+    }
+  }
+
+  function handleAssetSelect(asset: TradingAssetContext) {
+    const nextPrompt = `Explain my ${asset.name} ${
+      asset.market === "futures" ? "position" : "holdings"
+    }`;
+    updatePrompt(nextPrompt);
+    onAction?.("asset", nextPrompt);
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -281,7 +414,7 @@ export default function TradingContextComposer({
     }
   }
 
-  function handleAction(action: Exclude<TradingContextAction, "retry">) {
+  function handleAction(action: "orders" | "positions" | "explain") {
     const nextPrompt = actionPrompts[action];
     updatePrompt(nextPrompt);
     onAction?.(action, nextPrompt);
@@ -308,6 +441,7 @@ export default function TradingContextComposer({
       data-debug={debug ? "true" : "false"}
       data-interactive={isContextInteractive ? "true" : "false"}
       data-open={isOpen ? "true" : "false"}
+      data-revealed={alpha > 0.25 ? "true" : "false"}
       data-scrubbing={scrubbing ? "true" : "false"}
       style={rootStyle}
     >
@@ -343,15 +477,18 @@ export default function TradingContextComposer({
         id={contextId}
       >
         <header className={styles.contextHeader}>
-          <span>
-            <Sparkles aria-hidden="true" size={15} strokeWidth={2} />
-            <strong>{contextTitle}</strong>
-          </span>
+          <strong>{contextTitle}</strong>
           <span className={styles.totalCoverage}>{Math.round(coverage)}% covered</span>
         </header>
 
         {status === "loading" ? <LoadingRows /> : null}
-        {status === "ready" ? <TradingRows assets={assets} /> : null}
+        {status === "ready" ? (
+          <TradingRows
+            assets={assets}
+            onAssetSelect={handleAssetSelect}
+            tabbable={isContextInteractive}
+          />
+        ) : null}
         {status === "empty" ? (
           <div className={styles.statePanel}>
             <ReceiptText aria-hidden="true" size={22} />
@@ -372,12 +509,7 @@ export default function TradingContextComposer({
 
         {status === "ready" ? (
           <footer className={styles.actions}>
-            <button
-              onClick={() => handleAction("orders")}
-              tabIndex={actionTabIndex}
-              type="button"
-            >
-              <ReceiptText aria-hidden="true" size={15} />
+            <button onClick={() => handleAction("orders")} tabIndex={actionTabIndex} type="button">
               Orders
             </button>
             <button
@@ -385,15 +517,14 @@ export default function TradingContextComposer({
               tabIndex={actionTabIndex}
               type="button"
             >
-              <ChartNoAxesCombined aria-hidden="true" size={15} />
               Positions
             </button>
             <button
+              className={styles.primaryAction}
               onClick={() => handleAction("explain")}
               tabIndex={actionTabIndex}
               type="button"
             >
-              <Sparkles aria-hidden="true" size={15} />
               Explain
             </button>
           </footer>
@@ -412,6 +543,7 @@ export default function TradingContextComposer({
           id={inputId}
           name={name}
           onChange={handleChange}
+          onKeyDown={handleInputKeyDown}
           placeholder={placeholder}
           spellCheck="false"
           type="text"

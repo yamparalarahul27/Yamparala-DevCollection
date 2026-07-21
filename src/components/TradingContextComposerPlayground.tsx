@@ -86,6 +86,7 @@ export default function TradingContextComposerPlayground() {
         debug={debug}
         forceOpen={isOpen}
         gap={manualGap ?? undefined}
+        onDismiss={() => setIsOpen(false)}
         onGapChange={handleGapChange}
         onValueChange={handlePromptChange}
         scrubbing={isScrubbing}
