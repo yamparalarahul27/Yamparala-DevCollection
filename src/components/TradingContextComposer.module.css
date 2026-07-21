@@ -15,64 +15,69 @@
   display: block;
   width: min(100%, 446px);
   min-width: 0;
-  height: 404px;
-  overflow: clip;
-  padding-top: 270px;
+  height: 452px;
   background: transparent;
   color: var(--ink);
   font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+.gooDefs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.shapes {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  filter: var(--goo) drop-shadow(0 2px 5px rgba(15, 23, 42, 0.06))
+    drop-shadow(0 16px 34px rgba(15, 23, 42, 0.1));
+  pointer-events: none;
+  will-change: filter;
+}
+
+.shapeCard,
+.shapeComposer {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+.shapeCard {
+  bottom: var(--shape-bottom);
+  height: var(--shape-height);
+  border-radius: 26px;
+  background: var(--card);
+}
+
+.shapeComposer {
+  bottom: 0;
+  height: 134px;
+  border-radius: 30px;
+  background: var(--composer);
+}
+
 .contextCard {
   position: absolute;
-  top: 12px;
+  bottom: calc(var(--content-bottom) + var(--content-clip));
   left: 0;
   z-index: 1;
   display: grid;
   width: 100%;
-  height: 236px;
+  height: calc(236px - var(--content-clip));
   grid-template-rows: 48px 132px 56px;
   overflow: hidden;
-  border: 1px solid var(--card-border);
   border-radius: 26px;
-  background: var(--card);
-  box-shadow:
-    0 20px 48px rgba(15, 23, 42, 0.1),
-    0 2px 7px rgba(15, 23, 42, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  filter: blur(4px);
-  opacity: 0;
+  background: transparent;
+  filter: blur(var(--card-blur));
+  opacity: var(--card-alpha);
   pointer-events: none;
-  transform: translate3d(0, 258px, 0) scaleY(0.96);
-  transform-origin: bottom center;
-  visibility: hidden;
-  will-change: transform, opacity, filter;
-  transition:
-    transform 300ms cubic-bezier(0.4, 0, 1, 1),
-    opacity 180ms cubic-bezier(0.4, 0, 1, 1),
-    filter 180ms cubic-bezier(0.4, 0, 1, 1),
-    visibility 0ms linear 300ms;
-}
-
-.root[data-open="true"] .contextCard {
-  filter: blur(var(--context-blur));
-  opacity: var(--context-opacity);
-  transform: translate3d(0, calc(22px - var(--context-gap)), 0) scaleY(var(--context-scale));
-  visibility: visible;
-  transition:
-    transform 420ms cubic-bezier(0.16, 1.16, 0.3, 1),
-    opacity 220ms cubic-bezier(0, 0, 0.2, 1),
-    filter 220ms cubic-bezier(0, 0, 0.2, 1),
-    visibility 0ms linear 0ms;
+  will-change: opacity, filter;
 }
 
 .root[data-interactive="true"] .contextCard {
   pointer-events: auto;
-}
-
-.root[data-scrubbing="true"] .contextCard,
-.root[data-scrubbing="true"][data-open="true"] .contextCard {
-  transition: none;
 }
 
 .root[data-debug="true"] {
@@ -84,6 +89,30 @@
 .root[data-debug="true"] .composer {
   outline: 1px dashed rgba(225, 29, 72, 0.72);
   outline-offset: -3px;
+}
+
+.root[data-debug="true"] .shapeCard,
+.root[data-debug="true"] .shapeComposer {
+  outline: 1px dashed rgba(22, 163, 74, 0.7);
+  outline-offset: -1px;
+}
+
+.debugLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.debugReadout {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.8);
+  color: #f4f6fa;
+  font: 500 10px / 1.6 ui-monospace, "SF Mono", Menlo, monospace;
+  padding: 2px 6px;
 }
 
 .root[data-debug="true"] .contextCard::after,
@@ -273,33 +302,18 @@
 }
 
 .composer {
-  position: relative;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 2;
   display: flex;
-  width: 100%;
   height: 134px;
   align-items: flex-start;
   gap: 12px;
-  border: 1px solid var(--card-border);
   border-radius: 30px;
-  background: var(--composer);
-  box-shadow:
-    0 16px 34px rgba(15, 23, 42, 0.11),
-    0 2px 6px rgba(15, 23, 42, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  background: transparent;
   padding: 18px 72px 18px 23px;
-  transition:
-    border-color 150ms ease-out,
-    box-shadow 150ms ease-out;
-}
-
-.composer:focus-within {
-  border-color: rgba(37, 99, 235, 0.34);
-  box-shadow:
-    0 16px 34px rgba(15, 23, 42, 0.11),
-    0 2px 6px rgba(15, 23, 42, 0.04),
-    0 0 0 3px rgba(37, 99, 235, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92);
 }
 
 .composer input {
@@ -321,7 +335,8 @@
 }
 
 .composer input:focus-visible {
-  outline: none;
+  outline: 2px solid var(--focus);
+  outline-offset: 4px;
 }
 
 .sendButton {
@@ -567,11 +582,9 @@
   --focus: #79a7ff;
 }
 
-:global(.theme-dark) .contextCard,
-:global(.theme-dark) .composer {
-  box-shadow:
-    0 18px 44px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+:global(.theme-dark) .shapes {
+  filter: var(--goo) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4))
+    drop-shadow(0 18px 40px rgba(0, 0, 0, 0.32));
 }
 
 :global(.theme-dark) .totalCoverage,
@@ -672,7 +685,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .contextCard,
-  .root[data-open="true"] .contextCard,
   .actions button,
   .statePanel button,
   .sendButton,

@@ -53,83 +53,94 @@
   background: transparent;
 }
 
+/*
+ * Reference recreation. All dimensions are 1:1 with the source video:
+ * 442px-wide stack, 66px connector card, 128px composer, card corner
+ * radius 26, composer radius 28. The `--gap` custom property (unitless
+ * px) is the distance between card bottom and composer top; the shapes
+ * layer renders both boxes through the gooey SVG filter so they melt
+ * together when the gap goes negative.
+ */
+
 .referenceDemo {
-  --reference-card: #ffffff;
-  --reference-composer: #ffffff;
-  --reference-ink: #181a1f;
-  --reference-border: rgba(17, 24, 39, 0.08);
-  --reference-control: #f7f7f8;
+  --reference-surface: #ffffff;
+  --reference-ink: #1a1c20;
   --reference-focus: #2563eb;
 
   display: flex;
-  width: min(100%, 446px);
+  width: min(100%, 442px);
   flex-direction: column;
-  gap: 28px;
+  align-items: center;
+  gap: 38px;
   background: transparent;
   color: var(--reference-ink);
   font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+.gooDefs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
 .stage {
   position: relative;
   width: 100%;
-  height: 212px;
-  overflow: clip;
-  background: transparent;
+  height: 252px;
 }
 
-.connectorCard {
+.shapes {
   position: absolute;
-  top: 0;
+  inset: 0;
+  filter: var(--goo) drop-shadow(0 1px 3px rgba(18, 22, 33, 0.07))
+    drop-shadow(0 12px 26px rgba(18, 22, 33, 0.08));
+  will-change: filter;
+}
+
+.shapeCard,
+.shapeComposer {
+  position: absolute;
+  right: 0;
   left: 0;
-  z-index: 1;
+  background: var(--reference-surface);
+}
+
+.shapeCard {
+  bottom: 128px;
+  height: 66px;
+  border-radius: 33px;
+  transform: translate3d(0, calc(var(--gap) * -1px), 0);
+  will-change: transform;
+}
+
+.shapeComposer {
+  bottom: 0;
+  height: 128px;
+  border-radius: 29px;
+}
+
+.cardContent {
+  position: absolute;
+  right: 0;
+  bottom: 128px;
+  left: 0;
+  z-index: 2;
   display: grid;
-  width: 100%;
-  height: 68px;
-  grid-template-columns: 30px minmax(0, 1fr) auto auto;
+  height: 66px;
+  grid-template-columns: 28px minmax(0, 1fr) auto auto;
   align-items: center;
-  gap: 10px;
-  border: 1px solid var(--reference-border);
-  border-radius: 20px;
-  background: var(--reference-card);
-  box-shadow:
-    0 8px 22px rgba(15, 23, 42, 0.06),
-    0 1px 3px rgba(15, 23, 42, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  filter: blur(4px);
-  opacity: 0;
-  padding: 0 12px;
+  gap: 12px;
+  background: transparent;
+  filter: blur(var(--card-blur));
+  opacity: var(--card-alpha);
+  padding: 0 15px 0 25px;
   pointer-events: none;
-  transform: translate3d(0, 70px, 0) scaleY(0.97);
-  transform-origin: bottom center;
-  visibility: hidden;
+  transform: translate3d(0, calc(var(--gap) * -1px), 0);
   will-change: transform, opacity, filter;
-  transition:
-    transform 250ms cubic-bezier(0.4, 0, 1, 1),
-    opacity 180ms cubic-bezier(0.4, 0, 1, 1),
-    filter 180ms cubic-bezier(0.4, 0, 1, 1),
-    visibility 0ms linear 250ms;
 }
 
-.stage[data-visible="true"] .connectorCard {
-  filter: blur(var(--reference-blur));
-  opacity: var(--reference-opacity);
-  transform: translate3d(0, calc(10px - var(--reference-gap)), 0) scaleY(var(--reference-scale));
-  visibility: visible;
-  transition:
-    transform 360ms cubic-bezier(0.16, 1.12, 0.3, 1),
-    opacity 200ms cubic-bezier(0, 0, 0.2, 1),
-    filter 200ms cubic-bezier(0, 0, 0.2, 1),
-    visibility 0ms linear 0ms;
-}
-
-.stage[data-visible="true"] .connectorCard[aria-hidden="false"] {
+.cardContent[aria-hidden="false"] {
   pointer-events: auto;
-}
-
-.stage[data-scrubbing="true"] .connectorCard,
-.stage[data-scrubbing="true"][data-visible="true"] .connectorCard {
-  transition: none;
 }
 
 .notionIcon {
@@ -137,12 +148,12 @@
   width: 28px;
   height: 28px;
   place-items: center;
-  border: 2px solid #1d1d1f;
-  border-radius: 5px;
+  border: 2px solid #131315;
+  border-radius: 6px;
   background: #ffffff;
-  color: #111111;
+  color: #0f0f10;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 800;
   line-height: 1;
 }
@@ -155,193 +166,253 @@
 }
 
 .connectorIdentity > span {
-  color: #92969f;
-  font-size: 9px;
+  color: #9ca0a6;
+  font-size: 12px;
   font-weight: 500;
   line-height: 1;
 }
 
 .connectorIdentity strong {
   overflow: hidden;
-  color: var(--reference-ink);
-  font-size: 13px;
-  font-weight: 620;
-  line-height: 1.1;
+  color: #17181b;
+  font-size: 17px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .skipButton,
 .connectButton {
-  min-width: 48px;
-  min-height: 32px;
+  min-height: 34px;
   border: 0;
-  border-radius: 9px;
-  font: 570 10px / 1 var(--font-inter), system-ui, sans-serif;
+  border-radius: 17px;
+  font: 600 16px / 1 var(--font-inter), system-ui, sans-serif;
   transition:
     background-color 100ms ease-out,
-    color 100ms ease-out,
-    transform 100ms ease-out;
+    color 100ms ease-out;
 }
 
 .skipButton {
   background: transparent;
-  color: #686d76;
-}
-
-.connectButton {
-  border: 1px solid #dbe8ff;
-  background: #f4f8ff;
-  color: #2671d9;
+  color: #83868c;
+  font-weight: 500;
   padding-inline: 10px;
 }
 
-.skipButton:focus-visible,
-.connectButton:focus-visible,
-.composer input:focus-visible,
-.composer button:focus-visible,
-.controls input:focus-visible,
-.toggleButton:focus-visible {
-  outline: 2px solid var(--reference-focus);
-  outline-offset: 2px;
+.connectButton {
+  border: 1px solid #dce0f6;
+  background: #fbfbff;
+  color: #3d63ed;
+  padding-inline: 17px;
 }
 
-.composer {
+.composerContent {
   position: absolute;
-  top: 78px;
+  right: 0;
+  bottom: 0;
   left: 0;
-  z-index: 2;
-  width: 100%;
-  height: 134px;
-  border: 1px solid var(--reference-border);
-  border-radius: 29px;
-  background: var(--reference-composer);
-  box-shadow:
-    0 13px 28px rgba(15, 23, 42, 0.07),
-    0 2px 5px rgba(15, 23, 42, 0.035),
-    inset 0 1px 0 rgba(255, 255, 255, 0.94);
-  padding: 17px 64px 17px 22px;
+  z-index: 3;
+  height: 128px;
+  background: transparent;
+  padding: 22px 64px 0 24px;
 }
 
-.composer input {
+.composerContent input {
   width: 100%;
-  height: 34px;
+  height: 26px;
   border: 0;
-  border-radius: 7px;
   background: transparent;
   color: var(--reference-ink);
-  font: 480 13px / 1.4 var(--font-inter), system-ui, sans-serif;
-  letter-spacing: 0;
+  font: 450 17px / 1.4 var(--font-inter), system-ui, sans-serif;
   outline: none;
-  padding: 0 3px;
+  padding: 0;
 }
 
-.composer input::placeholder {
-  color: #7f838c;
+.composerContent input::placeholder {
+  color: #7d8085;
   opacity: 1;
 }
 
-.composer button {
+.composerContent button {
   position: absolute;
-  right: 14px;
-  bottom: 14px;
+  right: 15px;
+  bottom: 15px;
   display: grid;
-  width: 40px;
-  height: 40px;
+  width: 34px;
+  height: 34px;
   place-items: center;
   border: 0;
   border-radius: 50%;
-  background: #282c33;
+  background: #17181c;
   color: #ffffff;
-  transition:
-    background-color 100ms ease-out,
-    transform 100ms ease-out;
+  transition: background-color 100ms ease-out;
 }
 
-.composer button:disabled {
-  background: #e1e3e6;
-  color: #ffffff;
-  cursor: not-allowed;
+.composerContent button:disabled {
+  background: #f0f0f2;
+  color: #a8aaaf;
+  cursor: default;
+}
+
+.debugLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.debugCard,
+.debugComposer {
+  position: absolute;
+  right: 0;
+  left: 0;
+  border: 1px dashed rgba(225, 29, 72, 0.75);
+}
+
+.debugCard {
+  bottom: 128px;
+  height: 66px;
+  border-radius: 33px;
+  transform: translate3d(0, calc(var(--gap) * -1px), 0);
+}
+
+.debugComposer {
+  bottom: 0;
+  height: 128px;
+  border-radius: 29px;
+  border-color: rgba(37, 99, 235, 0.65);
+}
+
+.debugReadout {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 5px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #f4f6fa;
+  font: 500 11px / 1.6 ui-monospace, "SF Mono", Menlo, monospace;
+  padding: 2px 7px;
 }
 
 .controls {
   display: flex;
-  min-height: 40px;
+  min-height: 36px;
   align-items: center;
-  gap: 14px;
+  justify-content: center;
+  gap: 22px;
   background: transparent;
-  color: #666b74;
-  font-size: 10px;
+  color: #26282c;
+  font-size: 15px;
 }
 
 .gapControl {
-  display: grid;
-  min-width: 0;
-  flex: 1;
-  grid-template-columns: auto minmax(86px, 1fr) 34px;
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 13px;
 }
 
 .gapControl > span,
 .debugControl > span {
-  font-weight: 560;
+  font-weight: 500;
 }
 
 .gapControl input[type="range"] {
-  width: 100%;
-  height: 18px;
+  width: 156px;
+  height: 16px;
   margin: 0;
-  accent-color: #1473e6;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.gapControl input[type="range"]::-webkit-slider-runnable-track {
+  height: 4px;
+  border-radius: 2px;
+  background: linear-gradient(to right, #0f62d6 var(--fill), #dededf var(--fill));
+}
+
+.gapControl input[type="range"]::-webkit-slider-thumb {
+  width: 15px;
+  height: 15px;
+  margin-top: -5.5px;
+  appearance: none;
+  border: 0;
+  border-radius: 50%;
+  background: #1668dc;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.3);
+}
+
+.gapControl input[type="range"]::-moz-range-track {
+  height: 4px;
+  border-radius: 2px;
+  background: #dededf;
+}
+
+.gapControl input[type="range"]::-moz-range-progress {
+  height: 4px;
+  border-radius: 2px;
+  background: #0f62d6;
+}
+
+.gapControl input[type="range"]::-moz-range-thumb {
+  width: 15px;
+  height: 15px;
+  border: 0;
+  border-radius: 50%;
+  background: #1668dc;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.3);
+}
+
+.stage[data-scrubbing="true"] ~ .controls .gapControl input[type="range"],
+.gapControl input[type="range"]:active {
   cursor: ew-resize;
 }
 
 .gapControl output {
-  color: #70757f;
+  min-width: 46px;
+  color: #26282c;
   font-variant-numeric: tabular-nums;
-  text-align: right;
 }
 
 .debugControl {
   display: inline-flex;
   min-height: 32px;
   align-items: center;
-  gap: 5px;
+  gap: 8px;
   cursor: pointer;
 }
 
 .debugControl input {
-  width: 13px;
-  height: 13px;
+  width: 14px;
+  height: 14px;
   margin: 0;
-  accent-color: #1473e6;
+  accent-color: #1668dc;
 }
 
 .toggleButton {
-  min-width: 58px;
   min-height: 32px;
-  border: 1px solid rgba(17, 24, 39, 0.09);
-  border-radius: 7px;
-  background: var(--reference-control);
-  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
-  color: #4f555f;
-  font: 570 10px / 1 var(--font-inter), system-ui, sans-serif;
-  padding: 0 10px;
+  border: 1px solid #d8d8dc;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+  color: #1f2126;
+  font: 500 15px / 1 var(--font-inter), system-ui, sans-serif;
+  padding: 0 14px;
   transition:
     background-color 100ms ease-out,
-    border-color 100ms ease-out,
-    transform 100ms ease-out;
+    border-color 100ms ease-out;
 }
 
-.stage[data-debug="true"] {
-  outline: 1px dashed rgba(37, 99, 235, 0.6);
-  outline-offset: -1px;
-}
-
-.stage[data-debug="true"] .connectorCard,
-.stage[data-debug="true"] .composer {
-  outline: 1px dashed rgba(225, 29, 72, 0.7);
-  outline-offset: -3px;
+.skipButton:focus-visible,
+.connectButton:focus-visible,
+.composerContent input:focus-visible,
+.composerContent button:focus-visible,
+.controls input:focus-visible,
+.toggleButton:focus-visible {
+  outline: 2px solid var(--reference-focus);
+  outline-offset: 2px;
 }
 
 .srOnly {
@@ -355,32 +426,19 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .skipButton:hover,
-  .connectButton:hover,
-  .toggleButton:hover {
-    transform: translateY(-1px);
-  }
-
   .skipButton:hover {
-    background: #f5f5f6;
-    color: #292d34;
+    background: rgba(15, 23, 42, 0.05);
+    color: #33363c;
   }
 
   .connectButton:hover {
-    background: #eaf2ff;
+    background: #f2f5ff;
   }
 
   .toggleButton:hover {
-    border-color: rgba(17, 24, 39, 0.15);
-    background: #ffffff;
+    border-color: #c6c6cc;
+    background: #fafafb;
   }
-}
-
-.skipButton:active,
-.connectButton:active,
-.toggleButton:active,
-.composer button:active:not(:disabled) {
-  transform: translateY(1px) scale(0.98);
 }
 
 :global(.theme-dark) .variantTabs {
@@ -398,31 +456,71 @@
 }
 
 :global(.theme-dark) .referenceDemo {
-  --reference-card: #1a1d23;
-  --reference-composer: #202329;
+  --reference-surface: #1d2027;
   --reference-ink: #f1f3f6;
-  --reference-border: rgba(255, 255, 255, 0.1);
-  --reference-control: #282c34;
   --reference-focus: #79a7ff;
 }
 
-:global(.theme-dark) .connectorIdentity > span,
+:global(.theme-dark) .shapes {
+  filter: var(--goo) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.42))
+    drop-shadow(0 16px 34px rgba(0, 0, 0, 0.34));
+}
+
+:global(.theme-dark) .connectorIdentity > span {
+  color: #8c93a0;
+}
+
+:global(.theme-dark) .connectorIdentity strong,
 :global(.theme-dark) .controls,
-:global(.theme-dark) .gapControl output,
-:global(.theme-dark) .skipButton,
-:global(.theme-dark) .toggleButton {
-  color: #abb2be;
+:global(.theme-dark) .gapControl output {
+  color: #eef0f4;
+}
+
+:global(.theme-dark) .skipButton {
+  color: #a6acb8;
 }
 
 :global(.theme-dark) .notionIcon {
-  border-color: #dfe3e8;
+  border-color: #e6e8ec;
   background: #f6f7f8;
 }
 
 :global(.theme-dark) .connectButton {
-  border-color: rgba(121, 167, 255, 0.24);
-  background: rgba(58, 112, 207, 0.15);
-  color: #8db7ff;
+  border-color: rgba(121, 167, 255, 0.28);
+  background: rgba(61, 99, 237, 0.16);
+  color: #92b4ff;
+}
+
+:global(.theme-dark) .composerContent input::placeholder {
+  color: #8d929c;
+}
+
+:global(.theme-dark) .composerContent button {
+  background: #eef0f4;
+  color: #16181d;
+}
+
+:global(.theme-dark) .composerContent button:disabled {
+  background: #2a2e37;
+  color: #6f757f;
+}
+
+:global(.theme-dark) .toggleButton {
+  border-color: rgba(255, 255, 255, 0.14);
+  background: #262a32;
+  color: #dfe3ea;
+}
+
+:global(.theme-dark) .gapControl input[type="range"]::-webkit-slider-runnable-track {
+  background: linear-gradient(to right, #4d82e8 var(--fill), #3a3f49 var(--fill));
+}
+
+:global(.theme-dark) .gapControl input[type="range"]::-moz-range-track {
+  background: #3a3f49;
+}
+
+:global(.theme-dark) .gapControl input[type="range"]::-moz-range-progress {
+  background: #4d82e8;
 }
 
 @media (pointer: coarse) {
@@ -435,52 +533,19 @@
   }
 }
 
-@media (max-width: 420px) {
-  .connectorCard {
-    grid-template-columns: 28px minmax(0, 1fr) auto auto;
-    gap: 6px;
-    padding-inline: 9px;
+@media (max-width: 460px) {
+  .cardContent {
+    gap: 8px;
+    padding: 0 10px 0 16px;
   }
 
   .skipButton,
   .connectButton {
-    min-width: 42px;
-    padding-inline: 7px;
+    padding-inline: 10px;
   }
 
   .controls {
     flex-wrap: wrap;
-    gap: 4px 12px;
-  }
-
-  .gapControl {
-    width: 100%;
-    flex-basis: 100%;
-  }
-
-  .debugControl {
-    margin-right: auto;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .connectorCard,
-  .stage[data-visible="true"] .connectorCard,
-  .skipButton,
-  .connectButton,
-  .toggleButton,
-  .composer button {
-    animation: none;
-    transition: none;
-  }
-
-  .skipButton:hover,
-  .connectButton:hover,
-  .toggleButton:hover,
-  .skipButton:active,
-  .connectButton:active,
-  .toggleButton:active,
-  .composer button:active:not(:disabled) {
-    transform: none;
+    gap: 10px 16px;
   }
 }

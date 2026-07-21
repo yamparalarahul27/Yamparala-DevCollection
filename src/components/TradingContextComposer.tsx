@@ -1,8 +1,10 @@
 "use client";
 
 import {
+  useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
   type ChangeEvent,
@@ -16,6 +18,7 @@ import {
   RefreshCw,
   Sparkles,
 } from "lucide-react";
+import useGapMotion from "@/lib/useGapMotion";
 import styles from "./TradingContextComposer.module.css";
 
 export type TradingContextAction =
@@ -42,10 +45,17 @@ export type TradingContextComposerProps = {
   defaultValue?: string;
   debug?: boolean;
   forceOpen?: boolean;
+  /**
+   * Manual scrub position. When set, the card chases this value through
+   * the motion spring instead of animating on open/close. Leave undefined
+   * to let typed prompts drive the reveal.
+   */
   gap?: number;
   label?: string;
   name?: string;
   onAction?: (action: TradingContextAction, prompt: string) => void;
+  /** Reports the live animated gap every frame (used by the playground slider). */
+  onGapChange?: (gap: number) => void;
   onRetry?: () => void;
   onSubmitPrompt?: (prompt: string) => void;
   onValueChange?: (value: string) => void;
@@ -55,8 +65,28 @@ export type TradingContextComposerProps = {
   value?: string;
 };
 
+/**
+ * Motion model ported 1:1 from the video-reference variant: the context
+ * card and the composer are white silhouettes merged by a gooey SVG
+ * filter, one `gap` value (card bottom → composer top, px) drives the
+ * shapes, and open/close plays the curves measured frame by frame from
+ * the reference recording. Because this card travels ~264px (vs 70px in
+ * the video) the reveal caps its absolute overshoot at the video's
+ * ~28px so the bounce feels identical.
+ */
 const CARD_HEIGHT = 236;
+const COMPOSER_HEIGHT = 134;
 const MAX_GAP = 22;
+/** How deep the card's bottom edge may tuck inside the composer. */
+const MAX_TUCK = 26;
+/** Fully absorbed: the remaining 20px sliver sits inside the composer band. */
+const MIN_GAP = -(CARD_HEIGHT + MAX_TUCK) + 20;
+const OVERSHOOT_CAP_PX = 28;
+
+/** Content is invisible below -60px of gap and fully opaque by +16px. */
+function contentAlpha(gap: number) {
+  return Math.min(1, Math.max(0, (gap + 60) / 76));
+}
 
 const defaultAssets: readonly TradingAssetContext[] = [
   {
@@ -154,10 +184,11 @@ export default function TradingContextComposer({
   defaultValue = "",
   debug = false,
   forceOpen,
-  gap = 22,
+  gap: manualGap,
   label = "Ask about your portfolio",
   name,
   onAction,
+  onGapChange,
   onRetry,
   onSubmitPrompt,
   onValueChange,
@@ -169,13 +200,59 @@ export default function TradingContextComposer({
   const generatedId = useId();
   const inputId = `${generatedId}-input`;
   const contextId = `${generatedId}-context`;
+  const gooId = `goo-${generatedId.replace(/[^a-zA-Z0-9_-]/g, "")}`;
   const [internalValue, setInternalValue] = useState(defaultValue);
   const prompt = value ?? internalValue;
   const inferredOpen = /\b(orders?|positions?)\b/i.test(prompt);
   const isOpen = forceOpen ?? inferredOpen;
-  const clampedGap = Math.max(-CARD_HEIGHT, Math.min(MAX_GAP, gap));
-  const revealProgress = (clampedGap + CARD_HEIGHT) / (CARD_HEIGHT + MAX_GAP);
-  const isContextInteractive = isOpen && revealProgress > 0.72;
+
+  const motion = useGapMotion(
+    manualGap !== undefined ? manualGap : isOpen ? MAX_GAP : MIN_GAP,
+  );
+  const wasOpenRef = useRef(isOpen);
+  const hadManualRef = useRef(manualGap !== undefined);
+
+  useEffect(() => {
+    if (manualGap !== undefined) {
+      motion.scrubTo(Math.min(MAX_GAP, Math.max(MIN_GAP, manualGap)));
+      hadManualRef.current = true;
+      return;
+    }
+
+    const manualReleased = hadManualRef.current;
+    hadManualRef.current = false;
+
+    if (isOpen !== wasOpenRef.current || manualReleased) {
+      wasOpenRef.current = isOpen;
+      motion.playTo(isOpen ? MAX_GAP : MIN_GAP, {
+        direction: isOpen ? "in" : "out",
+        maxOvershootPx: OVERSHOOT_CAP_PX,
+      });
+    }
+  }, [isOpen, manualGap, motion]);
+
+  const gap = motion.gap;
+
+  useEffect(() => {
+    onGapChange?.(gap);
+  }, [gap, onGapChange]);
+
+  const alpha = contentAlpha(gap);
+  const blur = 4 * (1 - alpha);
+  const isContextInteractive = alpha > 0.7 && status === "ready";
+  /*
+   * Shape geometry: the card's top edge always moves 1:1 with `gap`, but
+   * its bottom edge stops MAX_TUCK px inside the composer (the card is
+   * taller than the composer, so a plain translate would poke out below).
+   * Past that point the shape shrinks while the top keeps descending
+   * until the sliver is fully absorbed — visually identical to sliding
+   * behind, and the goo filter melts the seam exactly like the video.
+   */
+  const shapeBottom = COMPOSER_HEIGHT + Math.max(gap, -MAX_TUCK);
+  const shapeHeight = Math.max(0, CARD_HEIGHT + gap - Math.max(gap, -MAX_TUCK));
+  const contentBottom = COMPOSER_HEIGHT + gap;
+  const contentClip = Math.min(CARD_HEIGHT, Math.max(0, -gap + 1));
+
   const coverage = useMemo(
     () => Math.min(100, assets.reduce((total, asset) => total + asset.coverage, 0)),
     [assets],
@@ -215,12 +292,14 @@ export default function TradingContextComposer({
     onAction?.("retry", prompt);
   }
 
-  const actionTabIndex = isContextInteractive && status === "ready" ? 0 : -1;
-  const motionStyle = {
-    "--context-blur": `${4 * (1 - revealProgress)}px`,
-    "--context-gap": `${clampedGap}px`,
-    "--context-opacity": revealProgress,
-    "--context-scale": 0.96 + 0.04 * revealProgress,
+  const actionTabIndex = isContextInteractive ? 0 : -1;
+  const rootStyle = {
+    "--card-alpha": alpha,
+    "--card-blur": `${blur.toFixed(2)}px`,
+    "--shape-bottom": `${shapeBottom.toFixed(2)}px`,
+    "--shape-height": `${shapeHeight.toFixed(2)}px`,
+    "--content-bottom": `${contentBottom.toFixed(2)}px`,
+    "--content-clip": `${contentClip.toFixed(2)}px`,
   } as CSSProperties;
 
   return (
@@ -230,10 +309,34 @@ export default function TradingContextComposer({
       data-interactive={isContextInteractive ? "true" : "false"}
       data-open={isOpen ? "true" : "false"}
       data-scrubbing={scrubbing ? "true" : "false"}
-      style={motionStyle}
+      style={rootStyle}
     >
+      <svg aria-hidden="true" className={styles.gooDefs} focusable="false">
+        <defs>
+          <filter id={gooId} x="-40%" y="-40%" width="180%" height="180%">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="8 4" result="blur" />
+            <feColorMatrix
+              in="blur"
+              type="matrix"
+              values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 19 -9"
+              result="goo"
+            />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+
+      <div
+        aria-hidden="true"
+        className={styles.shapes}
+        style={{ "--goo": `url(#${gooId})` } as CSSProperties}
+      >
+        <div className={styles.shapeCard} />
+        <div className={styles.shapeComposer} />
+      </div>
+
       <section
-        aria-hidden={!isOpen || revealProgress < 0.1}
+        aria-hidden={alpha < 0.15}
         aria-label="Portfolio trading context"
         className={styles.contextCard}
         data-status={status}
@@ -260,11 +363,7 @@ export default function TradingContextComposer({
           <div className={styles.statePanel}>
             <CircleAlert aria-hidden="true" size={22} />
             <strong>Couldn&apos;t load trading context</strong>
-            <button
-              onClick={handleRetry}
-              tabIndex={isOpen && revealProgress > 0.72 ? 0 : -1}
-              type="button"
-            >
+            <button onClick={handleRetry} tabIndex={alpha > 0.7 ? 0 : -1} type="button">
               <RefreshCw aria-hidden="true" size={14} />
               Retry
             </button>
@@ -327,6 +426,16 @@ export default function TradingContextComposer({
           <ArrowUp aria-hidden="true" size={19} strokeWidth={2.4} />
         </button>
       </form>
+
+      {debug ? (
+        <div aria-hidden="true" className={styles.debugLayer}>
+          <span className={styles.debugReadout}>
+            gap {gap.toFixed(1)}px · α {alpha.toFixed(2)} · blur {blur.toFixed(1)}px
+          </span>
+        </div>
+      ) : null}
     </div>
   );
 }
+
+export { CARD_HEIGHT, COMPOSER_HEIGHT, MAX_GAP, MIN_GAP };
