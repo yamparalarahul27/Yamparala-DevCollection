@@ -3,15 +3,17 @@ import TradingContextComposerShowcase from "@/components/TradingContextComposerS
 
 const CODE_CONTENT = `Use Copy Code to load the current local source for the Trading Context Composer component.`;
 
-const PROMPT_CONTENT = `Create a reusable AI trading chat composer based on the supplied motion reference:
-- Begin as a clean AI chat input with a circular send action.
-- When the typed prompt contains Orders or Positions, reveal a portfolio context card from behind the composer.
-- Reverse the reference motion: translate the card upward, fade it in, remove a slight blur, briefly overshoot, and settle farther above the composer.
-- Keep the composer anchored above the card in the stacking order so their rounded edges overlap during the reveal.
-- Show asset icon and name, futures uPnL or spot PnL, and portfolio coverage for each row.
-- Include Orders, Positions, and Explain actions.
-- Add a Gap scrubber, Debug layer view, Toggle control, and Replay action for inspecting the motion.
-- Include a separate video-reference variant that preserves the original Notion connector content and compact dimensions.
+const PROMPT_CONTENT = `Create a reusable AI trading chat composer that replicates the supplied motion reference frame by frame:
+- Render the card and the composer as white silhouettes inside a gooey SVG filter (blur + alpha contrast) so the two shapes melt together like liquid when they overlap.
+- Drive everything from a single gap value: the px distance between the card's bottom edge and the composer's top edge (negative values overlap and merge the shapes).
+- Play the reveal/dismiss curves measured from the reference video: reveal overshoots ~38.6% at ~120ms and settles at ~340ms; dismissal drops in ~170ms with a slow relax tail. The gap value itself animates, so a scrubber thumb follows the motion.
+- Keep card content on a separate unfiltered layer that fades and blurs only over the last stretch of travel while the composer text stays crisp.
+- When the typed prompt contains Orders or Positions, reveal a portfolio context card from behind the composer with that exact motion.
+- Show real crypto brand marks (BTC, ETH, SOL as inline SVG), asset name with a small market tag, and a single right-aligned PnL block with muted coverage metadata per row.
+- Make each asset row tappable so it drops a ready-made prompt about that asset into the composer; stagger the rows in as the card reveals.
+- Keep chrome minimal: no decorative icons, text-only action chips with one accented Explain action; Esc dismisses the card and typed closes are debounced so the card never flaps mid-edit.
+- Add a Gap scrubber (spring-following, like the reference), Debug layer view, Toggle control, and Replay action for inspecting the motion.
+- Include a separate video-reference variant that preserves the original Notion connector content and compact dimensions 1:1.
 - Support controlled and uncontrolled input, loading/empty/error states, responsive sizing, keyboard focus, dark mode, and reduced motion.`;
 
 export default function TradingContextComposerPage() {

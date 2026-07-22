@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  useCallback,
   useEffect,
   useRef,
   useState,
@@ -8,15 +9,13 @@ import {
   type PointerEvent,
 } from "react";
 import { PanelTopOpen, RotateCcw } from "lucide-react";
-import TradingContextComposer from "./TradingContextComposer";
+import TradingContextComposer, { MAX_GAP, MIN_GAP } from "./TradingContextComposer";
 import styles from "./TradingContextComposer.module.css";
-
-const MIN_GAP = -236;
-const MAX_GAP = 22;
 
 export default function TradingContextComposerPlayground() {
   const [prompt, setPrompt] = useState("");
-  const [gap, setGap] = useState(22);
+  const [manualGap, setManualGap] = useState<number | null>(null);
+  const [liveGap, setLiveGap] = useState(MIN_GAP);
   const [debug, setDebug] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [isScrubbing, setIsScrubbing] = useState(false);
@@ -32,12 +31,17 @@ export default function TradingContextComposerPlayground() {
 
   function handlePromptChange(nextPrompt: string) {
     setPrompt(nextPrompt);
+    setManualGap(null);
     setIsOpen(/\b(orders?|positions?)\b/i.test(nextPrompt));
   }
 
   function handleGapInput(event: FormEvent<HTMLInputElement>) {
-    setGap(Number(event.currentTarget.value));
+    setManualGap(Number(event.currentTarget.value));
   }
+
+  const handleGapChange = useCallback((gap: number) => {
+    setLiveGap(gap);
+  }, []);
 
   function stopScrubbing(event: PointerEvent<HTMLInputElement>) {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
@@ -53,11 +57,12 @@ export default function TradingContextComposerPlayground() {
     }
 
     setIsScrubbing(false);
+    setManualGap(null);
     setIsOpen(false);
     replayTimerRef.current = setTimeout(() => {
       setIsOpen(true);
       replayTimerRef.current = null;
-    }, 320);
+    }, 480);
   }
 
   function handleToggle() {
@@ -67,8 +72,12 @@ export default function TradingContextComposerPlayground() {
     }
 
     setIsScrubbing(false);
+    setManualGap(null);
     setIsOpen((current) => !current);
   }
+
+  const sliderValue =
+    manualGap ?? Math.round(Math.min(MAX_GAP, Math.max(MIN_GAP, liveGap)));
 
   return (
     <div className={styles.playground}>
@@ -76,7 +85,9 @@ export default function TradingContextComposerPlayground() {
         autoFocus
         debug={debug}
         forceOpen={isOpen}
-        gap={gap}
+        gap={manualGap ?? undefined}
+        onDismiss={() => setIsOpen(false)}
+        onGapChange={handleGapChange}
         onValueChange={handlePromptChange}
         scrubbing={isScrubbing}
         value={prompt}
@@ -95,9 +106,9 @@ export default function TradingContextComposerPlayground() {
             onPointerUp={stopScrubbing}
             step="1"
             type="range"
-            value={gap}
+            value={sliderValue}
           />
-          <output>{gap}px</output>
+          <output>{sliderValue}px</output>
         </label>
 
         <label className={styles.debugControl}>

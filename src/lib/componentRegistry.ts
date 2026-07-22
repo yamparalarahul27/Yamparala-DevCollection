@@ -33,7 +33,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
   {
     href: "/trading-context-composer",
     title: "Trading Context Composer",
-    description: "AI chat composer with trading context and an interactive video-reference motion variant.",
+    description: "AI chat composer with a gooey context-card reveal and a frame-accurate video-reference motion variant.",
     color: "#22a884",
     category: "Inputs & Controls",
     status: "Latest",
@@ -44,6 +44,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
       ["src", "components", "TradingContextComposer.module.css"],
       ["src", "components", "ReferenceConnectorComposer.tsx"],
       ["src", "components", "ReferenceConnectorComposer.module.css"],
+      ["src", "lib", "useGapMotion.ts"],
       ["src", "app", "trading-context-composer", "page.tsx"],
     ],
   },

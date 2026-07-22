@@ -15,64 +15,69 @@
   display: block;
   width: min(100%, 446px);
   min-width: 0;
-  height: 404px;
-  overflow: clip;
-  padding-top: 270px;
+  height: 452px;
   background: transparent;
   color: var(--ink);
   font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 
+.gooDefs {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.shapes {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  filter: var(--goo) drop-shadow(0 2px 5px rgba(15, 23, 42, 0.06))
+    drop-shadow(0 16px 34px rgba(15, 23, 42, 0.1));
+  pointer-events: none;
+  will-change: filter;
+}
+
+.shapeCard,
+.shapeComposer {
+  position: absolute;
+  right: 0;
+  left: 0;
+}
+
+.shapeCard {
+  bottom: var(--shape-bottom);
+  height: var(--shape-height);
+  border-radius: 26px;
+  background: var(--card);
+}
+
+.shapeComposer {
+  bottom: 0;
+  height: 134px;
+  border-radius: 30px;
+  background: var(--composer);
+}
+
 .contextCard {
   position: absolute;
-  top: 12px;
+  bottom: calc(var(--content-bottom) + var(--content-clip));
   left: 0;
   z-index: 1;
   display: grid;
   width: 100%;
-  height: 236px;
+  height: calc(236px - var(--content-clip));
   grid-template-rows: 48px 132px 56px;
   overflow: hidden;
-  border: 1px solid var(--card-border);
   border-radius: 26px;
-  background: var(--card);
-  box-shadow:
-    0 20px 48px rgba(15, 23, 42, 0.1),
-    0 2px 7px rgba(15, 23, 42, 0.05),
-    inset 0 1px 0 rgba(255, 255, 255, 0.8);
-  filter: blur(4px);
-  opacity: 0;
+  background: transparent;
+  filter: blur(var(--card-blur));
+  opacity: var(--card-alpha);
   pointer-events: none;
-  transform: translate3d(0, 258px, 0) scaleY(0.96);
-  transform-origin: bottom center;
-  visibility: hidden;
-  will-change: transform, opacity, filter;
-  transition:
-    transform 300ms cubic-bezier(0.4, 0, 1, 1),
-    opacity 180ms cubic-bezier(0.4, 0, 1, 1),
-    filter 180ms cubic-bezier(0.4, 0, 1, 1),
-    visibility 0ms linear 300ms;
-}
-
-.root[data-open="true"] .contextCard {
-  filter: blur(var(--context-blur));
-  opacity: var(--context-opacity);
-  transform: translate3d(0, calc(22px - var(--context-gap)), 0) scaleY(var(--context-scale));
-  visibility: visible;
-  transition:
-    transform 420ms cubic-bezier(0.16, 1.16, 0.3, 1),
-    opacity 220ms cubic-bezier(0, 0, 0.2, 1),
-    filter 220ms cubic-bezier(0, 0, 0.2, 1),
-    visibility 0ms linear 0ms;
+  will-change: opacity, filter;
 }
 
 .root[data-interactive="true"] .contextCard {
   pointer-events: auto;
-}
-
-.root[data-scrubbing="true"] .contextCard,
-.root[data-scrubbing="true"][data-open="true"] .contextCard {
-  transition: none;
 }
 
 .root[data-debug="true"] {
@@ -84,6 +89,30 @@
 .root[data-debug="true"] .composer {
   outline: 1px dashed rgba(225, 29, 72, 0.72);
   outline-offset: -3px;
+}
+
+.root[data-debug="true"] .shapeCard,
+.root[data-debug="true"] .shapeComposer {
+  outline: 1px dashed rgba(22, 163, 74, 0.7);
+  outline-offset: -1px;
+}
+
+.debugLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.debugReadout {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  border-radius: 4px;
+  background: rgba(15, 23, 42, 0.8);
+  color: #f4f6fa;
+  font: 500 10px / 1.6 ui-monospace, "SF Mono", Menlo, monospace;
+  padding: 2px 6px;
 }
 
 .root[data-debug="true"] .contextCard::after,
@@ -114,28 +143,19 @@
   justify-content: space-between;
   gap: 12px;
   border-bottom: 1px solid var(--divider);
-  padding: 0 15px;
+  padding: 0 16px;
 }
 
-.contextHeader > span:first-child {
-  display: inline-flex;
+.contextHeader > strong {
+  overflow: hidden;
   min-width: 0;
-  align-items: center;
-  gap: 7px;
   color: var(--ink);
   font-size: 13px;
-}
-
-.contextHeader strong {
-  overflow: hidden;
   font-weight: 650;
+  letter-spacing: -0.01em;
+  line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.contextHeader svg {
-  flex: none;
-  color: #596579;
 }
 
 .totalCoverage {
@@ -143,11 +163,13 @@
   border: 1px solid var(--divider);
   border-radius: 999px;
   background: var(--button-surface);
-  color: #505a69;
+  color: #545e6d;
   font-size: 11px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
-  padding: 5px 8px;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  padding: 5px 9px;
 }
 
 .assetList,
@@ -159,19 +181,74 @@
   padding: 0;
 }
 
-.assetRow {
-  display: grid;
+.assetItem {
+  position: relative;
+  display: block;
   min-width: 0;
-  grid-template-columns: 30px minmax(78px, 1fr) minmax(72px, auto) 54px;
-  align-items: center;
-  gap: 9px;
-  border-bottom: 1px solid var(--divider);
   list-style: none;
-  padding: 0 14px;
 }
 
-.assetRow:last-child {
-  border-bottom: 0;
+.assetItem:not(:last-child)::after {
+  position: absolute;
+  right: 16px;
+  bottom: 0;
+  left: 16px;
+  height: 1px;
+  background: var(--divider);
+  content: "";
+}
+
+.assetRow {
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  grid-template-columns: 30px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  opacity: 0;
+  padding: 0 16px;
+  text-align: left;
+  transform: translateY(7px);
+  transition:
+    background-color 100ms ease-out,
+    opacity 240ms ease-out,
+    transform 280ms cubic-bezier(0.2, 0.9, 0.3, 1.15);
+}
+
+.root[data-revealed="true"] .assetRow {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.root[data-revealed="true"] .assetItem:nth-child(1) .assetRow {
+  transition-delay: 60ms;
+}
+
+.root[data-revealed="true"] .assetItem:nth-child(2) .assetRow {
+  transition-delay: 105ms;
+}
+
+.root[data-revealed="true"] .assetItem:nth-child(3) .assetRow {
+  transition-delay: 150ms;
+}
+
+.assetRow:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: -3px;
+  border-radius: 10px;
+}
+
+.assetLogo {
+  display: block;
+  width: 30px;
+  height: 30px;
+  flex: none;
 }
 
 .assetIcon {
@@ -187,82 +264,105 @@
   font-weight: 750;
 }
 
-.assetIdentity,
-.pnl,
-.coverage {
-  display: flex;
+.assetIdentity {
+  display: inline-flex;
   min-width: 0;
-  flex-direction: column;
-  gap: 2px;
+  align-items: center;
+  gap: 8px;
 }
 
-.assetIdentity strong,
-.pnl strong,
-.coverage strong {
+.assetIdentity strong {
   overflow: hidden;
-  font-size: 11px;
+  color: var(--ink);
+  font-size: 13px;
   font-variant-numeric: tabular-nums;
-  font-weight: 650;
-  line-height: 1.1;
+  font-weight: 630;
+  letter-spacing: -0.01em;
+  line-height: 1;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.assetIdentity > span,
-.pnl > span,
-.coverage > span {
+.marketTag {
+  flex: none;
+  border-radius: 4px;
+  background: color-mix(in srgb, var(--button-surface) 72%, transparent);
   color: var(--subtle);
-  font-size: 9px;
-  font-weight: 520;
-  line-height: 1.1;
+  font-size: 8.5px;
+  font-weight: 620;
+  letter-spacing: 0.06em;
+  line-height: 1;
+  padding: 3px 5px;
+  text-transform: uppercase;
+  transform: translateY(0.5px);
 }
 
-.pnl,
-.coverage {
+.pnlBlock {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
   align-items: flex-end;
+  gap: 4px;
   text-align: right;
 }
 
-.pnl strong {
-  color: #16805d;
+.pnlBlock strong {
+  color: #158059;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 650;
+  letter-spacing: -0.005em;
+  line-height: 1;
 }
 
-.pnl[data-positive="false"] strong {
-  color: #c24152;
+.pnlBlock[data-positive="false"] strong {
+  color: #c2414f;
 }
 
-.coverage strong {
-  color: #465060;
+.pnlBlock > span {
+  color: var(--subtle);
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  line-height: 1;
 }
 
 .actions {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: center;
-  gap: 7px;
+  gap: 8px;
   border-top: 1px solid var(--divider);
-  padding: 8px 12px;
+  padding: 10px 16px;
 }
 
 .actions button,
 .statePanel button {
   display: inline-flex;
   min-width: 0;
-  min-height: 40px;
+  min-height: 36px;
   align-items: center;
   justify-content: center;
   gap: 6px;
   border: 1px solid var(--divider);
-  border-radius: 8px;
-  background: var(--button-surface);
-  color: #404a59;
-  font: 600 11px / 1 var(--font-inter), system-ui, sans-serif;
-  padding: 0 8px;
+  border-radius: 999px;
+  background: transparent;
+  color: #4c5563;
+  font: 600 12px / 1 var(--font-inter), system-ui, sans-serif;
+  letter-spacing: 0;
+  padding: 0 12px;
   transition:
     background-color 100ms ease-out,
     border-color 100ms ease-out,
     color 100ms ease-out,
     transform 100ms ease-out;
+}
+
+.actions .primaryAction {
+  border-color: #dce0f6;
+  background: #fbfbff;
+  color: #3d63ed;
 }
 
 .actions button:focus-visible,
@@ -273,61 +373,42 @@
 }
 
 .composer {
-  position: relative;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
   z-index: 2;
   display: flex;
-  width: 100%;
   height: 134px;
   align-items: flex-start;
   gap: 12px;
-  border: 1px solid var(--card-border);
   border-radius: 30px;
-  background: var(--composer);
-  box-shadow:
-    0 16px 34px rgba(15, 23, 42, 0.11),
-    0 2px 6px rgba(15, 23, 42, 0.04),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92);
-  padding: 18px 72px 18px 23px;
-  transition:
-    border-color 150ms ease-out,
-    box-shadow 150ms ease-out;
-}
-
-.composer:focus-within {
-  border-color: rgba(37, 99, 235, 0.34);
-  box-shadow:
-    0 16px 34px rgba(15, 23, 42, 0.11),
-    0 2px 6px rgba(15, 23, 42, 0.04),
-    0 0 0 3px rgba(37, 99, 235, 0.1),
-    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+  background: transparent;
+  padding: 22px 68px 0 24px;
 }
 
 .composer input {
   min-width: 0;
-  height: 38px;
+  height: 26px;
   flex: 1;
   border: 0;
-  border-radius: 8px;
   background: transparent;
   color: var(--ink);
-  font: 500 16px / 1.4 var(--font-inter), system-ui, sans-serif;
+  font: 450 17px / 1.4 var(--font-inter), system-ui, sans-serif;
   letter-spacing: 0;
   outline: none;
-  padding: 0 4px;
+  padding: 0;
 }
 
 .composer input::placeholder {
-  color: #9299a4;
-}
-
-.composer input:focus-visible {
-  outline: none;
+  color: #7d8085;
+  opacity: 1;
 }
 
 .sendButton {
   position: absolute;
   right: 16px;
-  bottom: 15px;
+  bottom: 16px;
   display: grid;
   width: 40px;
   min-width: 40px;
@@ -382,7 +463,7 @@
   grid-row: 2 / 4;
   grid-template-rows: repeat(3, 52px);
   align-content: center;
-  padding: 8px 14px;
+  padding: 8px 16px;
 }
 
 .skeletonRow {
@@ -527,6 +608,16 @@
     transform: translateY(-1px);
   }
 
+  .actions .primaryAction:hover {
+    border-color: #c4cdf2;
+    background: #f2f5ff;
+    color: #3057e0;
+  }
+
+  .root[data-interactive="true"] .assetRow:hover {
+    background: rgba(15, 23, 42, 0.032);
+  }
+
   .sendButton:hover:not(:disabled) {
     background: #11161e;
     box-shadow:
@@ -567,11 +658,9 @@
   --focus: #79a7ff;
 }
 
-:global(.theme-dark) .contextCard,
-:global(.theme-dark) .composer {
-  box-shadow:
-    0 18px 44px rgba(0, 0, 0, 0.3),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+:global(.theme-dark) .shapes {
+  filter: var(--goo) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.4))
+    drop-shadow(0 18px 40px rgba(0, 0, 0, 0.32));
 }
 
 :global(.theme-dark) .totalCoverage,
@@ -589,6 +678,24 @@
 
 :global(.theme-dark) .skeletonRow i {
   background: #30343c;
+}
+
+:global(.theme-dark) .actions .primaryAction {
+  border-color: rgba(121, 167, 255, 0.28);
+  background: rgba(61, 99, 237, 0.16);
+  color: #92b4ff;
+}
+
+:global(.theme-dark) .pnlBlock strong {
+  color: #37c893;
+}
+
+:global(.theme-dark) .pnlBlock[data-positive="false"] strong {
+  color: #ef7b8b;
+}
+
+:global(.theme-dark) .root[data-interactive="true"] .assetRow:hover {
+  background: rgba(255, 255, 255, 0.045);
 }
 
 :global(.theme-dark) .sendButton:disabled {
@@ -627,12 +734,13 @@
   }
 
   .assetRow {
-    grid-template-columns: 28px minmax(66px, 1fr) minmax(63px, auto) 48px;
-    gap: 7px;
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    gap: 8px;
     padding-inline: 11px;
   }
 
-  .assetIcon {
+  .assetIcon,
+  .assetLogo {
     width: 28px;
     height: 28px;
   }
@@ -671,8 +779,14 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .assetRow,
+  .root[data-revealed="true"] .assetRow {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
   .contextCard,
-  .root[data-open="true"] .contextCard,
   .actions button,
   .statePanel button,
   .sendButton,
