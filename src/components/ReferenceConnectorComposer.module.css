@@ -1,0 +1,486 @@
+.showcase {
+  display: flex;
+  width: min(100%, 520px);
+  min-height: 510px;
+  flex-direction: column;
+  align-items: center;
+  gap: 26px;
+  background: transparent;
+}
+
+.variantTabs {
+  display: grid;
+  width: min(100%, 292px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 3px;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.58);
+  padding: 3px;
+}
+
+.variantTabs button {
+  min-height: 36px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #6a717d;
+  font: 600 11px / 1 var(--font-inter), system-ui, sans-serif;
+  transition:
+    background-color 100ms ease-out,
+    box-shadow 100ms ease-out,
+    color 100ms ease-out;
+}
+
+.variantTabs button[aria-selected="true"] {
+  background: #ffffff;
+  box-shadow:
+    0 1px 3px rgba(15, 23, 42, 0.08),
+    0 1px 1px rgba(15, 23, 42, 0.04);
+  color: #20252d;
+}
+
+.variantTabs button:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+.variantPanel {
+  display: grid;
+  width: 100%;
+  flex: 1;
+  place-items: center;
+  background: transparent;
+}
+
+.referenceDemo {
+  --reference-card: #ffffff;
+  --reference-composer: #ffffff;
+  --reference-ink: #181a1f;
+  --reference-border: rgba(17, 24, 39, 0.08);
+  --reference-control: #f7f7f8;
+  --reference-focus: #2563eb;
+
+  display: flex;
+  width: min(100%, 446px);
+  flex-direction: column;
+  gap: 28px;
+  background: transparent;
+  color: var(--reference-ink);
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.stage {
+  position: relative;
+  width: 100%;
+  height: 212px;
+  overflow: clip;
+  background: transparent;
+}
+
+.connectorCard {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  display: grid;
+  width: 100%;
+  height: 68px;
+  grid-template-columns: 30px minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid var(--reference-border);
+  border-radius: 20px;
+  background: var(--reference-card);
+  box-shadow:
+    0 8px 22px rgba(15, 23, 42, 0.06),
+    0 1px 3px rgba(15, 23, 42, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  filter: blur(4px);
+  opacity: 0;
+  padding: 0 12px;
+  pointer-events: none;
+  transform: translate3d(0, 70px, 0) scaleY(0.97);
+  transform-origin: bottom center;
+  visibility: hidden;
+  will-change: transform, opacity, filter;
+  transition:
+    transform 250ms cubic-bezier(0.4, 0, 1, 1),
+    opacity 180ms cubic-bezier(0.4, 0, 1, 1),
+    filter 180ms cubic-bezier(0.4, 0, 1, 1),
+    visibility 0ms linear 250ms;
+}
+
+.stage[data-visible="true"] .connectorCard {
+  filter: blur(var(--reference-blur));
+  opacity: var(--reference-opacity);
+  transform: translate3d(0, calc(10px - var(--reference-gap)), 0) scaleY(var(--reference-scale));
+  visibility: visible;
+  transition:
+    transform 360ms cubic-bezier(0.16, 1.12, 0.3, 1),
+    opacity 200ms cubic-bezier(0, 0, 0.2, 1),
+    filter 200ms cubic-bezier(0, 0, 0.2, 1),
+    visibility 0ms linear 0ms;
+}
+
+.stage[data-visible="true"] .connectorCard[aria-hidden="false"] {
+  pointer-events: auto;
+}
+
+.stage[data-scrubbing="true"] .connectorCard,
+.stage[data-scrubbing="true"][data-visible="true"] .connectorCard {
+  transition: none;
+}
+
+.notionIcon {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border: 2px solid #1d1d1f;
+  border-radius: 5px;
+  background: #ffffff;
+  color: #111111;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.connectorIdentity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.connectorIdentity > span {
+  color: #92969f;
+  font-size: 9px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.connectorIdentity strong {
+  overflow: hidden;
+  color: var(--reference-ink);
+  font-size: 13px;
+  font-weight: 620;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.skipButton,
+.connectButton {
+  min-width: 48px;
+  min-height: 32px;
+  border: 0;
+  border-radius: 9px;
+  font: 570 10px / 1 var(--font-inter), system-ui, sans-serif;
+  transition:
+    background-color 100ms ease-out,
+    color 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.skipButton {
+  background: transparent;
+  color: #686d76;
+}
+
+.connectButton {
+  border: 1px solid #dbe8ff;
+  background: #f4f8ff;
+  color: #2671d9;
+  padding-inline: 10px;
+}
+
+.skipButton:focus-visible,
+.connectButton:focus-visible,
+.composer input:focus-visible,
+.composer button:focus-visible,
+.controls input:focus-visible,
+.toggleButton:focus-visible {
+  outline: 2px solid var(--reference-focus);
+  outline-offset: 2px;
+}
+
+.composer {
+  position: absolute;
+  top: 78px;
+  left: 0;
+  z-index: 2;
+  width: 100%;
+  height: 134px;
+  border: 1px solid var(--reference-border);
+  border-radius: 29px;
+  background: var(--reference-composer);
+  box-shadow:
+    0 13px 28px rgba(15, 23, 42, 0.07),
+    0 2px 5px rgba(15, 23, 42, 0.035),
+    inset 0 1px 0 rgba(255, 255, 255, 0.94);
+  padding: 17px 64px 17px 22px;
+}
+
+.composer input {
+  width: 100%;
+  height: 34px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--reference-ink);
+  font: 480 13px / 1.4 var(--font-inter), system-ui, sans-serif;
+  letter-spacing: 0;
+  outline: none;
+  padding: 0 3px;
+}
+
+.composer input::placeholder {
+  color: #7f838c;
+  opacity: 1;
+}
+
+.composer button {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #282c33;
+  color: #ffffff;
+  transition:
+    background-color 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.composer button:disabled {
+  background: #e1e3e6;
+  color: #ffffff;
+  cursor: not-allowed;
+}
+
+.controls {
+  display: flex;
+  min-height: 40px;
+  align-items: center;
+  gap: 14px;
+  background: transparent;
+  color: #666b74;
+  font-size: 10px;
+}
+
+.gapControl {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  grid-template-columns: auto minmax(86px, 1fr) 34px;
+  align-items: center;
+  gap: 8px;
+}
+
+.gapControl > span,
+.debugControl > span {
+  font-weight: 560;
+}
+
+.gapControl input[type="range"] {
+  width: 100%;
+  height: 18px;
+  margin: 0;
+  accent-color: #1473e6;
+  cursor: ew-resize;
+}
+
+.gapControl output {
+  color: #70757f;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.debugControl {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+}
+
+.debugControl input {
+  width: 13px;
+  height: 13px;
+  margin: 0;
+  accent-color: #1473e6;
+}
+
+.toggleButton {
+  min-width: 58px;
+  min-height: 32px;
+  border: 1px solid rgba(17, 24, 39, 0.09);
+  border-radius: 7px;
+  background: var(--reference-control);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  color: #4f555f;
+  font: 570 10px / 1 var(--font-inter), system-ui, sans-serif;
+  padding: 0 10px;
+  transition:
+    background-color 100ms ease-out,
+    border-color 100ms ease-out,
+    transform 100ms ease-out;
+}
+
+.stage[data-debug="true"] {
+  outline: 1px dashed rgba(37, 99, 235, 0.6);
+  outline-offset: -1px;
+}
+
+.stage[data-debug="true"] .connectorCard,
+.stage[data-debug="true"] .composer {
+  outline: 1px dashed rgba(225, 29, 72, 0.7);
+  outline-offset: -3px;
+}
+
+.srOnly {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .skipButton:hover,
+  .connectButton:hover,
+  .toggleButton:hover {
+    transform: translateY(-1px);
+  }
+
+  .skipButton:hover {
+    background: #f5f5f6;
+    color: #292d34;
+  }
+
+  .connectButton:hover {
+    background: #eaf2ff;
+  }
+
+  .toggleButton:hover {
+    border-color: rgba(17, 24, 39, 0.15);
+    background: #ffffff;
+  }
+}
+
+.skipButton:active,
+.connectButton:active,
+.toggleButton:active,
+.composer button:active:not(:disabled) {
+  transform: translateY(1px) scale(0.98);
+}
+
+:global(.theme-dark) .variantTabs {
+  border-color: rgba(255, 255, 255, 0.09);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:global(.theme-dark) .variantTabs button {
+  color: #aab1bd;
+}
+
+:global(.theme-dark) .variantTabs button[aria-selected="true"] {
+  background: #292d35;
+  color: #f1f3f6;
+}
+
+:global(.theme-dark) .referenceDemo {
+  --reference-card: #1a1d23;
+  --reference-composer: #202329;
+  --reference-ink: #f1f3f6;
+  --reference-border: rgba(255, 255, 255, 0.1);
+  --reference-control: #282c34;
+  --reference-focus: #79a7ff;
+}
+
+:global(.theme-dark) .connectorIdentity > span,
+:global(.theme-dark) .controls,
+:global(.theme-dark) .gapControl output,
+:global(.theme-dark) .skipButton,
+:global(.theme-dark) .toggleButton {
+  color: #abb2be;
+}
+
+:global(.theme-dark) .notionIcon {
+  border-color: #dfe3e8;
+  background: #f6f7f8;
+}
+
+:global(.theme-dark) .connectButton {
+  border-color: rgba(121, 167, 255, 0.24);
+  background: rgba(58, 112, 207, 0.15);
+  color: #8db7ff;
+}
+
+@media (pointer: coarse) {
+  .variantTabs button,
+  .skipButton,
+  .connectButton,
+  .debugControl,
+  .toggleButton {
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 420px) {
+  .connectorCard {
+    grid-template-columns: 28px minmax(0, 1fr) auto auto;
+    gap: 6px;
+    padding-inline: 9px;
+  }
+
+  .skipButton,
+  .connectButton {
+    min-width: 42px;
+    padding-inline: 7px;
+  }
+
+  .controls {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .gapControl {
+    width: 100%;
+    flex-basis: 100%;
+  }
+
+  .debugControl {
+    margin-right: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .connectorCard,
+  .stage[data-visible="true"] .connectorCard,
+  .skipButton,
+  .connectButton,
+  .toggleButton,
+  .composer button {
+    animation: none;
+    transition: none;
+  }
+
+  .skipButton:hover,
+  .connectButton:hover,
+  .toggleButton:hover,
+  .skipButton:active,
+  .connectButton:active,
+  .toggleButton:active,
+  .composer button:active:not(:disabled) {
+    transform: none;
+  }
+}

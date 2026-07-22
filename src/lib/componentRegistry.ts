@@ -31,6 +31,23 @@ export type ComponentRegistryEntry = {
 
 export const componentRegistry: readonly ComponentRegistryEntry[] = [
   {
+    href: "/trading-context-composer",
+    title: "Trading Context Composer",
+    description: "AI chat composer with trading context and an interactive video-reference motion variant.",
+    color: "#22a884",
+    category: "Inputs & Controls",
+    status: "Latest",
+    sourceFiles: [
+      ["src", "components", "TradingContextComposer.tsx"],
+      ["src", "components", "TradingContextComposerPlayground.tsx"],
+      ["src", "components", "TradingContextComposerShowcase.tsx"],
+      ["src", "components", "TradingContextComposer.module.css"],
+      ["src", "components", "ReferenceConnectorComposer.tsx"],
+      ["src", "components", "ReferenceConnectorComposer.module.css"],
+      ["src", "app", "trading-context-composer", "page.tsx"],
+    ],
+  },
+  {
     href: "/floatingdock",
     title: "Floating Component Dock",
     navLabel: "Floating Dock",
