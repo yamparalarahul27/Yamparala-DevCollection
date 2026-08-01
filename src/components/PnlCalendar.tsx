@@ -131,12 +131,12 @@ export function buildDemoPnlPage(pageIndex: number): PnlMonthGrid[] {
 
 function cellClassName(state: PnlDayState) {
   if (state === "gain") {
-    return "border border-[#bae6d4] bg-[#dcfce7] text-[#166534]";
+    return "border border-[var(--gain-border)] bg-[var(--gain-bg)] text-[var(--gain-text)]";
   }
   if (state === "loss") {
-    return "border border-[#fecaca] bg-[#fee2e2] text-[#991b1b]";
+    return "border border-[var(--loss-border)] bg-[var(--loss-bg)] text-[var(--loss-text)]";
   }
-  return "border border-[#edf0f5] bg-[#f6f8fb] text-[#c0c6d4]";
+  return "border border-[var(--muted-day-border)] bg-[var(--muted-day-bg)] text-[var(--muted-day-text)]";
 }
 
 export default function PnlCalendar({
@@ -166,22 +166,22 @@ export default function PnlCalendar({
   return (
     <div
       className={cn(
-        "w-full max-w-[1120px] rounded-[18px] border border-[#e6e9ef] bg-white p-4 shadow-[0_10px_28px_rgba(15,23,42,0.06)] sm:p-6",
+        "w-full max-w-[1120px] rounded-[18px] border border-[var(--proteus-border)] bg-[var(--surface)] p-4 shadow-[var(--glossy-soft-shadow)] sm:p-6",
         className,
       )}
     >
       <div className="flex items-center justify-between gap-3">
-        <h2 className="font-mono text-[24px] font-bold tracking-[-0.02em] text-[#111827]">
+        <h2 className="font-mono text-[24px] font-bold tracking-[-0.02em] text-[var(--foreground)]">
           {title}
         </h2>
 
         <div className="flex items-center gap-2">
-          <span className="font-mono text-[14px] text-[#6b7280]">
+          <span className="font-mono text-[14px] text-[var(--text-secondary)]">
             {activePage + 1} / {pageCount}
           </span>
           <button
             aria-label="Previous page"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#e5e7eb] text-[#6b7280] transition-colors hover:bg-[#f8fafc] disabled:cursor-not-allowed disabled:opacity-45"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border-color)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)] disabled:cursor-not-allowed disabled:opacity-45"
             disabled={activePage === 0}
             onClick={() => setPage(Math.max(0, activePage - 1))}
             type="button"
@@ -190,7 +190,7 @@ export default function PnlCalendar({
           </button>
           <button
             aria-label="Next page"
-            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[#e5e7eb] text-[#6b7280] transition-colors hover:bg-[#f8fafc] disabled:cursor-not-allowed disabled:opacity-45"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-[var(--border-color)] text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-muted)] disabled:cursor-not-allowed disabled:opacity-45"
             disabled={activePage >= pageCount - 1}
             onClick={() => setPage(Math.min(pageCount - 1, activePage + 1))}
             type="button"
@@ -203,13 +203,13 @@ export default function PnlCalendar({
       <div className="mt-5 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
         {resolvedMonths.map((month) => (
           <section key={month.id}>
-            <h3 className="font-mono text-[14px] font-semibold text-[#1f2937]">
+            <h3 className="font-mono text-[14px] font-semibold text-[var(--foreground)]">
               {month.label}
             </h3>
             <div className="mt-2 grid grid-cols-7 gap-1.5">
               {WEEK_DAYS.map((day) => (
                 <span
-                  className="pb-1 text-center text-[11px] font-medium uppercase tracking-[0.04em] text-[#9ca3af]"
+                  className="pb-1 text-center text-[11px] font-medium uppercase tracking-[0.04em] text-[var(--text-secondary)]"
                   key={day}
                 >
                   {day}
@@ -230,9 +230,9 @@ export default function PnlCalendar({
                 const cellClasses = cn(
                   "flex h-[48px] w-full flex-col justify-between rounded-[10px] px-1.5 py-1.5",
                   cellClassName(cell.state),
-                  interactive &&
-                    "cursor-pointer transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#8162ff]",
-                );
+                      interactive &&
+                        "cursor-pointer transition-transform hover:scale-[1.03] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent-purple)]",
+                    );
 
                 if (interactive) {
                   return (

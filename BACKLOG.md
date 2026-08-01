@@ -23,21 +23,23 @@ Out of scope for this PR — tracked here so we don't lose it.
 
 Remaining items from the July 2026 project review (registry consolidation,
 git-based dates, serverless source-viewer fix, CI, README, and lint cleanup
-already landed). August 2026 cleanup extracted Chain Selector, NFT Table, and
-PnL Calendar into real components with props, removed their CODE_CONTENT
-megastrings, normalized several button label/`cn`/`forwardRef` APIs, and
-demoted thin button skins to `Experience`.
+already landed).
 
-### Still open — page-only demos
+August 2026 cleanup (this branch) also:
 
-- Extract `svgtoc` CurvedToc and `mathcurveloaders` CurveCanvas out of their
-  page.tsx dumps; kill remaining CODE_CONTENT megastrings there and on
-  `numberflow` / `peektext` / `figma-properties-button`.
-- Normalize remaining concatenated routes to kebab-case (`chain-selector`,
-  `nft-table`, `pnl-calendar`, `floating-dock`, `performance-button`, …)
-  with redirects if needed.
-- Expand shared design tokens and optionally a GlossySurface primitive so
-  button skins stop reinventing the same shadow/gradient recipe.
+- Extracted Chain Selector, NFT Table, PnL Calendar, Curved TOC, and Math Curve
+  Loaders into reusable components with props.
+- Removed CODE_CONTENT megastrings for those demos plus Peektext, Figma
+  Properties, and NumberFlow.
+- Normalized concatenated routes to kebab-case with permanent redirects.
+- Expanded shared design tokens (accents, gain/loss, shell dark, glossy
+  shadow recipe) and started wiring extracted UI to them.
+
+### Still open
+
+- Continue migrating remaining button CSS modules onto shared glossy tokens /
+  a small GlossySurface primitive instead of one-off shadow stacks.
+- Per-button visual polish still varies; thin skins remain marked `Experience`.
 
 ### Repo hygiene
 

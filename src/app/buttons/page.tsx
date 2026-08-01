@@ -136,7 +136,7 @@ const buttonDemos: ButtonDemo[] = [
   },
   {
     title: "Performance Button",
-    href: "/performancebutton",
+    href: "/performance-button",
     description: "Dark Subscribe pill recreated from performance.dev.",
     preview: <PerformanceButton>Subscribe</PerformanceButton>,
     previewClassName: "bg-[#f4f6fb]",

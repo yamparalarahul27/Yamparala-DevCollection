@@ -49,7 +49,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     ],
   },
   {
-    href: "/floatingdock",
+    href: "/floating-dock",
     title: "Floating Component Dock",
     navLabel: "Floating Dock",
     description: "Bottom-center floating utility dock with component menu, copy actions, and theme switcher.",
@@ -59,11 +59,11 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     sourceFiles: [
       ["src", "components", "FloatingComponentDock.tsx"],
       ["src", "components", "ComponentShell.tsx"],
-      ["src", "app", "floatingdock", "page.tsx"],
+      ["src", "app", "floating-dock", "page.tsx"],
     ],
   },
   {
-    href: "/datepicker",
+    href: "/date-picker",
     title: "Date Picker",
     description: "Timeline ruler with drag-to-resize, NL text input, and granularity panels.",
     color: "#3B82F6",
@@ -74,11 +74,11 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
       ["src", "components", "timeline-date-picker", "constants.ts"],
       ["src", "components", "timeline-date-picker", "panels.tsx"],
       ["src", "lib", "parseDateInput.ts"],
-      ["src", "app", "datepicker", "page.tsx"],
+      ["src", "app", "date-picker", "page.tsx"],
     ],
   },
   {
-    href: "/svgtoc",
+    href: "/svg-toc",
     title: "SVG Curved TOC",
     description: "Interactive table of contents with cubic Bezier connectors, clip-path animation, and offset-path demos.",
     color: "#8162ff",
@@ -86,22 +86,23 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     status: "Latest",
     sourceFiles: [
       ["src", "components", "CurvedToc.tsx"],
-      ["src", "app", "svgtoc", "page.tsx"],
+      ["src", "app", "svg-toc", "page.tsx"],
     ],
   },
   {
-    href: "/mathcurveloaders",
+    href: "/math-curve-loaders",
     title: "Math Curve Loaders",
     description: "Animated loading spinners based on mathematical curves — rose, Lissajous, hypotrochoid, and more.",
     color: "#8162ff",
     category: "Visual Effects",
-    status: "Experience",
+    status: "Latest",
     sourceFiles: [
-      ["src", "app", "mathcurveloaders", "page.tsx"],
+      ["src", "components", "MathCurveLoaders.tsx"],
+      ["src", "app", "math-curve-loaders", "page.tsx"],
     ],
   },
   {
-    href: "/chainselector",
+    href: "/chain-selector",
     title: "Chain Selector",
     description: "Horizontal pill bar for switching between blockchain networks with controlled/uncontrolled selection.",
     color: "#5d3ae9",
@@ -109,11 +110,11 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     status: "Latest",
     sourceFiles: [
       ["src", "components", "ChainSelector.tsx"],
-      ["src", "app", "chainselector", "page.tsx"],
+      ["src", "app", "chain-selector", "page.tsx"],
     ],
   },
   {
-    href: "/nfttable",
+    href: "/nft-table",
     title: "NFT Collections Table",
     description: "Sortable swipeable table with price, change, volume, market cap, and vol. score columns.",
     color: "#22A06B",
@@ -121,11 +122,11 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     status: "Latest",
     sourceFiles: [
       ["src", "components", "NftCollectionTable.tsx"],
-      ["src", "app", "nfttable", "page.tsx"],
+      ["src", "app", "nft-table", "page.tsx"],
     ],
   },
   {
-    href: "/avatarcreator",
+    href: "/avatar-creator",
     title: "Avatar Creator",
     description: "Reusable dithered-gradient profile avatar builder with swatches, shuffle, and custom color add.",
     color: "#9B4EE8",
@@ -133,11 +134,11 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     status: "Latest",
     sourceFiles: [
       ["src", "components", "ProfileAvatar.tsx"],
-      ["src", "app", "avatarcreator", "page.tsx"],
+      ["src", "app", "avatar-creator", "page.tsx"],
     ],
   },
   {
-    href: "/pnlcalendar",
+    href: "/pnl-calendar",
     title: "PnL Calendar",
     description: "Monthly trading calendar with positive/negative day heatmap and paged navigation.",
     color: "#0EA5A4",
@@ -145,11 +146,11 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     status: "Latest",
     sourceFiles: [
       ["src", "components", "PnlCalendar.tsx"],
-      ["src", "app", "pnlcalendar", "page.tsx"],
+      ["src", "app", "pnl-calendar", "page.tsx"],
     ],
   },
   {
-    href: "/peektext",
+    href: "/peek-text",
     title: "Peektext",
     description: "Inline text hover reveal that expands a tiny image with smooth transition.",
     color: "#E11D48",
@@ -157,11 +158,11 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     status: "Latest",
     sourceFiles: [
       ["src", "components", "Peektext.tsx"],
-      ["src", "app", "peektext", "page.tsx"],
+      ["src", "app", "peek-text", "page.tsx"],
     ],
   },
   {
-    href: "/canvasgallery",
+    href: "/canvas-gallery",
     title: "Canvas Gallery",
     description: "3D image canvas with pan, zoom, click-to-select, side panel, and minimap. Built with React Three Fiber + Drei.",
     color: "#6366f1",
@@ -169,7 +170,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     status: "Latest",
     sourceFiles: [
       ["src", "components", "CanvasGallery.tsx"],
-      ["src", "app", "canvasgallery", "page.tsx"],
+      ["src", "app", "canvas-gallery", "page.tsx"],
     ],
   },
   {
@@ -366,7 +367,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     ],
   },
   {
-    href: "/performancebutton",
+    href: "/performance-button",
     title: "Performance Button",
     description: "Pixel-perfect recreation of the performance.dev Subscribe button — dark pill with two-layer shadow and inset gradient ring.",
     color: "#0a0d1a",
@@ -375,7 +376,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     sourceFiles: [
       ["src", "components", "PerformanceButton.tsx"],
       ["src", "components", "PerformanceButton.module.css"],
-      ["src", "app", "performancebutton", "page.tsx"],
+      ["src", "app", "performance-button", "page.tsx"],
     ],
   },
   {
@@ -495,14 +496,14 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     ],
   },
   {
-    href: "/numberflow",
+    href: "/number-flow",
     title: "NumberFlow",
     description: "Animated number transitions — currency, percent, compact, countdown, continuous, trend, and stepper variants.",
     color: "#8162ff",
     category: "Data & Charts",
     status: "Latest",
     sourceFiles: [
-      ["src", "app", "numberflow", "page.tsx"],
+      ["src", "app", "number-flow", "page.tsx"],
     ],
   },
   {

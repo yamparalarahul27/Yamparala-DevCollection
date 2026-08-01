@@ -43,21 +43,21 @@ export default function ComponentShell({
     <div
       className={`
         min-h-screen flex flex-col transition-colors
-        ${isDark ? "bg-[#0f1117] theme-dark" : "bg-[var(--background)]"}
+        ${isDark ? "bg-[var(--shell-dark-bg)] theme-dark" : "bg-[var(--background)]"}
       `}
     >
       {/* Header */}
       <header
         className={`
           sticky top-0 z-30 border-b px-4 py-3 transition-colors
-          ${isDark ? "border-[#242834] bg-[#0f1117]" : "border-gray-200/60 bg-[var(--background)]"}
+          ${isDark ? "border-[var(--shell-dark-border)] bg-[var(--shell-dark-bg)]" : "border-gray-200/60 bg-[var(--background)]"}
         `}
       >
         <Link
           href="/"
           className={`
             inline-flex items-center gap-2 text-sm transition-colors
-            ${isDark ? "text-[#aab1be] hover:text-[#e4e7ee]" : "text-gray-600 hover:text-gray-900"}
+            ${isDark ? "text-[var(--shell-dark-muted)] hover:text-[var(--shell-dark-text)]" : "text-gray-600 hover:text-gray-900"}
           `}
         >
           <Undo2 size={16} />
@@ -67,7 +67,7 @@ export default function ComponentShell({
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col items-center justify-center gap-5 p-6 pb-28 sm:p-8 sm:pb-32">
-        <h1 className={`text-xl font-semibold ${isDark ? "text-[#e4e7ee]" : "text-gray-800"}`}>
+        <h1 className={`text-xl font-semibold ${isDark ? "text-[var(--shell-dark-text)]" : "text-gray-800"}`}>
           {title}
         </h1>
         {children}

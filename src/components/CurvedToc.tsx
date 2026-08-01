@@ -131,7 +131,7 @@ export default function CurvedToc({
         <path
           d={outlinePath}
           fill="none"
-          stroke="#e5e7eb"
+          stroke="var(--border-color)"
           strokeWidth={1.5}
         />
       </svg>
@@ -148,7 +148,7 @@ export default function CurvedToc({
           <path
             d={outlinePath}
             fill="none"
-            stroke="#8162ff"
+            stroke="var(--accent-purple)"
             strokeWidth={2}
           />
         </svg>
@@ -156,7 +156,7 @@ export default function CurvedToc({
 
       {/* ---- Thumb box (circle) ---- */}
       <div
-        className="absolute w-[7px] h-[7px] rounded-full bg-[#8162ff] shadow-[0_0_6px_rgba(129,98,255,0.5)] pointer-events-none"
+        className="absolute w-[7px] h-[7px] rounded-full bg-[var(--accent-purple)] shadow-[0_0_6px_rgba(129,98,255,0.5)] pointer-events-none"
         style={{
           translate: `${thumbBoxX - 3}px ${thumbTop - 3}px`,
           transition: "translate 250ms cubic-bezier(.4,0,.2,1)",
@@ -177,7 +177,7 @@ export default function CurvedToc({
               top,
               left: itemOffsetX(item.depth, strokeXBase, indentPx) + 12,
               height: itemHeight,
-              color: isActive ? "#1f2937" : "#9ca3af",
+              color: isActive ? "var(--foreground)" : "var(--text-secondary)",
               fontWeight: isActive ? 600 : 400,
             }}
           >

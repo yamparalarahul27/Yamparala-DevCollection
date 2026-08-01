@@ -64,13 +64,13 @@ export default function ChainSelector({
   return (
     <div
       className={cn(
-        "flex w-full max-w-[610px] items-center gap-3 overflow-x-auto rounded-[100px] bg-white px-4 py-1 shadow-[0_2px_4px_rgba(0,0,0,0.04)] hide-scrollbar sm:gap-6",
+        "flex w-full max-w-[610px] items-center gap-3 overflow-x-auto rounded-[100px] bg-[var(--surface)] px-4 py-1 shadow-[var(--proteus-shadow)] hide-scrollbar sm:gap-6",
         className,
       )}
       role="tablist"
       aria-label={label.replace(/:$/, "")}
     >
-      <span className="shrink-0 text-[14px] text-[#1f2937]">{label}</span>
+      <span className="shrink-0 text-[14px] text-[var(--foreground)]">{label}</span>
       <div className="flex flex-1 items-center gap-2 sm:justify-between sm:gap-4">
         {chains.map((chain) => {
           const active = selectedChain.id === chain.id;
@@ -80,7 +80,7 @@ export default function ChainSelector({
               className={cn(
                 "flex shrink-0 items-center gap-1 rounded-sm p-[6px] transition-colors",
                 active
-                  ? "border-b-2 border-[#8162ff]"
+                  ? "border-b-2 border-[var(--accent-purple)]"
                   : "border-b-2 border-transparent hover:bg-black/[0.03]",
               )}
               key={chain.id}
@@ -97,7 +97,7 @@ export default function ChainSelector({
                 width={20}
               />
               {active ? (
-                <span className="whitespace-nowrap text-[12px] font-medium text-[#1f2937]">
+                <span className="whitespace-nowrap text-[12px] font-medium text-[var(--foreground)]">
                   {chain.label}
                 </span>
               ) : (
