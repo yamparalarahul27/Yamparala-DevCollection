@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import styles from "./EarnButton.module.css";
 
 export type EarnButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -35,7 +36,7 @@ const EarnButton = forwardRef<HTMLButtonElement, EarnButtonProps>(
       <button
         ref={ref}
         type={type}
-        className={[styles.button, className].filter(Boolean).join(" ")}
+        className={cn(styles.button, className)}
         {...props}
       >
         <FilledEarnIcon className={styles.icon} />

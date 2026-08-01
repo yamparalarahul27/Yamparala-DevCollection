@@ -55,9 +55,10 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     description: "Bottom-center floating utility dock with component menu, copy actions, and theme switcher.",
     color: "#1F2937",
     category: "Navigation & Layout",
-    status: "WIP",
+    status: "Latest",
     sourceFiles: [
       ["src", "components", "FloatingComponentDock.tsx"],
+      ["src", "components", "ComponentShell.tsx"],
       ["src", "app", "floatingdock", "page.tsx"],
     ],
   },
@@ -101,22 +102,24 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
   {
     href: "/chainselector",
     title: "Chain Selector",
-    description: "Horizontal pill bar for switching between blockchain networks.",
+    description: "Horizontal pill bar for switching between blockchain networks with controlled/uncontrolled selection.",
     color: "#5d3ae9",
     category: "Inputs & Controls",
-    status: "WIP",
+    status: "Latest",
     sourceFiles: [
+      ["src", "components", "ChainSelector.tsx"],
       ["src", "app", "chainselector", "page.tsx"],
     ],
   },
   {
     href: "/nfttable",
     title: "NFT Collections Table",
-    description: "Sortable table with volume, floor price, owners, supply columns.",
+    description: "Sortable swipeable table with price, change, volume, market cap, and vol. score columns.",
     color: "#22A06B",
     category: "Data & Charts",
-    status: "WIP",
+    status: "Latest",
     sourceFiles: [
+      ["src", "components", "NftCollectionTable.tsx"],
       ["src", "app", "nfttable", "page.tsx"],
     ],
   },
@@ -138,8 +141,9 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     description: "Monthly trading calendar with positive/negative day heatmap and paged navigation.",
     color: "#0EA5A4",
     category: "Data & Charts",
-    status: "WIP",
+    status: "Latest",
     sourceFiles: [
+      ["src", "components", "PnlCalendar.tsx"],
       ["src", "app", "pnlcalendar", "page.tsx"],
     ],
   },
@@ -340,7 +344,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     description: "Glossy purple Track Status CTA with a wide molded surface and oversized white text.",
     color: "#7a2fd2",
     category: "Buttons",
-    status: "Latest",
+    status: "Experience",
     sourceFiles: [
       ["src", "components", "TrackStatusButton.tsx"],
       ["src", "components", "TrackStatusButton.module.css"],
@@ -379,7 +383,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     description: "Reusable dark gradient button built from the shared Figma radius, shadow, and opacity properties.",
     color: "#323232",
     category: "Buttons",
-    status: "Latest",
+    status: "Experience",
     sourceFiles: [
       ["src", "components", "FigmaPropertiesButton.tsx"],
       ["src", "components", "FigmaPropertiesButton.module.css"],
@@ -405,7 +409,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     description: "Figma-spec light gray hug button with subtle gradient, inset highlight, and soft shadow.",
     color: "#d4d4d4",
     category: "Buttons",
-    status: "Latest",
+    status: "Experience",
     sourceFiles: [
       ["src", "components", "LightGradientButton.tsx"],
       ["src", "components", "LightGradientButton.module.css"],
@@ -418,7 +422,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     description: "Supplied orange Add View button with layered outer and inset shadows.",
     color: "#ea580c",
     category: "Buttons",
-    status: "Latest",
+    status: "Experience",
     sourceFiles: [
       ["src", "components", "OrangeAddViewButton.tsx"],
       ["src", "app", "orange-add-view-button", "page.tsx"],
@@ -456,7 +460,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     description: "Bright lime Add Alert Rule CTA with plus icon, rounded border, and soft raised finish.",
     color: "#a3e635",
     category: "Buttons",
-    status: "Latest",
+    status: "Experience",
     sourceFiles: [
       ["src", "components", "LimeAlertRuleButton.tsx"],
       ["src", "components", "LimeAlertRuleButton.module.css"],

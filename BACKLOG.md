@@ -23,7 +23,21 @@ Out of scope for this PR — tracked here so we don't lose it.
 
 Remaining items from the July 2026 project review (registry consolidation,
 git-based dates, serverless source-viewer fix, CI, README, and lint cleanup
-already landed):
+already landed). August 2026 cleanup extracted Chain Selector, NFT Table, and
+PnL Calendar into real components with props, removed their CODE_CONTENT
+megastrings, normalized several button label/`cn`/`forwardRef` APIs, and
+demoted thin button skins to `Experience`.
+
+### Still open — page-only demos
+
+- Extract `svgtoc` CurvedToc and `mathcurveloaders` CurveCanvas out of their
+  page.tsx dumps; kill remaining CODE_CONTENT megastrings there and on
+  `numberflow` / `peektext` / `figma-properties-button`.
+- Normalize remaining concatenated routes to kebab-case (`chain-selector`,
+  `nft-table`, `pnl-calendar`, `floating-dock`, `performance-button`, …)
+  with redirects if needed.
+- Expand shared design tokens and optionally a GlossySurface primitive so
+  button skins stop reinventing the same shadow/gradient recipe.
 
 ### Repo hygiene
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { cn } from "@/lib/utils";
 import styles from "./TrackStatusButton.module.css";
 
 export type TrackStatusButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
@@ -18,7 +19,7 @@ const TrackStatusButton = forwardRef<
     <button
       ref={ref}
       type={type}
-      className={[styles.button, className].filter(Boolean).join(" ")}
+      className={cn(styles.button, className)}
       {...props}
     >
       <span className={styles.label}>{children}</span>
