@@ -16,7 +16,7 @@ A 3D image gallery built with React Three Fiber. Pan around an infinite tiled gr
 ```
 src/
 ├── components/CanvasGallery.tsx     — The component (single file)
-└── app/canvasgallery/page.tsx       — Demo page with dynamic import + sample data
+└── app/canvas-gallery/page.tsx       — Demo page with dynamic import + sample data
 ```
 
 ## Public API
@@ -181,4 +181,4 @@ pnpm add -D @types/three
 
 ---
 
-Full source: `src/components/CanvasGallery.tsx` (744 lines) and `src/app/canvasgallery/page.tsx`.
+Full source: `src/components/CanvasGallery.tsx` (744 lines) and `src/app/canvas-gallery/page.tsx`.

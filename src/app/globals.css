@@ -9,6 +9,36 @@
   --text-secondary: #6b7280;
   --border-color: #e5e7eb;
   --accent: #e11d48;
+
+  /* Shared brand / product accents */
+  --accent-purple: #8162ff;
+  --accent-purple-strong: #5d3ae9;
+
+  /* Trading / data semantics */
+  --gain-bg: #dcfce7;
+  --gain-border: #bae6d4;
+  --gain-text: #166534;
+  --loss-bg: #fee2e2;
+  --loss-border: #fecaca;
+  --loss-text: #991b1b;
+  --muted-day-bg: #f6f8fb;
+  --muted-day-border: #edf0f5;
+  --muted-day-text: #c0c6d4;
+
+  /* Shell surfaces */
+  --surface: #ffffff;
+  --surface-muted: #f8fafc;
+  --shell-dark-bg: #0f1117;
+  --shell-dark-border: #242834;
+  --shell-dark-panel: #1f2126;
+  --shell-dark-text: #e4e7ee;
+  --shell-dark-muted: #aab1be;
+
+  /* Shared glossy CTA recipe (tint per component) */
+  --glossy-inset-highlight: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+  --glossy-inset-shade: inset 0 -1px 0 rgba(15, 23, 42, 0.12);
+  --glossy-soft-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+  --glossy-focus-ring: #60a5fa;
 }
 
 @theme inline {
@@ -85,9 +115,15 @@ button {
 }
 
 .proteus-panel {
-  background: #ffffff;
+  background: var(--surface);
   border: 1px solid var(--proteus-card-border);
   box-shadow: var(--proteus-shadow);
+}
+
+/* Shared raised/glossy surface used by light CTA skins */
+.proteus-glossy-surface {
+  box-shadow: var(--glossy-inset-highlight), var(--glossy-inset-shade),
+    var(--glossy-soft-shadow);
 }
 
 .hide-scrollbar {

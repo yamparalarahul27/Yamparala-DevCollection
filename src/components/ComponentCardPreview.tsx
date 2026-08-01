@@ -349,7 +349,7 @@ export default function ComponentCardPreview({
         </ScaledPreview>
       );
       break;
-    case "/performancebutton":
+    case "/performance-button":
       preview = <PerformanceButton>Subscribe</PerformanceButton>;
       break;
     case "/figma-properties-button":
@@ -375,37 +375,37 @@ export default function ComponentCardPreview({
         </ScaledPreview>
       );
       break;
-    case "/datepicker":
+    case "/date-picker":
       preview = <MiniTimeline />;
       break;
-    case "/numberflow":
+    case "/number-flow":
       preview = <MiniNumberFlow />;
       break;
-    case "/floatingdock":
+    case "/floating-dock":
       preview = <MiniDock />;
       break;
-    case "/svgtoc":
+    case "/svg-toc":
       preview = <MiniNetwork />;
       break;
-    case "/mathcurveloaders":
+    case "/math-curve-loaders":
       preview = <MiniLoader />;
       break;
-    case "/chainselector":
+    case "/chain-selector":
       preview = <MiniPills />;
       break;
-    case "/nfttable":
+    case "/nft-table":
       preview = <MiniTable />;
       break;
-    case "/avatarcreator":
+    case "/avatar-creator":
       preview = <MiniAvatar />;
       break;
-    case "/pnlcalendar":
+    case "/pnl-calendar":
       preview = <MiniCalendar />;
       break;
-    case "/peektext":
+    case "/peek-text":
       preview = <MiniPeekText />;
       break;
-    case "/canvasgallery":
+    case "/canvas-gallery":
       preview = <MiniGallery />;
       break;
     default:

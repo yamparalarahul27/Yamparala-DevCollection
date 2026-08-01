@@ -1,6 +1,6 @@
 # Avatar Builder — Trading Patterns Ideas
 
-Design exploration for evolving the **Avatar Creator** (`src/app/avatarcreator/page.tsx`)
+Design exploration for evolving the **Avatar Creator** (`src/app/avatar-creator/page.tsx`)
 and the reusable **ProfileAvatar** component (`src/components/ProfileAvatar.tsx`) with
 trading / market-themed patterns, plus general builder improvements.
 
