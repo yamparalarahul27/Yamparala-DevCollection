@@ -85,6 +85,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     category: "Navigation & Layout",
     status: "Latest",
     sourceFiles: [
+      ["src", "components", "CurvedToc.tsx"],
       ["src", "app", "svgtoc", "page.tsx"],
     ],
   },
