@@ -1,0 +1,208 @@
+.button {
+  box-sizing: border-box;
+  position: relative;
+  isolation: isolate;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55em;
+  overflow: hidden;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-inter), system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 600;
+  line-height: 1;
+  -webkit-tap-highlight-color: transparent;
+  transition:
+    filter 150ms ease-out,
+    transform 150ms ease-out,
+    box-shadow 150ms ease-out;
+}
+
+.button::before {
+  position: absolute;
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.34),
+    transparent 48%,
+    rgba(255, 255, 255, 0.06)
+  );
+  content: "";
+  pointer-events: none;
+  opacity: 0.9;
+}
+
+.label,
+.leading,
+.trailing {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.leading svg,
+.trailing svg {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+/* Sizes */
+.sizeSm {
+  min-height: 36px;
+  min-width: 72px;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 13px;
+}
+
+.sizeMd {
+  min-height: 44px;
+  min-width: 112px;
+  border-radius: 12px;
+  padding: 0 18px;
+  font-size: 14px;
+}
+
+.sizeLg {
+  min-height: 56px;
+  min-width: 160px;
+  border-radius: 16px;
+  padding: 0 22px;
+  font-size: 18px;
+}
+
+.sizeHero {
+  min-height: 96px;
+  width: min(100%, 540px);
+  border-radius: 28px;
+  padding: 0 34px;
+  font-size: 40px;
+  font-weight: 500;
+}
+
+/* Tones */
+.toneLight {
+  background: linear-gradient(180deg, #e5e5e5 0%, #e2e2e2 100%);
+  box-shadow:
+    var(--glossy-inset-highlight),
+    0 3px 4px -1px rgba(0, 0, 0, 0.15),
+    0 0 0 1px #d4d4d4;
+  color: #202124;
+}
+
+.toneDark {
+  background: linear-gradient(90deg, #323232 0%, #222222 100%);
+  box-shadow:
+    inset 0 0.5px 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 1.2px 0.35px #121212,
+    0 2px 4px -1px rgba(13, 13, 13, 0.5),
+    0 0 0 1px #333333;
+  color: #f8fafc;
+}
+
+.toneOrange {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: #ea580c;
+  box-shadow:
+    var(--glossy-inset-highlight),
+    0 18px 36px rgba(0, 0, 0, 0.12),
+    0 3px 6px rgba(0, 0, 0, 0.2),
+    inset 0 0 6px 2px rgba(255, 255, 255, 0.24),
+    0 0 0 1px #ea580c;
+  color: #ffffff;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.toneLime {
+  border: 2px solid #93dd2b;
+  background: linear-gradient(180deg, #e2ff95 0%, #cafd63 100%);
+  box-shadow:
+    var(--glossy-inset-highlight),
+    inset 0 -1px 0 rgba(101, 180, 14, 0.16),
+    0 2px 0 rgba(132, 213, 32, 0.48),
+    0 5px 10px rgba(127, 196, 23, 0.16);
+  color: #0e2608;
+}
+
+.tonePurple {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 42%),
+    linear-gradient(180deg, #9c4ce2 0%, #7a2fd2 100%);
+  box-shadow:
+    inset 0 6px 0 rgba(199, 143, 255, 0.44),
+    inset 0 -4px 10px rgba(87, 25, 176, 0.26),
+    0 4px 0 #6224bd,
+    var(--glossy-soft-shadow);
+  color: #ffffff;
+  text-shadow: 0 2px 3px rgba(66, 18, 139, 0.12);
+}
+
+.tonePurple::before {
+  inset: 6px 7px auto;
+  height: 38%;
+  border-radius: 22px 22px 16px 16px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), transparent),
+    radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.22), transparent 72%);
+}
+
+@media (hover: hover) {
+  .button:hover:not(:disabled) {
+    filter: brightness(1.05);
+    transform: translateY(-1px);
+  }
+
+  .tonePurple:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+}
+
+.button:active:not(:disabled) {
+  filter: brightness(0.98);
+  transform: translateY(1px);
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--glossy-focus-ring);
+  outline-offset: 3px;
+}
+
+.toneLime:focus-visible {
+  outline-color: #1d4f0b;
+  outline-offset: 5px;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+@media (max-width: 640px) {
+  .sizeHero {
+    min-height: 72px;
+    font-size: 28px;
+    border-radius: 22px;
+  }
+
+  .sizeLg {
+    min-height: 52px;
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button {
+    transition: none;
+  }
+
+  .button:hover:not(:disabled),
+  .button:active:not(:disabled) {
+    transform: none;
+  }
+}

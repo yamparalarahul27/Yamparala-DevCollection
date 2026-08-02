@@ -1,34 +1,25 @@
 "use client";
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { cn } from "@/lib/utils";
+import { forwardRef } from "react";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 
-export type OrangeAddViewButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  children?: ReactNode;
-};
+export type OrangeAddViewButtonProps = Omit<GlossyButtonProps, "tone">;
 
-const OrangeAddViewButton = forwardRef<HTMLButtonElement, OrangeAddViewButtonProps>(
-  function OrangeAddViewButton(
-    { children = "Add View", className, type = "button", ...props },
-    ref,
-  ) {
-    return (
-      <button
-        ref={ref}
-        type={type}
-        className={cn(
-          "relative z-10 box-border inline-flex min-h-10 items-center justify-center rounded-xl border border-white/40 bg-orange-600 px-10 py-2.5 text-base font-normal leading-none tracking-[-0.02em] text-white",
-          "shadow-[var(--glossy-inset-highlight),0_18px_36px_rgba(0,0,0,0.12),0_3px_6px_rgba(0,0,0,0.20),inset_0_0_6px_2px_rgba(255,255,255,0.24),0_0_0_1px_var(--color-orange-600)]",
-          "transition-[filter,transform,box-shadow] duration-150 ease-out hover:-translate-y-0.5 hover:brightness-105 active:translate-y-px focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-orange-300 disabled:cursor-not-allowed disabled:opacity-55",
-          className,
-        )}
-        {...props}
-      >
-        {children}
-      </button>
-    );
-  },
-);
+const OrangeAddViewButton = forwardRef<
+  HTMLButtonElement,
+  OrangeAddViewButtonProps
+>(function OrangeAddViewButton(
+  { children = "Add View", size = "md", ...props },
+  ref,
+) {
+  return (
+    <GlossyButton ref={ref} size={size} tone="orange" {...props}>
+      {children}
+    </GlossyButton>
+  );
+});
 
 export default OrangeAddViewButton;
 export { OrangeAddViewButton };

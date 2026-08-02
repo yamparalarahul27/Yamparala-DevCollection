@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import ComponentShell from "@/components/ComponentShell";
 import ConnectWalletButton from "@/components/ConnectWalletButton";
+import PropsPlayground from "@/components/PropsPlayground";
 
 const CODE_CONTENT = `Use Copy Code to load the current local source for the Connect Wallet button component.`;
 
@@ -11,16 +15,58 @@ const PROMPT_CONTENT = `Create a compact Connect Wallet button inspired by the s
 - Pressed state feels tactile with a small downward compression.
 - Use a real button element, visible focus ring, disabled/connecting support, and reduced-motion-safe CSS.`;
 
+type WalletState = "idle" | "connecting" | "connected";
+
 export default function ConnectWalletButtonPage() {
+  const [state, setState] = useState<WalletState>("idle");
+  const [label, setLabel] = useState("");
+  const [disabled, setDisabled] = useState(false);
+
   return (
     <ComponentShell
       title="Connect Wallet Button"
       codeContent={CODE_CONTENT}
       promptContent={PROMPT_CONTENT}
     >
-      <div className="flex min-h-[220px] w-full max-w-lg items-center justify-center rounded-lg bg-[#030b0f] px-6 py-12 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-        <ConnectWalletButton />
-      </div>
+      <PropsPlayground
+        description="Exercise idle / connecting / connected states."
+        stageClassName="bg-[#030b0f] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]"
+        controls={[
+          {
+            type: "select",
+            id: "state",
+            label: "state",
+            value: state,
+            options: [
+              { label: "idle", value: "idle" },
+              { label: "connecting", value: "connecting" },
+              { label: "connected", value: "connected" },
+            ],
+            onChange: (value) => setState(value as WalletState),
+          },
+          {
+            type: "text",
+            id: "label",
+            label: "label override",
+            value: label,
+            placeholder: "Uses state default when empty",
+            onChange: setLabel,
+          },
+          {
+            type: "toggle",
+            id: "disabled",
+            label: "disabled",
+            value: disabled,
+            onChange: setDisabled,
+          },
+        ]}
+      >
+        <ConnectWalletButton
+          disabled={disabled}
+          label={label || undefined}
+          state={state}
+        />
+      </PropsPlayground>
     </ComponentShell>
   );
 }

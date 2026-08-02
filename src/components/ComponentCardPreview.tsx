@@ -12,6 +12,7 @@ import FloatingToolbarTooltip from "@/components/FloatingToolbarTooltip";
 import FunLoadingButton from "@/components/FunLoadingButton";
 import GlassButton from "@/components/GlassButton";
 import GlassCard from "@/components/GlassCard";
+import GlossyButton from "@/components/GlossyButton";
 import GlossyIconButtonStack from "@/components/GlossyIconButtons";
 import GlowTypingInput from "@/components/GlowTypingInput";
 import LightGradientButton from "@/components/LightGradientButton";
@@ -349,6 +350,9 @@ export default function ComponentCardPreview({
         </ScaledPreview>
       );
       break;
+    case "/glossy-button":
+      preview = <GlossyButton>Continue</GlossyButton>;
+      break;
     case "/performance-button":
       preview = <PerformanceButton>Subscribe</PerformanceButton>;
       break;
@@ -397,6 +401,7 @@ export default function ComponentCardPreview({
       preview = <MiniTable />;
       break;
     case "/avatar-creator":
+    case "/profile-avatar":
       preview = <MiniAvatar />;
       break;
     case "/pnl-calendar":

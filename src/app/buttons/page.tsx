@@ -8,6 +8,7 @@ import FigmaPropertiesButton from "@/components/FigmaPropertiesButton";
 import FixActionButtons from "@/components/FixActionButtons";
 import FunLoadingButton from "@/components/FunLoadingButton";
 import GlassButton from "@/components/GlassButton";
+import GlossyButton from "@/components/GlossyButton";
 import GlossyIconButtonStack from "@/components/GlossyIconButtons";
 import LightGradientButton from "@/components/LightGradientButton";
 import LimeAlertRuleButton from "@/components/LimeAlertRuleButton";
@@ -28,6 +29,13 @@ type ButtonDemo = {
 };
 
 const buttonDemos: ButtonDemo[] = [
+  {
+    title: "Glossy Button",
+    href: "/glossy-button",
+    description: "Shared tone/size primitive behind the Experience button skins.",
+    preview: <GlossyButton>Continue</GlossyButton>,
+    previewClassName: "bg-[#111827]",
+  },
   {
     title: "Connect Wallet Button",
     href: "/connect-wallet-button",
