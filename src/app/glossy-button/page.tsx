@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import ComponentShell from "@/components/ComponentShell";
 import GlossyButton, {
+  type GlossyButtonShape,
   type GlossyButtonSize,
   type GlossyButtonTone,
 } from "@/components/GlossyButton";
@@ -12,8 +13,9 @@ import PropsPlayground from "@/components/PropsPlayground";
 const CODE_CONTENT = `Use Copy Code to load the current local source for GlossyButton.`;
 
 const PROMPT_CONTENT = `Create a shared GlossyButton primitive with:
-- tone: light | dark | orange | lime | purple
+- tone: light | dark | orange | lime | purple | green | ink | mint | steel
 - size: sm | md | lg | hero
+- shape: rounded | pill
 - children, leading, trailing, forwardRef, disabled
 - shared inset highlight / soft shadow tokens so one-off CTA skins can wrap it`;
 
@@ -23,11 +25,28 @@ const stageByTone: Record<GlossyButtonTone, string> = {
   orange: "bg-[#fff8f2]",
   lime: "bg-[#f7ffe8]",
   purple: "bg-[#efeddb]",
+  green: "bg-[#efeddb]",
+  ink: "bg-[#f4f6fb]",
+  mint: "bg-[#171823]",
+  steel: "bg-[#f7f7f8]",
 };
+
+const tones: GlossyButtonTone[] = [
+  "light",
+  "dark",
+  "orange",
+  "lime",
+  "purple",
+  "green",
+  "ink",
+  "mint",
+  "steel",
+];
 
 export default function GlossyButtonPage() {
   const [tone, setTone] = useState<GlossyButtonTone>("dark");
   const [size, setSize] = useState<GlossyButtonSize>("md");
+  const [shape, setShape] = useState<GlossyButtonShape>("rounded");
   const [label, setLabel] = useState("Continue");
   const [disabled, setDisabled] = useState(false);
   const [showLeading, setShowLeading] = useState(false);
@@ -39,7 +58,7 @@ export default function GlossyButtonPage() {
       promptContent={PROMPT_CONTENT}
     >
       <PropsPlayground
-        description="Shared primitive behind the Experience button skins."
+        description="Shared primitive behind Experience skins and consolidated specialty CTAs."
         stageClassName={stageByTone[tone]}
         controls={[
           {
@@ -47,13 +66,7 @@ export default function GlossyButtonPage() {
             id: "tone",
             label: "tone",
             value: tone,
-            options: [
-              { label: "light", value: "light" },
-              { label: "dark", value: "dark" },
-              { label: "orange", value: "orange" },
-              { label: "lime", value: "lime" },
-              { label: "purple", value: "purple" },
-            ],
+            options: tones.map((value) => ({ label: value, value })),
             onChange: (value) => setTone(value as GlossyButtonTone),
           },
           {
@@ -68,6 +81,17 @@ export default function GlossyButtonPage() {
               { label: "hero", value: "hero" },
             ],
             onChange: (value) => setSize(value as GlossyButtonSize),
+          },
+          {
+            type: "select",
+            id: "shape",
+            label: "shape",
+            value: shape,
+            options: [
+              { label: "rounded", value: "rounded" },
+              { label: "pill", value: "pill" },
+            ],
+            onChange: (value) => setShape(value as GlossyButtonShape),
           },
           {
             type: "text",
@@ -95,6 +119,7 @@ export default function GlossyButtonPage() {
         <GlossyButton
           disabled={disabled}
           leading={showLeading ? <Plus aria-hidden="true" /> : undefined}
+          shape={shape}
           size={size}
           tone={tone}
         >

@@ -4,40 +4,26 @@ Open ideas for future iteration on the component collection.
 
 ## Side-list + preview landing layout
 
-Convert the landing page from a single-column stack into a two-pane layout:
+Shipped as `ComponentCollectionStudio` on the homepage:
 
-- **Left:** scrollable sidebar listing every component (compact rows — name, status dot, tiny color swatch). Keyboard navigable (↑/↓, Enter).
-- **Right:** live in-page preview of the currently selected component (iframe-embedded route or direct dynamic import), with sticky title bar showing status, links to "Open full page", "Copy code", "Copy prompt".
+- Left sidebar list with search, category chips, keyboard ↑/↓/Enter
+- Right live iframe preview with sticky title + Open full page / New tab
+- URL state `/?c=<slug>` (+ `q`, `section`); last viewed remembered in localStorage
+- Mobile: list/preview swap with Back to list
 
-Notes:
-
-- Mobile fallback: sidebar collapses into a sheet/drawer; preview takes full width.
-- Search box at top of sidebar (fuzzy by title + description).
-- URL state: `/?c=<slug>` so previews are shareable; no preview ⇒ welcome panel with stats.
-- Consider remembering last-viewed component in `localStorage` for fast resume.
-- Performance: lazy-load preview routes; keep sidebar light.
-
-Out of scope for this PR — tracked here so we don't lose it.
+Possible polish later: copy-code/prompt actions in the studio chrome, denser virtualized list, and non-iframe previews for lighter components.
 
 ## Project health follow-ups
 
-Remaining items from the July 2026 project review (registry consolidation,
-git-based dates, serverless source-viewer fix, CI, README, and lint cleanup
-already landed).
-
-August 2026 cleanup (merged) also extracted WIP demos, kebab routes, and
-shared tokens. Follow-up branch added:
-
-- `GlossyButton` primitive (`tone` + `size`) with Experience skins as wrappers
-- `PropsPlayground` on Glossy Button, Glow Typing Input, Connect Wallet,
-  Chain Selector, Charts, and Profile Avatar
+August 2026 cleanup extracted WIP demos, kebab routes, tokens, GlossyButton,
+props playgrounds, expanded specialty-button consolidation, and the studio landing.
 
 ### Still open
 
-- Continue migrating remaining specialty buttons (Earn, Buy Now, Performance,
-  Fix Actions, etc.) onto GlossyButton or sibling primitives where the look fits.
+- Continue migrating remaining specialty buttons (Buy Now glow, FUN Loading,
+  Ultramock, Glossy Icon, Connect Wallet, Glass) only where the look fits a
+  GlossyButton tone — otherwise keep as art studies.
 - Broader a11y + dark-mode policy for product components.
-- Side-list + live preview landing layout (see above).
 
 ### Repo hygiene
 

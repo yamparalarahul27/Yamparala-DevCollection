@@ -1,15 +1,14 @@
 "use client";
 
-import {
-  forwardRef,
-  type ButtonHTMLAttributes,
-  type ReactNode,
-} from "react";
+import { forwardRef, type ReactNode } from "react";
 import { CircleCheck, Eye } from "lucide-react";
 import { cn } from "@/lib/utils";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 import styles from "./PreviewDeployButtons.module.css";
 
-export type PreviewDeployButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type PreviewDeployButtonProps = Omit<GlossyButtonProps, "tone"> & {
   variant: "preview" | "deploy";
   children?: ReactNode;
 };
@@ -18,29 +17,23 @@ export const PreviewDeployButton = forwardRef<
   HTMLButtonElement,
   PreviewDeployButtonProps
 >(function PreviewDeployButton(
-  { children, className, type = "button", variant, ...props },
+  { children, className, leading, size = "lg", variant, ...props },
   ref,
 ) {
   const isPreview = variant === "preview";
   const Icon = isPreview ? Eye : CircleCheck;
 
   return (
-    <button
+    <GlossyButton
       ref={ref}
-      type={type}
-      className={cn(
-        styles.button,
-        isPreview ? styles.preview : styles.deploy,
-        className,
-      )}
+      className={cn(styles.pairButton, className)}
+      leading={leading ?? <Icon aria-hidden="true" />}
+      size={size}
+      tone={isPreview ? "light" : "steel"}
       {...props}
     >
-      <Icon
-        aria-hidden="true"
-        className={cn(styles.icon, isPreview && styles.previewIcon)}
-      />
-      <span>{children ?? (isPreview ? "Preview" : "Deploy")}</span>
-    </button>
+      {children ?? (isPreview ? "Preview" : "Deploy")}
+    </GlossyButton>
   );
 });
 

@@ -1,11 +1,14 @@
 "use client";
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef } from "react";
 import { cn } from "@/lib/utils";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 import styles from "./EarnButton.module.css";
 
-export type EarnButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  children?: ReactNode;
+export type EarnButtonProps = Omit<GlossyButtonProps, "tone" | "shape" | "size"> & {
+  size?: GlossyButtonProps["size"];
 };
 
 function FilledEarnIcon({ className }: { className?: string }) {
@@ -29,19 +32,27 @@ function FilledEarnIcon({ className }: { className?: string }) {
 
 const EarnButton = forwardRef<HTMLButtonElement, EarnButtonProps>(
   function EarnButton(
-    { children = "Earn", className, type = "button", ...props },
+    {
+      children = "Earn",
+      className,
+      leading = <FilledEarnIcon className={styles.icon} />,
+      size = "hero",
+      ...props
+    },
     ref,
   ) {
     return (
-      <button
+      <GlossyButton
         ref={ref}
-        type={type}
-        className={cn(styles.button, className)}
+        className={cn(styles.tilt, className)}
+        leading={leading}
+        shape="pill"
+        size={size}
+        tone="green"
         {...props}
       >
-        <FilledEarnIcon className={styles.icon} />
-        <span className={styles.label}>{children}</span>
-      </button>
+        {children}
+      </GlossyButton>
     );
   },
 );

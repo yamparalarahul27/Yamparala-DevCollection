@@ -1,34 +1,42 @@
 "use client";
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef } from "react";
+import { cn } from "@/lib/utils";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 import styles from "./PerformanceButton.module.css";
 
-export type PerformanceButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  children?: ReactNode;
+export type PerformanceButtonProps = Omit<
+  GlossyButtonProps,
+  "tone" | "shape" | "size"
+> & {
   isLeaving?: boolean;
+  size?: GlossyButtonProps["size"];
 };
 
 const PerformanceButton = forwardRef<HTMLButtonElement, PerformanceButtonProps>(
   function PerformanceButton(
-    { children, className, isLeaving = false, type = "button", style, ...rest },
+    {
+      children = "Subscribe",
+      className,
+      isLeaving = false,
+      size = "lg",
+      ...props
+    },
     ref,
   ) {
     return (
-      <button
+      <GlossyButton
         ref={ref}
-        type={type}
-        className={[styles.button, className].filter(Boolean).join(" ")}
-        style={style}
-        {...rest}
+        className={cn(styles.performance, isLeaving && styles.leaving, className)}
+        shape="pill"
+        size={size}
+        tone="ink"
+        {...props}
       >
-        <span
-          className={[styles.inner, isLeaving ? styles.innerLeaving : ""]
-            .filter(Boolean)
-            .join(" ")}
-        >
-          {children}
-        </span>
-      </button>
+        {children}
+      </GlossyButton>
     );
   },
 );

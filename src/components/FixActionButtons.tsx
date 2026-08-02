@@ -1,43 +1,37 @@
 "use client";
 
-import { type ButtonHTMLAttributes, type ReactNode, forwardRef } from "react";
+import { forwardRef, type ReactNode } from "react";
 import { Eye, Hammer } from "lucide-react";
 import { cn } from "@/lib/utils";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 import styles from "./FixActionButtons.module.css";
 
-export type FixActionButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
+export type FixActionButtonProps = Omit<GlossyButtonProps, "tone"> & {
   children?: ReactNode;
   variant: "apply" | "preview";
 };
 
 export const FixActionButton = forwardRef<HTMLButtonElement, FixActionButtonProps>(
   function FixActionButton(
-    { children, className, type = "button", variant, ...props },
+    { children, className, leading, size = "lg", variant, ...props },
     ref,
   ) {
     const isApply = variant === "apply";
     const Icon = isApply ? Hammer : Eye;
 
     return (
-      <button
+      <GlossyButton
         ref={ref}
-        type={type}
-        className={cn(
-          styles.button,
-          isApply ? styles.apply : styles.preview,
-          className,
-        )}
+        className={cn(styles.fixButton, className)}
+        leading={leading ?? <Icon aria-hidden="true" />}
+        size={size}
+        tone={isApply ? "mint" : "dark"}
         {...props}
       >
-        <Icon
-          aria-hidden="true"
-          className={cn(
-            styles.icon,
-            isApply ? styles.applyIcon : styles.previewIcon,
-          )}
-        />
-        <span>{children ?? (isApply ? "Apply Fix" : "Preview Fix")}</span>
-      </button>
+        {children ?? (isApply ? "Apply Fix" : "Preview Fix")}
+      </GlossyButton>
     );
   },
 );
