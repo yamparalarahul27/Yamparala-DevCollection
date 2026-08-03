@@ -1,29 +1,25 @@
 "use client";
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import { cn } from "@/lib/utils";
-import styles from "./TrackStatusButton.module.css";
+import { forwardRef } from "react";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 
-export type TrackStatusButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  children?: ReactNode;
+export type TrackStatusButtonProps = Omit<GlossyButtonProps, "tone" | "size"> & {
+  size?: GlossyButtonProps["size"];
 };
 
 const TrackStatusButton = forwardRef<
   HTMLButtonElement,
   TrackStatusButtonProps
 >(function TrackStatusButton(
-  { children = "Track Status", className, type = "button", ...props },
+  { children = "Track Status", size = "hero", ...props },
   ref,
 ) {
   return (
-    <button
-      ref={ref}
-      type={type}
-      className={cn(styles.button, className)}
-      {...props}
-    >
-      <span className={styles.label}>{children}</span>
-    </button>
+    <GlossyButton ref={ref} size={size} tone="purple" {...props}>
+      {children}
+    </GlossyButton>
   );
 });
 

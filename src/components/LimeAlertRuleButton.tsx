@@ -1,30 +1,35 @@
 "use client";
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
+import { forwardRef } from "react";
 import { Plus } from "lucide-react";
-import styles from "./LimeAlertRuleButton.module.css";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 
-export type LimeAlertRuleButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  children?: ReactNode;
-};
+export type LimeAlertRuleButtonProps = Omit<GlossyButtonProps, "tone">;
 
 const LimeAlertRuleButton = forwardRef<
   HTMLButtonElement,
   LimeAlertRuleButtonProps
 >(function LimeAlertRuleButton(
-  { children = "Add Alert Rule", className, type = "button", ...props },
+  {
+    children = "Add Alert Rule",
+    leading = <Plus aria-hidden="true" />,
+    size = "lg",
+    ...props
+  },
   ref,
 ) {
   return (
-    <button
+    <GlossyButton
       ref={ref}
-      type={type}
-      className={[styles.button, className].filter(Boolean).join(" ")}
+      leading={leading}
+      size={size}
+      tone="lime"
       {...props}
     >
-      <Plus aria-hidden="true" className={styles.icon} />
-      <span>{children}</span>
-    </button>
+      {children}
+    </GlossyButton>
   );
 });
 

@@ -110,6 +110,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     status: "Latest",
     sourceFiles: [
       ["src", "components", "ChainSelector.tsx"],
+      ["src", "components", "PropsPlayground.tsx"],
       ["src", "app", "chain-selector", "page.tsx"],
     ],
   },
@@ -183,6 +184,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     sourceFiles: [
       ["src", "components", "GlowTypingInput.tsx"],
       ["src", "components", "GlowTypingInput.module.css"],
+      ["src", "components", "PropsPlayground.tsx"],
       ["src", "app", "glow-typing-input", "page.tsx"],
     ],
   },
@@ -196,6 +198,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     sourceFiles: [
       ["src", "components", "FinancialCharts.tsx"],
       ["src", "components", "FinancialCharts.module.css"],
+      ["src", "components", "PropsPlayground.tsx"],
       ["src", "app", "chart-components", "page.tsx"],
     ],
   },
@@ -209,6 +212,7 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     sourceFiles: [
       ["src", "components", "ConnectWalletButton.tsx"],
       ["src", "components", "ConnectWalletButton.module.css"],
+      ["src", "components", "PropsPlayground.tsx"],
       ["src", "app", "connect-wallet-button", "page.tsx"],
     ],
   },
@@ -330,6 +334,20 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
     ],
   },
   {
+    href: "/glossy-button",
+    title: "Glossy Button",
+    description: "Shared CTA primitive with tone (light/dark/orange/lime/purple) and size (sm/md/lg/hero). Experience button skins wrap this.",
+    color: "#323232",
+    category: "Buttons",
+    status: "Latest",
+    sourceFiles: [
+      ["src", "components", "GlossyButton.tsx"],
+      ["src", "components", "GlossyButton.module.css"],
+      ["src", "components", "PropsPlayground.tsx"],
+      ["src", "app", "glossy-button", "page.tsx"],
+    ],
+  },
+  {
     href: "/buttons",
     title: "Button Components",
     description: "Parallel gallery of every button demo with preview cards and View links that open each component in a new tab.",
@@ -343,13 +361,13 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
   {
     href: "/track-status-button",
     title: "Track Status Button",
-    description: "Glossy purple Track Status CTA with a wide molded surface and oversized white text.",
+    description: "Thin wrapper around GlossyButton tone=purple size=hero.",
     color: "#7a2fd2",
     category: "Buttons",
     status: "Experience",
     sourceFiles: [
       ["src", "components", "TrackStatusButton.tsx"],
-      ["src", "components", "TrackStatusButton.module.css"],
+      ["src", "components", "GlossyButton.tsx"],
       ["src", "app", "track-status-button", "page.tsx"],
     ],
   },
@@ -382,13 +400,13 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
   {
     href: "/figma-properties-button",
     title: "Figma Properties Button",
-    description: "Reusable dark gradient button built from the shared Figma radius, shadow, and opacity properties.",
+    description: "Thin wrapper around GlossyButton tone=dark.",
     color: "#323232",
     category: "Buttons",
     status: "Experience",
     sourceFiles: [
       ["src", "components", "FigmaPropertiesButton.tsx"],
-      ["src", "components", "FigmaPropertiesButton.module.css"],
+      ["src", "components", "GlossyButton.tsx"],
       ["src", "app", "figma-properties-button", "page.tsx"],
     ],
   },
@@ -408,25 +426,26 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
   {
     href: "/light-gradient-button",
     title: "Light Gradient Button",
-    description: "Figma-spec light gray hug button with subtle gradient, inset highlight, and soft shadow.",
+    description: "Thin wrapper around GlossyButton tone=light.",
     color: "#d4d4d4",
     category: "Buttons",
     status: "Experience",
     sourceFiles: [
       ["src", "components", "LightGradientButton.tsx"],
-      ["src", "components", "LightGradientButton.module.css"],
+      ["src", "components", "GlossyButton.tsx"],
       ["src", "app", "light-gradient-button", "page.tsx"],
     ],
   },
   {
     href: "/orange-add-view-button",
     title: "Orange Add View Button",
-    description: "Supplied orange Add View button with layered outer and inset shadows.",
+    description: "Thin wrapper around GlossyButton tone=orange.",
     color: "#ea580c",
     category: "Buttons",
     status: "Experience",
     sourceFiles: [
       ["src", "components", "OrangeAddViewButton.tsx"],
+      ["src", "components", "GlossyButton.tsx"],
       ["src", "app", "orange-add-view-button", "page.tsx"],
     ],
   },
@@ -459,14 +478,27 @@ export const componentRegistry: readonly ComponentRegistryEntry[] = [
   {
     href: "/lime-alert-rule-button",
     title: "Lime Alert Rule Button",
-    description: "Bright lime Add Alert Rule CTA with plus icon, rounded border, and soft raised finish.",
+    description: "Thin wrapper around GlossyButton tone=lime with a Plus leading icon.",
     color: "#a3e635",
     category: "Buttons",
     status: "Experience",
     sourceFiles: [
       ["src", "components", "LimeAlertRuleButton.tsx"],
-      ["src", "components", "LimeAlertRuleButton.module.css"],
+      ["src", "components", "GlossyButton.tsx"],
       ["src", "app", "lime-alert-rule-button", "page.tsx"],
+    ],
+  },
+  {
+    href: "/profile-avatar",
+    title: "Profile Avatar",
+    description: "Reusable dithered-gradient avatar with size, colors, and props playground. Full swatch builder remains at Avatar Creator.",
+    color: "#9B4EE8",
+    category: "Inputs & Controls",
+    status: "Latest",
+    sourceFiles: [
+      ["src", "components", "ProfileAvatar.tsx"],
+      ["src", "components", "PropsPlayground.tsx"],
+      ["src", "app", "profile-avatar", "page.tsx"],
     ],
   },
   {

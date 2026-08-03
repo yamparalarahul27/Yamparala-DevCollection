@@ -1,28 +1,20 @@
 "use client";
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import styles from "./LightGradientButton.module.css";
+import { forwardRef } from "react";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 
-export type LightGradientButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  children?: ReactNode;
-};
+export type LightGradientButtonProps = Omit<GlossyButtonProps, "tone">;
 
 const LightGradientButton = forwardRef<
   HTMLButtonElement,
   LightGradientButtonProps
->(function LightGradientButton(
-  { children = "Open", className, type = "button", ...props },
-  ref,
-) {
+>(function LightGradientButton({ children = "Open", size = "md", ...props }, ref) {
   return (
-    <button
-      ref={ref}
-      type={type}
-      className={[styles.button, className].filter(Boolean).join(" ")}
-      {...props}
-    >
-      <span className={styles.content}>{children}</span>
-    </button>
+    <GlossyButton ref={ref} size={size} tone="light" {...props}>
+      {children}
+    </GlossyButton>
   );
 });
 

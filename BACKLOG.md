@@ -25,21 +25,19 @@ Remaining items from the July 2026 project review (registry consolidation,
 git-based dates, serverless source-viewer fix, CI, README, and lint cleanup
 already landed).
 
-August 2026 cleanup (this branch) also:
+August 2026 cleanup (merged) also extracted WIP demos, kebab routes, and
+shared tokens. Follow-up branch added:
 
-- Extracted Chain Selector, NFT Table, PnL Calendar, Curved TOC, and Math Curve
-  Loaders into reusable components with props.
-- Removed CODE_CONTENT megastrings for those demos plus Peektext, Figma
-  Properties, and NumberFlow.
-- Normalized concatenated routes to kebab-case with permanent redirects.
-- Expanded shared design tokens (accents, gain/loss, shell dark, glossy
-  shadow recipe) and started wiring extracted UI to them.
+- `GlossyButton` primitive (`tone` + `size`) with Experience skins as wrappers
+- `PropsPlayground` on Glossy Button, Glow Typing Input, Connect Wallet,
+  Chain Selector, Charts, and Profile Avatar
 
 ### Still open
 
-- Continue migrating remaining button CSS modules onto shared glossy tokens /
-  a small GlossySurface primitive instead of one-off shadow stacks.
-- Per-button visual polish still varies; thin skins remain marked `Experience`.
+- Continue migrating remaining specialty buttons (Earn, Buy Now, Performance,
+  Fix Actions, etc.) onto GlossyButton or sibling primitives where the look fits.
+- Broader a11y + dark-mode policy for product components.
+- Side-list + live preview landing layout (see above).
 
 ### Repo hygiene
 

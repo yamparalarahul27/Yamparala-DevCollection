@@ -1,29 +1,23 @@
 "use client";
 
-import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from "react";
-import styles from "./FigmaPropertiesButton.module.css";
+import { forwardRef } from "react";
+import GlossyButton, {
+  type GlossyButtonProps,
+} from "@/components/GlossyButton";
 
-export type FigmaPropertiesButtonProps =
-  ButtonHTMLAttributes<HTMLButtonElement> & {
-    children?: ReactNode;
-  };
+export type FigmaPropertiesButtonProps = Omit<GlossyButtonProps, "tone">;
 
 const FigmaPropertiesButton = forwardRef<
   HTMLButtonElement,
   FigmaPropertiesButtonProps
 >(function FigmaPropertiesButton(
-  { children, className, type = "button", ...props },
+  { children = "Continue", size = "md", ...props },
   ref,
 ) {
   return (
-    <button
-      ref={ref}
-      type={type}
-      className={[styles.button, className].filter(Boolean).join(" ")}
-      {...props}
-    >
-      <span className={styles.content}>{children}</span>
-    </button>
+    <GlossyButton ref={ref} size={size} tone="dark" {...props}>
+      {children}
+    </GlossyButton>
   );
 });
 
