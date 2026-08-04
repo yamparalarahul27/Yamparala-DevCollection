@@ -85,6 +85,14 @@
   font-weight: 500;
 }
 
+.shapePill,
+.shapePill.sizeSm,
+.shapePill.sizeMd,
+.shapePill.sizeLg,
+.shapePill.sizeHero {
+  border-radius: 999px;
+}
+
 /* Tones */
 .toneLight {
   background: linear-gradient(180deg, #e5e5e5 0%, #e2e2e2 100%);
@@ -152,14 +160,79 @@
     radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.22), transparent 72%);
 }
 
+.toneGreen {
+  background:
+    radial-gradient(circle at 18% 20%, rgba(255, 255, 255, 0.18), transparent 24%),
+    linear-gradient(180deg, #006b36 0%, #00592d 52%, #08713d 100%);
+  box-shadow:
+    inset 0 4px 10px rgba(255, 255, 255, 0.22),
+    inset 0 -11px 20px rgba(0, 31, 16, 0.34),
+    0 12px 26px rgba(5, 72, 35, 0.32);
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.toneInk {
+  border: 0.5px solid rgb(2, 3, 10);
+  background: rgb(10, 13, 26);
+  box-shadow:
+    0 2px 4px rgba(2, 3, 10, 0.4),
+    0 10px 24px rgba(2, 3, 10, 0.28);
+  color: #ffffff;
+  font-weight: 500;
+}
+
+.toneInk::before {
+  inset: 1px;
+  border-radius: inherit;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.12),
+    transparent 40%
+  );
+}
+
+.toneMint {
+  border: 1px solid rgba(128, 255, 208, 0.6);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 45%),
+    linear-gradient(180deg, #08c78d 0%, #07aa7d 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(170, 255, 224, 0.36),
+    inset 0 -2px 0 rgba(0, 93, 67, 0.22),
+    0 0 24px rgba(8, 199, 141, 0.36),
+    var(--glossy-soft-shadow);
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.28);
+}
+
+.toneSteel {
+  border: 2px solid #111116;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.16), transparent 34%),
+    linear-gradient(180deg, #5a5a63 0%, #303038 45%, #111116 100%);
+  box-shadow:
+    inset 0 3px 0 rgba(255, 255, 255, 0.2),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.22),
+    0 5px 0 #09090d,
+    0 8px 12px rgba(0, 0, 0, 0.24);
+  color: #ffffff;
+}
+
 @media (hover: hover) {
   .button:hover:not(:disabled) {
     filter: brightness(1.05);
     transform: translateY(-1px);
   }
 
-  .tonePurple:hover:not(:disabled) {
+  .tonePurple:hover:not(:disabled),
+  .toneMint:hover:not(:disabled),
+  .toneSteel:hover:not(:disabled) {
     transform: translateY(-2px);
+  }
+
+  .toneInk:hover:not(:disabled) {
+    background: rgb(22, 27, 48);
   }
 }
 

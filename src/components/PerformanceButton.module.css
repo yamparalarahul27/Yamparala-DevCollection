@@ -1,107 +1,12 @@
-.button {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 56px;
+.performance {
   min-width: 138px;
+  height: 56px;
+  min-height: 56px;
   padding: 0 32px;
-  border-radius: 999px;
-  border: 0.5px solid rgb(2, 3, 10);
-  background: rgb(10, 13, 26);
-  color: rgb(255, 255, 255);
-  font-family: "Performance Sans", system-ui, -apple-system, "Segoe UI", Roboto,
-    sans-serif;
   font-size: 16px;
-  font-weight: 500;
-  line-height: normal;
-  cursor: pointer;
-  transition:
-    background 150ms ease-out,
-    box-shadow 150ms ease-out,
-    transform 150ms ease-out;
-  box-shadow:
-    0 2px 4px rgba(2, 3, 10, 0.4),
-    0 10px 24px rgba(2, 3, 10, 0.28);
-  -webkit-tap-highlight-color: transparent;
 }
 
-@media (hover: hover) {
-  .button:hover {
-    background: rgb(22, 27, 48);
-    transform: translateY(-1px);
-    box-shadow:
-      0 3px 5px rgba(2, 3, 10, 0.38),
-      0 12px 26px rgba(2, 3, 10, 0.3);
-  }
-}
-
-.button:active {
-  background: rgb(22, 27, 48);
-  transform: translateY(1px);
-  transition:
-    background 100ms ease-out,
-    transform 100ms ease-out;
-}
-
-.button:focus-visible {
-  outline: 2px solid #60a5fa;
-  outline-offset: 4px;
-}
-
-.button:disabled {
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.button::after {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  border-radius: inherit;
-  padding: 1.5px;
-  pointer-events: none;
-  background: linear-gradient(
-    rgb(87, 94, 107) 0%,
-    rgb(19, 23, 44) 40%,
-    rgb(19, 23, 44) 50%,
-    rgb(19, 23, 44) 60%,
-    rgb(118, 130, 152) 100%
-  );
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  mask-composite: exclude;
-}
-
-.inner {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 1;
-  filter: blur(0);
-  transition:
-    opacity 0.14s,
-    filter 0.14s;
-}
-
-.innerLeaving {
-  opacity: 0;
-  filter: blur(6px);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .button,
-  .inner {
-    transition: none;
-  }
-
-  .button:hover,
-  .button:active {
-    transform: none;
-  }
+.leaving {
+  opacity: 0.72;
+  filter: saturate(0.85);
 }
